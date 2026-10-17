@@ -1,0 +1,29 @@
+{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:49507",
+      "sslPort": 44337
+    }
+  },
+  "profiles": {
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "environmentVariables": {
+        "TWILIO_AUTH_TOKEN": "YOUR_TWILIO_AUTH_TOKEN",
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "TWILIO_ACCOUNT_SID": "YOUR_TWILIO_ACCOUNT_SID",
+        "LlaveSecreta": "YOUR_JWT_SECRET"
+      }
+    },
+    "CentromedicoCliente": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:5001;http://localhost:5000"
+    }
+  }
+}

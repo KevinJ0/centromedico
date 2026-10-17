@@ -1,0 +1,51 @@
+<main class="no-styles login-container">
+  <div class="background-overlay"></div>
+  <mat-card class="login-card" data-aos="fade-up" data-aos-duration="1000">
+    <mat-card-content class="acceso">
+      <form [formGroup]="loginFormGroup" (ngSubmit)="Login()" class="login-form">
+        <div class="login-header" data-aos="fade-down" data-aos-delay="200">
+          <h2>Bienvenido</h2>
+          <p>Ingresa a tu cuenta para continuar</p>
+        </div>
+
+        <mat-form-field appearance="outline" class="custom-field" data-aos="fade-right" data-aos-delay="400">
+          <mat-label>Correo Electrónico</mat-label>
+          <mat-icon matPrefix>email</mat-icon>
+          <input [style.fontSize.px]="getFontSize()" type="email" matInput formControlName="loginEmailControl">
+          <mat-error
+            *ngIf="loginFormGroup.get('loginEmailControl').hasError('email') && !loginFormGroup.get('loginEmailControl').hasError('required')">
+            Por favor ingrese un correo válido
+          </mat-error>
+          <mat-error *ngIf="loginFormGroup.get('loginEmailControl').hasError('required')">
+            Correo <strong>requerido</strong>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="custom-field" data-aos="fade-left" data-aos-delay="600">
+          <mat-label>Contraseña</mat-label>
+          <mat-icon matPrefix>lock</mat-icon>
+          <input [style.fontSize.px]="getFontSize()" formControlName="loginPasswordControl" matInput
+            [type]="hide ? 'password' : 'text'">
+          <button type="button" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hide">
+            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+          <mat-error *ngIf="loginFormGroup.get('loginPasswordControl').hasError('required')">
+            Contraseña <strong>requerida</strong>
+          </mat-error>
+        </mat-form-field>
+
+        <a href="#" class="forgot-pass" data-aos="fade-left" data-aos-delay="700">¿Contraseña olvidada?</a>
+
+        <div class="actions" data-aos="zoom-in" data-aos-delay="800">
+          <button class="login-btn" [disabled]="loading" type="submit" mat-flat-button color="primary">
+            <span *ngIf="!loading; else spinner">ENTRAR</span>
+            <ng-template #spinner>
+              <mat-progress-spinner diameter="25" strokeWidth="2" [mode]="mode"></mat-progress-spinner>
+            </ng-template>
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</main>

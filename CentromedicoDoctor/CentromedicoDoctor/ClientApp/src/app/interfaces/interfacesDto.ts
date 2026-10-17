@@ -1,0 +1,383 @@
+export interface CustomError {
+  status: number;
+  message: string;
+}
+
+export interface UserInfo {
+  doc_identidad: string;
+  nombre: string;
+  apellido: string;
+  confirm_doc_identidad?: boolean;
+  contacto: string;
+  fecha_nacimiento: Date;
+  sexo: string;
+
+}
+export interface especialidad {
+  id: number | string;
+  descrip: string;
+}
+export interface hora {
+  id: string | Date;
+  descrip: string;
+}
+export interface seguro {
+  id: number;
+  descrip: string;
+}
+
+export interface cobertura {
+  segurosID: number;
+  descrip: string;
+  porciento: number;
+  pago: number;
+  cobertura: number;
+  diferencia: number;
+}
+
+export interface citaEntry {
+  medicoId: number | string;
+  id: number | string;
+  descuento: number;
+  observacion: string;
+}
+
+
+
+export interface citaCalendar {
+  id: number | string;
+  doc_identidad: string;
+  medicosID: number;
+  medico_nombre: string;
+  medico_apellido: string;
+  serviciosID: number;
+  servicio_descrip: string;
+  cod_verificacionID: string;
+  pacientesID: number;
+  paciente_nombre: string;
+  paciente_apellido: string;
+  paciente_nombre_tutor: string;
+  paciente_apellido_tutor: string;
+  nota: string;
+  menor_un_ano: boolean;
+  edad: number;
+  contacto: string;
+  contacto_whatsapp: string;
+  fecha_hora: string | Date;
+  segurosID: number;
+  seguro_descrip: string;
+  diferencia: number;
+  cobertura: number;
+  descuento: number;
+  pago: number;
+  total: number;
+  turno: number;
+  consultorio: number;
+  appointmentDuration: string;
+  estado: boolean;
+}
+export interface ticket {
+  cod_verificacion: string;
+  servicio: string;
+  consultorio: number;
+  fecha_hora: string;
+  medico_nombre_apellido: string;
+  seguro: string;
+  pago: number;
+  cobertura: number;
+  diferencia: number;
+  paciente_nombre_apellido: string;
+  doc_identidad_tutor: string;
+  doc_identidad: string;
+  tutor_nombre_apellido: string;
+  contacto: string;
+  correo: string;
+  turno: number;
+}
+
+export interface medico {
+  id: number;
+  exequatur: string;
+  colegiatura: string;
+  cedula: string;
+  nombre: string;
+  apellido: string;
+  sexo: string;
+  correo: string;
+  url_twitter: string;
+  url_facebook: string;
+  url_instagram: string;
+  telefono1: string;
+  telefono1_contact: string;
+  telefono2: string;
+  telefono2_contact: string;
+  consultorio: number;
+  estado: Boolean;
+  profilePhoto: string;
+  especialidades: string[];
+  seguros: string[];
+  servicios: string[];
+  extensiones_telefonicas: string[];
+  horarios: Object;
+}
+
+export interface userMedicoForm {
+
+  nombre: string;
+  apellido: string;
+  telefono1: string;
+  telefono2: string;
+  telefono1_contact: string;
+  telefono2_contact: string;
+  exten_tel_arrstr: string;
+  extensiones_telefonicas?: any[];
+  consultorio: number;
+  url_facebook: string;
+  url_twitter: string;
+  url_instagram: string;
+  profilePhoto: File;
+}
+
+
+export interface doctorCard {
+  id: number | string;
+  exequatur: string;
+  colegiatura: string;
+  nombre: string;
+  apellido: string;
+  sexo: string;
+  correo: string;
+  url_twitter: string;
+  url_facebook: string;
+  url_instagram: string;
+  telefono1: string;
+  telefono2: string;
+  consultorio: number;
+  profilePhoto: string;
+  telefono1_contact: string;
+  telefono2_contact: string;
+  especialidades: string[];
+}
+
+export interface user {
+  id?: string;
+  name?: string;
+  email?: string;
+  role?: string;
+  profilePhoto: string;
+}
+
+export interface group {
+  type: string;
+  group_name: string;
+}
+
+export interface TokenResponse {
+  token: string;
+  expiration: string; //date
+  refresh_token: string;
+  roles: string;
+  username: string;
+  groups: group[];
+  medicos: medico[];
+}
+
+export interface correoPregunta {
+  nombre: string;
+  correo: string;
+  contacto: string;
+  motivo: number;
+  mensaje: string;
+}
+
+export interface servicio {
+  id: number;
+  descrip: string;
+}
+
+export interface servicioCobertura extends servicio {
+  coberturas: cobertura[];
+}
+
+export interface citaForm {
+  medico: {
+    id: number;
+    nombre: string;
+    apellido: string;
+  };
+  servicios: {
+    id: number;
+    descrip: string;
+    coberturas: {
+      segurosID: number;
+      descrip: string;
+      porciento: number;
+      pago: number;
+      cobertura: number;
+      diferencia: number;
+    }[];
+  }[];
+  diasLaborables: Date[];
+}
+
+export interface citaPaciente {
+  id?: number | string;
+  doc_identidad: string;
+  medicosID: number;
+  serviciosID: number;
+  pacientesID?: number;
+  paciente_nombre: string;
+  paciente_apellido: string;
+  paciente_nombre_tutor?: string;
+  paciente_apellido_tutor?: string;
+  nota?: string;
+  menor_un_ano?: boolean;
+  edad?: number;
+  contacto?: string;
+  fecha_nacimiento: string | Date;
+  sexo: string;
+  contacto_whatsapp: string;
+  fecha_hora: string | Date;
+  segurosID: number;
+  turno?: number;
+}
+
+export interface ResetPassword {
+  password: string;
+  confirmPassword: string;
+}
+
+export interface balanceCaja {
+  medicosID?: number;
+  secretariasID: number;
+  balance_inicial: number;
+}
+
+export interface secretaria {
+  id: number | string,
+  correo: string,
+  nombre: string,
+  apellido: string
+}
+
+
+export interface citaResult {
+  cod_verificacion: string;
+  servicio: string;
+  consultorio: number;
+  fecha_hora: string;
+  medico_nombre_apellido: string;
+  seguro: string;
+  pago: number;
+  cobertura: number;
+  diferencia: number;
+  paciente_nombre_apellido: string;
+  doc_identidad_tutor: string;
+  doc_identidad: string;
+  tutor_nombre_apellido: string;
+  contacto: string;
+  correo: string;
+  turno: number;
+}
+
+export interface cita {
+  id?: number | string;
+  nombre: string;
+  apellido: string;
+  sexo: string;
+  doc_identidad: string;
+  fecha_hora: Date;
+  medicosID: number;
+  serviciosID: number;
+  fecha_nacimiento: Date;
+  contacto: string;
+  contacto_whatsapp: boolean;
+  appointment_type: number;
+  segurosID: number;
+  nota: string;
+}
+
+export interface CitaCreate {
+  fecha_hora: Date;
+  medicosID: number;
+  telefono: string;
+  serviciosID: number;
+  appointment_type: number;
+  email: string;
+  segurosID: number;
+  nota: string;
+  paciente: Paciente;
+}
+
+export interface Paciente {
+  Id: number;
+  doc_identidad: string;
+  doc_identidad_tutor?: string;
+  nombre: string;
+  apellido: string;
+  contacto?: string;
+  contacto_whatsapp: boolean;
+  fecha_nacimiento: Date;
+  sexo: string;
+  email?: string;
+  nombre_tutor?: string;
+  apellido_tutor?: string;
+}
+
+export interface ResetPassword {
+  password: string;
+  confirmPassword: string;
+}
+
+export interface balanceCaja {
+  medicosID?: number;
+  secretariasID: number;
+  balance_inicial: number;
+
+}
+
+export interface secretaria {
+  id: number | string,
+  correo: string,
+  nombre: string,
+  apellido: string
+}
+
+
+export interface citaResult {
+
+  cod_verificacion: string;
+  servicio: string;
+  consultorio: number;
+  fecha_hora: string;
+  medico_nombre_apellido: string;
+  seguro: string;
+  pago: number;
+  cobertura: number;
+  diferencia: number;
+  paciente_nombre_apellido: string;
+  doc_identidad_tutor: string;
+  doc_identidad: string;
+  tutor_nombre_apellido: string;
+  contacto: string;
+  correo: string;
+  turno: number;
+
+}
+
+export interface cita {
+  id?: number | string;
+  nombre: string;
+  apellido: string;
+  sexo: string;
+  doc_identidad: string;
+  fecha_hora: Date;
+  medicosID: number;
+  serviciosID: number;
+  fecha_nacimiento: Date;
+  contacto: string;
+  contacto_whatsapp: boolean;
+  appointment_type: number;
+  segurosID: number;
+  nota: string;
+}

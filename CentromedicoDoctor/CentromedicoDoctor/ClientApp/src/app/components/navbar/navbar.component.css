@@ -1,0 +1,89 @@
+:host {
+  display: block;
+  width: 100%;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar-container {
+  height: 50px;
+  background-color: var(--header-bg-color);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  padding: 0 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.logo-section .logo {
+  height: 32px;
+  object-fit: contain;
+}
+
+.spacer {
+  flex: 1;
+}
+
+
+.user-profile-btn {
+  padding: 0 12px !important;
+  border-radius: 30px !important;
+  background-color: transparent;
+  transition: background-color 0.2s;
+  height: auto !important;
+  line-height: normal !important;
+}
+
+::ng-deep .user-profile-btn .mat-button-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.user-profile-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.avatar-circle {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.avatar-circle mat-icon {
+  font-size: 20px;
+  height: 20px;
+  width: 20px;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.2;
+}
+
+.user-name {
+  font-weight: 600;
+  color: var(--menu-text-color);
+  font-size: 0.75rem;
+  text-transform: none;
+}
+
+.user-role {
+  font-size: 0.65rem;
+  color: var(--menu-text-secondary);
+  text-transform: none;
+}
+
+.dropdown-icon {
+  color: var(--menu-text-secondary);
+}

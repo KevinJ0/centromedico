@@ -1,0 +1,13 @@
+<h1 mat-dialog-title>DETALLES CITA</h1>
+
+<app-mat-dialog-content-appointment [data]="data"></app-mat-dialog-content-appointment>
+
+<mat-dialog-actions align="center">
+  <button color="primary" [disabled]="!isEntryToday" mat-stroked-button (click)="openDialogEntry(event)">Dar
+    entrada</button>
+  <button mat-stroked-button (click)="onNoClick()" [routerLink]="['./app/cita/'+data.id]"
+    type="button">Modificar</button>
+  <button mat-stroked-button (click)="openDialogAppointmentPostpone(event)">Posponer</button>
+  <button mat-stroked-button (click)="openDeleteDialog()" color="warn">Eliminar</button>
+  <button mat-flat-button (click)="onNoClick()" color="primary">Cerrar</button>
+</mat-dialog-actions>

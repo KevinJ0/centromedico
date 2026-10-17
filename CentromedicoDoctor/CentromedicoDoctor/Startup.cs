@@ -1,0 +1,297 @@
+using CentromedicoDoctor.Services.Interfaces;
+using Amazon.S3;
+using AutoMapper;
+using Centromedico.Database.DbModels;
+using Centromedico.Database.Context;
+using CentromedicoDoctor.Exceptions;
+using CentromedicoDoctor.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SpaServices.AngularCli;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using CentromedicoDoctor.Profiles;
+using Doctor.Repository.Repositories;
+using Doctor.Repository.Repositories.Interfaces;
+using System.Reflection;
+using System.IO;
+using CentromedicoDoctor.Services.Helpers;
+using CentromedicoDoctor.Hubs;
+using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
+using Amazon.Runtime;
+using Amazon;
+
+namespace CentromedicoDoctor
+
+{
+    public class Startup
+    {
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
+        public IConfiguration Configuration { get; }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
+
+            services.AddHttpContextAccessor();
+
+            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<ICitaService, CitaService>();
+            services.AddScoped<IServicioService, ServicioService>();
+            services.AddScoped<ISeguroService, SeguroService>();
+            services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IHorarioMedicoService, HorarioMedicoService>();
+            services.AddScoped<IPacienteService, PacienteService>();
+            services.AddScoped<INotificationService, NotificationService>();
+            services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IGrupoService, GrupoService>();
+            services.AddScoped<IEspecialidadService, EspecialidadService>();
+
+
+            services.AddScoped<IPacienteRepository, PacienteRepository>();
+            services.AddScoped<ISeguroRepository, SeguroRepository>();
+            services.AddScoped<IAccountRepository, AccountRepository>();
+            services.AddScoped<IServicioRepository, ServicioRepository>();
+            services.AddScoped<IMedicoRepository, MedicoRepository>();
+            services.AddScoped<ITokenRepository, TokenRepository>();
+            services.AddScoped<ICitaRepository, CitaRepository>();
+            services.AddScoped<IHorarioMedicoRepository, HorarioMedicoRepository>();
+            services.AddScoped<ICoberturaRepository, CoberturaRepository>();
+            services.AddScoped<IHorarioMedicoReservaRepository, HorarioMedicoReservaRepository>();
+            services.AddScoped<ISecretariaRepository, SecretariaRepository>();
+            services.AddScoped<IEspecialidadRepository, EspecialidadRepository>();
+            services.AddScoped<IBalanceRepository, BalanceRepository>();
+            services.AddScoped<ITurnoService, TurnoService>();
+            services.AddScoped<ITurnoRepository, TurnoRepository>();
+            services.AddScoped<IDatabaseChangeNotificationService, SqlDependencyService>();
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            //services.AddSingleton<IS3Service, S3Service>();
+
+            string accessKey = Configuration["AWS:AccessKey"];
+            string secretKey = Configuration["AWS:SecretKey"];
+            //string region = Configuration["AWS:Region"];
+
+
+            var awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
+            var s3Client = new AmazonS3Client(awsCredentials, RegionEndpoint.USEast2);
+
+            services.AddSingleton<IAmazonS3>(s3Client);
+
+            //services.AddDefaultAWSOptions(Configuration.GetAWSOptions("AWS"));
+            //services.AddAWSService<IAmazonS3>();
+            services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("EnableCORS", builder =>
+                {
+                var allowedOrigins = new string[] { "http://localhost:4211", "http://localhost:4200" };
+
+                builder.WithOrigins(allowedOrigins)
+                              .AllowAnyHeader()
+                              .AllowAnyMethod()
+                              .AllowCredentials();
+
+                   /*
+                    builder.AllowAnyHeader()
+.AllowAnyMethod()
+.SetIsOriginAllowed((Host) => true)
+.AllowCredentials();*/
+
+                });
+            });
+            services.AddSignalR(opt => opt.EnableDetailedErrors = true);
+
+            //services.AddControllersWithViews();
+            // In production, the Angular files will be served from this directory
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "ClientApp/dist";
+            });
+            services.AddMvc(options => options.Filters.Add(typeof(ExceptionFilter)));
+            services.AddMvc().ConfigureApiBehaviorOptions(options =>
+            {
+                //options.SuppressModelStateInvalidFilter = true;
+                options.InvalidModelStateResponseFactory = actionContext =>
+                {
+                    string errors = "";
+                    var errorsList = new List<string>();
+
+                    foreach (var state in actionContext.ModelState)
+                    {
+
+                        foreach (var error in state.Value.Errors)
+                        {
+
+                            errors = error.ErrorMessage;
+                            var n = errors.IndexOf("Path");
+                            if (n! > 0)
+                                errorsList.Add(errors.Substring(0, n).Trim());
+                            else
+                                errorsList.Add(errors);
+
+                        }
+
+                    }
+
+                    var modelState = actionContext.ModelState;
+                    return new BadRequestObjectResult(new
+                    {
+                        error = new[] { errorsList[0] },
+                    })
+                    ;
+                };
+            });
+
+            services.AddControllers().AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+
+            var mapperConfig = new MapperConfiguration(m => m.AddProfile(new MappingProfile()));
+            IMapper mapper = mapperConfig.CreateMapper();
+            // services.AddSingleton(mapper);
+
+            services.AddAutoMapper(typeof(Startup));
+
+            // Token Model
+            services.AddScoped<token>();
+
+            services.AddIdentity<MyIdentityUser, IdentityRole>(options =>
+            {
+                options.Password.RequiredLength = 5;
+                options.Password.RequiredUniqueChars = 0;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireDigit = false;
+                // Lockout settings.
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(2);
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.AllowedForNewUsers = true;
+            }).AddEntityFrameworkStores<MyDbContext>().
+                 AddDefaultTokenProviders()
+                 .AddErrorDescriber<SpanishIdentityErrorDescriber>(); // Add this line
+
+
+            services.AddDbContext<MyDbContext>(option => option.UseSqlServer(
+                Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddAuthentication(op =>
+            {
+                op.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                op.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
+                op.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).
+                AddJwtBearer(o =>
+                {
+
+                    o.RequireHttpsMetadata = false;
+                    o.SaveToken = true;
+                    o.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = Configuration["Authorization:Issuer"],
+                        ValidAudience = Configuration["Authorization:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Authorization:LlaveSecreta"])),
+                        ClockSkew = TimeSpan.Zero
+                    };
+
+                    o.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var accessToken = context.Request.Query["access_token"];
+
+                            // If the request is for our hub...
+                            var path = context.HttpContext.Request.Path;
+                            if (!string.IsNullOrEmpty(accessToken) && (path.StartsWithSegments("/notificacion")))
+                            {
+                                context.Token = accessToken;
+                            }
+                            return Task.CompletedTask;
+                        }
+                    };
+                });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("RequireLoggedIn",
+                    policy => policy.RequireRole("Doctor", "Secretary", "Patient").RequireAuthenticatedUser());
+
+
+            });
+        
+
+        }
+
+        public void Configure(
+            IApplicationBuilder app,
+            IWebHostEnvironment env,
+            IDatabaseChangeNotificationService notificationService)
+        {
+
+
+            app.UseDeveloperExceptionPage();
+
+
+            app.UseCors("EnableCORS"); 
+
+            app.UseHttpsRedirection();
+
+            app.UseStaticFiles();
+            app.UseAuthentication();
+
+            if (!env.IsDevelopment())
+            {
+                app.UseSpaStaticFiles();
+            }
+
+            app.UseRouting();
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller}/{action=Index}/{id?}");
+                endpoints.MapHub<NotificationHub>("/notificacion").RequireAuthorization();
+            });
+
+
+            app.UseSpa(spa =>
+            {
+
+                spa.Options.SourcePath = "ClientApp";
+
+                if (env.IsDevelopment())
+                {
+                    spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
+                    spa.UseAngularCliServer(npmScript: "start");
+                }
+            });
+
+            notificationService.Config();
+
+        }
+    }
+}
