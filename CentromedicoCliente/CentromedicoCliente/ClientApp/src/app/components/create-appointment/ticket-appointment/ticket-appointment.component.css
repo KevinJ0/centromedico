@@ -1,0 +1,239 @@
+main {
+  padding: 4rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--color-surface-alt);
+  min-height: 80vh;
+}
+
+.boarding-pass-container {
+  width: 100%;
+  max-width: 450px;
+  filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.15));
+}
+
+.ticket-visual {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.ticket-header {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  position: relative;
+}
+
+.ticket-logo {
+  max-width: 40px;
+  filter: brightness(0) invert(1);
+  margin-bottom: 0.5rem;
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.brand-name {
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  opacity: 0.9;
+  font-weight: 600;
+}
+
+.ticket-title h2 {
+  font-size: 1.8rem;
+  margin: 0;
+  color: white;
+  letter-spacing: 1px;
+}
+
+.confirmation-code {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.3rem 0.8rem;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-top: 0.5rem;
+  display: inline-block;
+}
+
+/* Body */
+.ticket-body {
+  padding: 2rem 2rem 3rem 2rem;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.highlight-row {
+  margin-bottom: 2rem;
+}
+
+.info-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-group label {
+  font-size: 0.75rem;
+  color: var(--color-text-subtle);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.2rem;
+}
+
+.info-group p {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-strong);
+  margin: 0;
+}
+
+.big-text {
+  font-size: 2rem !important;
+  color: var(--primary-color) !important;
+}
+
+.align-right {
+  text-align: right;
+  align-items: flex-end;
+}
+
+.price-text {
+  font-size: 1.4rem !important;
+  color: #10b981 !important;
+  /* Medical Green */
+}
+
+/* Dashed Lines */
+.dashed-line {
+  border-top: 2px dashed var(--color-border);
+  margin: 1.5rem 0;
+  position: relative;
+}
+
+/* Ticket Cutouts */
+.ticket-cutout {
+  position: absolute;
+  background-color: var(--color-surface-alt);
+  /* Matches main bg */
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  bottom: 110px;
+  /* Position needs adjustment based on content height, roughly near footer */
+  z-index: 10;
+}
+
+.ticket-cutout.left {
+  left: -20px;
+}
+
+.ticket-cutout.right {
+  right: -20px;
+}
+
+/* Footer */
+.ticket-footer {
+  background-color: var(--color-surface);
+  padding: 1.5rem;
+  border-top: 2px dashed var(--color-border);
+  text-align: center;
+}
+
+.disclaimer {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  line-height: 1.4;
+  margin: 0 0 1rem 0;
+}
+
+.barcode-strip {
+  height: 30px;
+  background-image: linear-gradient(to right, var(--color-text) 3%, white 3%, white 6%, var(--color-text) 6%, var(--color-text) 9%, white 9%, white 12%, var(--color-text) 12%, var(--color-text) 20%, white 20%, white 25%, var(--color-text) 25%, var(--color-text) 30%, white 30%, white 40%, var(--color-text) 40%, var(--color-text) 50%, white 50%, white 55%, var(--color-text) 55%, var(--color-text) 60%, white 60%, white 70%, var(--color-text) 70%, var(--color-text) 80%, white 80%);
+  width: 80%;
+  margin: auto;
+  opacity: 0.7;
+}
+
+/* Actions */
+.actions-container {
+  margin-top: 3rem;
+  text-align: center;
+  width: 100%;
+  max-width: 450px;
+}
+
+.success-msg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: #dcfce7;
+  color: #15803d;
+  padding: 1rem;
+  border-radius: 12px;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+}
+
+.buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.buttons button {
+  display: flex !important;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.5rem !important;
+}
+
+/* Print Overrides */
+@media print {
+  main {
+    background: white;
+    padding: 0;
+    margin: 0;
+  }
+
+  .boarding-pass-container {
+    filter: none;
+    max-width: 100%;
+    width: 100%;
+    box-shadow: none;
+  }
+
+  .actions-container {
+    display: none !important;
+  }
+
+  .ticket-visual {
+    border: 1px solid #ddd;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Ensure white text on colored header prints correctly */
+  .ticket-header {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    background-color: var(--primary-color) !important;
+    color: white !important;
+  }
+}

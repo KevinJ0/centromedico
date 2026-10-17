@@ -1,0 +1,129 @@
+<main class="doctor-detail-container" *ngIf="!loading else load">
+  <!-- Back Button (Breadcrumb style) -->
+  <a class="back-link" [routerLink]="['..']">
+    <mat-icon>arrow_back</mat-icon> Volver al directorio
+  </a>
+
+  <!-- Header Section: Profile & Actions -->
+  <section class="profile-header" data-aos="fade-down">
+    <div class="profile-main">
+      <div class="profile-image-container">
+        <img [src]="_medico.profilePhoto | noProfilePhoto" alt="Foto del médico" loading="lazy">
+      </div>
+      <div class="profile-info">
+        <h1 class="doctor-name">
+          <span class="title" *ngIf="_medico.sexo == 'f' else maleTitle">Dra.</span>
+          <ng-template #maleTitle><span class="title">Dr.</span></ng-template>
+          {{_medico.nombre}} {{_medico.apellido}}
+        </h1>
+        <span class="specialty-badge">{{_especialidades}}</span>
+      </div>
+    </div>
+
+    <div class="profile-actions">
+      <button [routerLink]="['/crear-cita']" [queryParams]="{ medicoId: medicoId}" mat-flat-button color="primary"
+        class="cta-button">
+        <mat-icon>event</mat-icon>
+        <span>Agendar Cita</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- Content Grid -->
+  <div class="content-grid">
+
+    <!-- Left Column: Personal Info & Contact -->
+    <div class="info-column">
+
+      <!-- Personal Information Card -->
+      <div class="content-card info-card" data-aos="fade-up" data-aos-delay="100">
+        <div class="card-header">
+          <mat-icon class="card-icon">person</mat-icon>
+          <h3>Información Personal</h3>
+        </div>
+        <div class="card-body">
+          <div class="info-row" *ngIf="_medico.telefono1 || _medico.telefono2">
+            <span class="label">Teléfonos</span>
+            <div class="values">
+              <a *ngIf="_medico.telefono1" [href]="'tel:' + _medico.telefono1" class="phone-link">
+                <mat-icon>phone</mat-icon> {{_medico.telefono1 | mask: '000-000-0000'}}
+              </a>
+              <a *ngIf="_medico.telefono2" [href]="'tel:' + _medico.telefono2" class="phone-link">
+                <mat-icon>phone</mat-icon> {{_medico.telefono2 | mask: '000-000-0000'}}
+              </a>
+            </div>
+          </div>
+
+          <div class="info-row" *ngIf="_medico.correo">
+            <span class="label">Correo</span>
+            <div class="values">
+              <span class="value link"><mat-icon>email</mat-icon> {{_medico.correo}}</span>
+            </div>
+          </div>
+
+          <div class="info-row" *ngIf="_medico.url_facebook || _medico.url_twitter || _medico.url_instagram">
+            <span class="label">Redes Sociales</span>
+            <div class="social-links">
+              <a *ngIf="_medico.url_facebook" [href]="_medico.url_facebook" target="_blank"
+                class="social-btn"><mat-icon>facebook</mat-icon></a>
+              <a *ngIf="_medico.url_twitter" [href]="_medico.url_twitter" target="_blank" class="social-btn"><mat-icon
+                  svgIcon="twitter"></mat-icon></a>
+              <a *ngIf="_medico.url_instagram" [href]="_medico.url_instagram" target="_blank"
+                class="social-btn"><mat-icon svgIcon="instagram"></mat-icon></a>
+            </div>
+          </div>
+
+          <div class="regulatory-info">
+            <span *ngIf="_medico.exequatur" class="reg-badge">Exequatur: {{_medico.exequatur}}</span>
+            <span *ngIf="_medico.colegiatura" class="reg-badge">Colegiatura: {{_medico.colegiatura}}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Insurance Card -->
+      <div class="content-card insurance-card" data-aos="fade-up" data-aos-delay="200">
+        <div class="card-header">
+          <mat-icon class="card-icon">verified_user</mat-icon>
+          <h3>Aseguradoras</h3>
+        </div>
+        <ul class="insurance-list">
+          <li *ngFor="let item of _medico.seguros">
+            <mat-icon>check_circle</mat-icon> {{item.descrip}}
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Right Column: Schedule -->
+    <div class="schedule-column">
+      <div class="content-card schedule-card" data-aos="fade-up" data-aos-delay="300">
+        <div class="card-header">
+          <mat-icon class="card-icon">schedule</mat-icon>
+          <h3>Horarios de Consulta</h3>
+        </div>
+        <div class="schedule-container">
+          <div *ngFor="let day of _medico.horarios | keyvalue">
+            <ng-container *ngIf="_medico.horarios[day.key]">
+              <div class="schedule-row">
+                <div class="day-label">{{ day.key }}</div>
+                <div class="hours">
+                  <span *ngFor="let hour of _medico.horarios[day.key]; let i = index" class="hour-tag">
+                    {{ hour }}
+                  </span>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<ng-template #load>
+  <div class="loading-container">
+    <mat-progress-spinner mode="indeterminate" diameter="50"></mat-progress-spinner>
+  </div>
+</ng-template>

@@ -1,0 +1,102 @@
+<main>
+  <div id="print-section" class="boarding-pass-container">
+    <div class="ticket-visual">
+
+      <!-- Header Section -->
+      <div class="ticket-header">
+        <div class="brand">
+          <span class="brand-name">HOSPITAL SALVADOR</span>
+        </div>
+        <div class="ticket-title">
+          <h2>TICKET DE CITA</h2>
+          <span class="confirmation-code">#{{citaDataResult.cod_verificacion}}</span>
+        </div>
+      </div>
+
+      <!-- Main Body -->
+      <div class="ticket-body">
+        <div class="info-row highlight-row">
+          <div class="info-group">
+            <label>FECHA & HORA</label>
+            <p>{{citaDataResult.fecha_hora}}</p>
+          </div>
+          <div class="info-group align-right">
+            <label>TURNO</label>
+            <p class="big-text">{{citaDataResult.turno}}</p>
+          </div>
+        </div>
+
+        <div class="dashed-line"></div>
+
+        <div class="info-row">
+          <div class="info-group">
+            <label>PACIENTE</label>
+            <p>{{citaDataResult.paciente_nombre_apellido}}</p>
+          </div>
+          <div class="info-group">
+            <label>DOCTOR</label>
+            <p>{{citaDataResult.medico_nombre_apellido}}</p>
+          </div>
+        </div>
+
+        <div class="info-row">
+          <div class="info-group">
+            <label>CONSULTORIO</label>
+            <p>{{citaDataResult.consultorio}}</p>
+          </div>
+          <div class="info-group">
+            <label>SERVICIO</label>
+            <p>{{citaDataResult.servicio}}</p>
+          </div>
+        </div>
+
+        <div class="info-row" *ngIf="isDependent">
+          <div class="info-group">
+            <label>TUTOR</label>
+            <p>{{citaDataResult.tutor_nombre_apellido}}</p>
+          </div>
+        </div>
+
+        <div class="dashed-line"></div>
+
+        <div class="info-row footer-row">
+          <div class="info-group">
+            <label>SEGURO</label>
+            <p>{{citaDataResult.seguro}}</p>
+          </div>
+          <div class="info-group align-right">
+            <label>DIFERENCIA A PAGAR</label>
+            <p class="price-text">RD${{citaDataResult.diferencia}}</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Cutout Circles for effect -->
+      <div class="ticket-cutout left"></div>
+      <div class="ticket-cutout right"></div>
+
+      <!-- Footer / Disclaimer -->
+      <div class="ticket-footer">
+        <p class="disclaimer">
+          Por favor llegar 30 minutos antes. Recuerde traer su documento de identidad.
+        </p>
+        <div class="barcode-strip"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="actions-container">
+    <p class="success-msg">
+      <mat-icon>check_circle</mat-icon>
+      Hemos enviado la confirmación a su correo.
+    </p>
+    <div class="buttons">
+      <button mat-flat-button color="primary" useExistingCss="true" [useExistingCss]="true" ngxPrint
+        printSectionId="print-section">
+        <mat-icon>print</mat-icon> Imprimir Ticket
+      </button>
+      <button mat-stroked-button [routerLink]="['/']">Volver al Inicio</button>
+    </div>
+  </div>
+</main>

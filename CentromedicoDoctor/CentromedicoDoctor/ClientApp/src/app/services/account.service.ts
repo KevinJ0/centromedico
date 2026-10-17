@@ -137,7 +137,7 @@ export class AccountService {
     try {
 
       return this.http.get<medico>(this.baseUrl +
-        `api/account/getUserInfo`)
+        `api/account/getUserInfoDoctor`)
         .pipe(map(result => {
           console.log(result)
           return result;
@@ -261,7 +261,7 @@ export class AccountService {
   }
 
   getUserInfo(): Observable<UserInfo> {
-    return this.http.get<UserInfo>(this.baseUrl + "api/account/getUserInfo")
+    return this.http.get<UserInfo>(this.baseUrl + "api/account/getUserInfoDoctor")
       .pipe(map((data: UserInfo) => data),
         catchError(err => {
           return throwError(err);

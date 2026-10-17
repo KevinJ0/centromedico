@@ -1,0 +1,161 @@
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Centromedico.Database;
+using Centromedico.Database.Context;
+using Centromedico.Database.DbModels;
+using CentromedicoDoctor.Exceptions;
+using CentromedicoDoctor.Services.Interfaces;
+using Doctor.DTO;
+using Doctor.Repository.Repositories.Interfaces;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CentromedicoDoctor.Services
+{
+    public class PacienteService : IPacienteService
+    {
+        private readonly UserManager<MyIdentityUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly MyDbContext _db;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IMapper _mapper;
+        private readonly IAccountRepository _accountRepo;
+
+        public PacienteService(RoleManager<IdentityRole> roleManager,
+            IHttpContextAccessor httpContextAccessor,
+          UserManager<MyIdentityUser> userManager,
+            MyDbContext db,
+            IMapper mapper,
+            IAccountRepository accountRepo)
+        {
+            _accountRepo = accountRepo;
+            _roleManager = roleManager;
+            _httpContextAccessor = httpContextAccessor;
+            _userManager = userManager;
+            _db = db;
+            _mapper = mapper;
+        }
+
+        public async Task<List<PacienteDto>> getPacienteListAsync(int medicoId)
+        {
+            var pacientesDTOList = await _db.pacientes
+                .Where(x => x.citas.Any(y => y.medicosID == medicoId && y.pacientesID == x.ID && !x.menor_un_año))
+                .ProjectTo<PacienteDto>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            return pacientesDTOList;
+        }
+
+        public async Task<bool> saveUserInfoAsync(UserInfo formuser)
+        {
+            try
+            {
+                var user = _db.MyIdentityUsers.FirstOrDefault(x => x.doc_identidad == formuser.doc_identidad);
+                bool isUserNew = false;
+                var validateB = validateBirth(formuser.fecha_nacimiento);
+
+                if (!validateB)
+                    throw new ArgumentException("Es necesario que el usuario sea mayor de edad.");
+
+                if (user == null)
+                {
+                    user_info userInfo = _db.user_info.FirstOrDefault(x =>
+                                                            x.doc_identidad == formuser.doc_identidad);
+
+                    if (userInfo == null)
+                    {
+                        userInfo = new user_info();
+                        isUserNew = true;
+                    }
+                    userInfo.nombre = formuser.nombre;
+                    userInfo.apellido = formuser.apellido;
+                    userInfo.sexo = formuser.sexo;
+                    userInfo.contacto = formuser.contacto;
+                    userInfo.doc_identidad = formuser.doc_identidad;
+                    userInfo.fecha_nacimiento = formuser.fecha_nacimiento == null ? userInfo.fecha_nacimiento
+                                                                                  : formuser.fecha_nacimiento;
+                    if (isUserNew)
+                    {
+                        _db.user_info.Add(userInfo);
+                        _db.SaveChanges();
+                    }
+                    else
+                        _db.SaveChanges();
+
+
+                }
+                else
+                {
+                    user.nombre = formuser.nombre;
+                    user.apellido = formuser.apellido;
+                    user.sexo = formuser.sexo;
+                    user.contacto = formuser.contacto;
+                    user.doc_identidad = formuser.doc_identidad;
+                    user.fecha_nacimiento = formuser.fecha_nacimiento;
+                }
+
+                if (user != null)
+                {
+                    //Update patient info
+                    //Update tutor's name for all records in the database with this user
+                    (from p in _db.pacientes
+                     where p.MyIdentityUserID == user.Id && p.doc_identidad_tutor != null
+                     select p).ToList()
+                   .ForEach(x =>
+                   {
+                       x.nombre_tutor = user.nombre;
+                       x.apellido_tutor = user.apellido;
+                       x.doc_identidad_tutor = user.doc_identidad;
+                   });
+
+
+                    var paciente = (from p in _db.pacientes
+                                    where p.MyIdentityUserID == user.Id && p.doc_identidad != null
+                                    select p).FirstOrDefault();
+
+                    if (paciente != null)
+                    {
+                        paciente.nombre = user.nombre;
+                        paciente.doc_identidad = user.doc_identidad;
+                        paciente.apellido = user.apellido;
+                    }
+
+                    _db.SaveChanges();
+
+                }
+
+
+
+                return true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+        }
+
+        public Task<bool> updateAsync(UserInfo formuser)
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool validateBirth(DateTime _fechaNacimiento)
+        {
+            int _edad = DateTime.Today.AddTicks(-_fechaNacimiento.Ticks).Year - 1;
+
+            if (_edad < 18)
+                return false;
+
+            return true;
+        }
+
+    }
+}

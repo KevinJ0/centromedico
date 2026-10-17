@@ -1,0 +1,105 @@
+<header class="header" id="menu-mobile" role="banner">
+
+  <nav id="nav" class="nav" role="navigation">
+    <div class="mobile-container-logo">
+      <a [routerLink]="['/']">
+        <img src="../../../assets/imgs/footer_logo.png" class="mobile-main-logo" alt="Logo" loading="lazy">
+      </a>
+    </div>
+
+    <ul class="nav__menu" id="menu" tabindex="-1" aria-label="main navigation" hidden>
+      <li class="nav__item"><a [routerLink]="['/']" class="nav__link">Inicio</a></li>
+      <li class="nav__item"><a [routerLink]="['/medicos']" class="nav__link">Directorio Médico</a></li>
+      <li class="nav__item"><a [routerLink]="['/medicos']" class="nav__link nav__link--cta">Agendar cita</a></li>
+      <li class="nav__item" [hidden]="!userName">
+        <a class="nav__link" [routerLink]="['/mis-citas']">Mis Citas</a>
+      </li>
+      <li class="nav__item"><a [routerLink]="['/ubicacion']" class="nav__link">Ubicaciones</a></li>
+      <li class="nav__item"><a [routerLink]="['/contactos']" class="nav__link">Contactos</a></li>
+      <li class="nav__item"><a [routerLink]="['/faq']" class="nav__link">Preguntas Frecuentes</a></li>
+      <li [hidden]="userName || isLoginRoute" class="nav__item">
+        <a class="nav__link" [routerLink]="['/paciente-login']">Acceso de pacientes</a>
+      </li>
+      <li class="nav__item" [hidden]="!userName">
+        <a class="nav__link" [routerLink]="['/ajustes-usuario']">Ajustes</a>
+      </li>
+      <li class="nav__item" [hidden]="!userName">
+        <a class="nav__link" (click)="logOut()">Cerrar sesión</a>
+      </li>
+    </ul>
+
+    <a href="#nav" class="nav__toggle" role="button" aria-expanded="false" aria-controls="menu">
+      <svg class="menuicon" xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50">
+        <title>Toggle Menu</title>
+        <g>
+          <line class="menuicon__bar" x1="13" y1="16.5" x2="37" y2="16.5" />
+          <line class="menuicon__bar" x1="13" y1="24.5" x2="37" y2="24.5" />
+          <line class="menuicon__bar" x1="13" y1="24.5" x2="37" y2="24.5" />
+          <line class="menuicon__bar" x1="13" y1="32.5" x2="37" y2="32.5" />
+          <circle class="menuicon__circle" r="23" cx="25" cy="25" />
+        </g>
+      </svg>
+    </a>
+
+    <div class="splash"></div>
+
+  </nav>
+
+</header>
+
+
+<header id="menu-principal">
+  <div class="bg-container-sub">
+    <div class="header-container">
+
+      <div class="container-logo">
+        <a [routerLink]="['/']">
+          <img src="../../../assets/imgs/header_logo.png" class="main-logo" alt="Logo" loading="lazy">
+        </a>
+      </div>
+
+      <div class="sub-menu">
+        <ul>
+          <li><a [routerLink]="['/']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Inicio</a></li>
+          <li><a [routerLink]="['/medicos']" routerLinkActive="active">Directorio Médico</a></li>
+          <li><a [routerLink]="['/medicos']" routerLinkActive="active" class="special-link">Agendar cita</a></li>
+          <li *ngIf="userName"><a [routerLink]="['/mis-citas']" routerLinkActive="active">Mis Citas</a></li>
+          <li><a [routerLink]="['/ubicacion']" routerLinkActive="active">Ubicaciones</a></li>
+          <li><a [routerLink]="['/contactos']" routerLinkActive="active">Contactos</a></li>
+          <li><a [routerLink]="['/faq']" routerLinkActive="active">Preguntas Frecuentes</a></li>
+        </ul>
+      </div>
+
+      <div class="login-btn-container">
+        <ul>
+          <li *ngIf="!userName && !isLoginRoute">
+            <a [routerLink]="['/paciente-login']">
+              Acceso de pacientes <mat-icon aria-hidden="true">login</mat-icon>
+            </a>
+          </li>
+          <li *ngIf="userName" style="line-height: 0;">
+            <button [matMenuTriggerFor]="userMenu" class="settings-btn" matTooltip="Mi cuenta">
+              <mat-icon style="margin: 0 !important;">account_circle</mat-icon>
+            </button>
+
+            <mat-menu #userMenu="matMenu" xPosition="before" class="custom-user-menu">
+              <div class="menu-user-info">
+                <span class="user-name-label">{{userName}}</span>
+              </div>
+              <mat-divider></mat-divider>
+              <a mat-menu-item [routerLink]="['/ajustes-usuario']">
+                <mat-icon color="primary">settings</mat-icon>
+                <span>Ajustes</span>
+              </a>
+              <button mat-menu-item (click)="logOut()">
+                <mat-icon color="warn">logout</mat-icon>
+                <span>Cerrar sesión</span>
+              </button>
+            </mat-menu>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</header>

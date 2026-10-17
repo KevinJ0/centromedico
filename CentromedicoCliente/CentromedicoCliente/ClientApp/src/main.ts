@@ -1,0 +1,31 @@
+import { enableProdMode } from '@angular/core';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { AppModule } from './app/app.module';
+import { environment } from './environments/environment';
+
+export function getBaseUrl() {
+
+  //return "https://centromedicoxx1-001-site1.ktempurl.com/";
+  return "https://localhost:44337/";
+  return document.getElementsByTagName('base')[0].href;
+
+}
+
+export function getDoctorApiUrl() {
+
+  return "https://localhost:44337/";
+
+}
+
+const providers = [
+  { provide: 'BASE_URL', useFactory: getBaseUrl, deps: [] },
+  { provide: 'DOCTOR_URL', useFactory: getDoctorApiUrl, deps: [] }
+];
+
+if (environment.production) {
+  enableProdMode();
+}
+
+
+platformBrowserDynamic(providers).bootstrapModule(AppModule)
+  .catch(err => console.log(err));
