@@ -1,0 +1,39 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Warning",
+      "Microsoft.Hosting.Lifetime": "Information"
+    }
+  },
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=localhost\\MSSQLSERVER01;Database=centromedico;Trusted_Connection=True;"
+  },
+  "Authorization": {
+    "Issuer": "https://localhost:44337",
+    "Audience": "https://localhost:44337",
+    "ExpireTime": "5",
+    "ClientId": "Centromedico-AUTHENTICATION-REFRESH-TOKEN",
+    "LlaveSecreta": "dev-secret-key-change-me-please-use-at-least-32-chars!!"
+  },
+  "AWS": {
+    "Profile": "default",
+    "Region": "us-east-2",
+    "AccessKey": "",
+    "SecretKey": ""
+  },
+  "EmailSettings": {
+    "Secret": "dev-email-secret-change-me",
+    "RefreshTokenTTL": 2,
+    "EmailFrom": "hospital@kevinjrosario.com",
+    "SmtpHost": "smtp.gmail.com",
+    "SmtpPort": 465,
+    "SmtpUser": "",
+    "SmtpPass": ""
+  },
+  "Azure": {
+    "SignalR": {
+      "Enabled": "false"
+    }
+  }
+}
