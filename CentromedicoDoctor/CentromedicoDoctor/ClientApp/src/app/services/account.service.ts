@@ -124,7 +124,7 @@ export class AccountService {
   }
 
   isUserDocIdentConfirm(): Observable<boolean> {
-    return this.http.get<boolean>(this.baseUrl + "api/account/isUserDocIdentConfirm")
+    return this.http.get<boolean>(this.baseUrl + "api/account/isUserDocIdentConfirmDoctor")
       .pipe(map((result: boolean) => {
 
         return result;
@@ -182,7 +182,7 @@ export class AccountService {
   }
 
   SetUserInfo(userInfo: UserInfo): Observable<boolean> {
-    return this.http.post<boolean>(this.baseUrl + "api/account/setUserInfo", userInfo)
+    return this.http.post<boolean>(this.baseUrl + "api/account/setUserInfoDoctor", userInfo)
       .pipe(
         map(() => true),
         catchError(err => {
@@ -251,7 +251,7 @@ export class AccountService {
 
 
   setUserInfo(userInfo: UserInfo): Observable<boolean> {
-    return this.http.post<boolean>(this.baseUrl + "api/account/setUserInfo", userInfo)
+    return this.http.post<boolean>(this.baseUrl + "api/account/setUserInfoDoctor", userInfo)
       .pipe(
         map(() => true),
         catchError(err => {

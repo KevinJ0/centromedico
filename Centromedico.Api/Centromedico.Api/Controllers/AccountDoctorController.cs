@@ -67,7 +67,7 @@ namespace CentromedicoCliente.Controllers
         /// <response code="400">La fecha suministrada no es válida.</response>
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Patient")]
         [HttpPost("[action]")]
-        public async Task<ActionResult> setUserInfoAsync(UserInfo formuser)
+        public async Task<ActionResult> setUserInfoDoctorAsync(UserInfo formuser)
         {
 
             bool result = await _accountSvc.saveUserInfoAsync(formuser);
@@ -131,7 +131,7 @@ namespace CentromedicoCliente.Controllers
         /// <response code="500">Ha ocurrido un error al tratar de hacer la solicitud.</response>
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Patient")]
         [HttpGet("[action]")]
-        public async Task<bool> isUserDocIdentConfirmAsync()
+        public async Task<bool> isUserDocIdentConfirmDoctorAsync()
         {
 
             try
