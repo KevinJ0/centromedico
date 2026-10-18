@@ -83,8 +83,8 @@
   --color-danger: #ef4444;
   --color-info: #3b82f6;
   --color-success: #46a35e;
-  --font-display: "Plus Jakarta Sans", "Montserrat", sans-serif;
-  --font-body: "Roboto", "Helvetica Neue", sans-serif;
+  --font-display: "Segoe UI", "Helvetica Neue", sans-serif;
+  --font-body: "Segoe UI", "Helvetica Neue", sans-serif;
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 12px;
@@ -127,11 +127,23 @@ body {
 
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: "Segoe UI", "Helvetica Neue", sans-serif;
 }
 
-/* this is to avoid nav and footer's main */
-main main {
+:focus-visible {
+  outline: 2px solid var(--primary-color, #186cb2);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+a:focus-visible,
+button:focus-visible,
+.mat-button:focus-visible,
+.mat-flat-button:focus-visible,
+.mat-stroked-button:focus-visible {
+  outline: 2px solid var(--primary-color, #186cb2);
+  outline-offset: 2px;
+}
   max-width: 1360px;
   margin: auto;
   padding: 3rem clamp(0.5rem, 2vw, 4rem);

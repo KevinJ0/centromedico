@@ -28,7 +28,7 @@ html,
 body {
   height: 100%;
   margin: 0;
-  font-family: 'Roboto', "Helvetica Neue", sans-serif;
+  font-family: "Segoe UI", "Helvetica Neue", sans-serif;
   background-color: var(--bg-color);
   color: var(--text-primary);
   box-sizing: border-box;
@@ -57,7 +57,11 @@ p {
   background: #a0aec0;
 }
 
-a {
+:focus-visible {
+  outline: 2px solid var(--primary-color, #067ACC);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
   color: var(--primary-color);
   text-decoration: none;
   transition: color 0.2s;
