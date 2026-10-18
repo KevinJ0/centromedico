@@ -1,116 +1,112 @@
-<main>
+<main class="auth-page">
+  <div class="auth-card">
+    <div class="auth-brand">
+      <img src="../../../assets/imgs/logo-alone.png" alt="Hospital Salvador" class="auth-logo" loading="lazy" width="64" height="64">
+      <h1 class="auth-title">Hospital Salvador</h1>
+      <p class="auth-subtitle">Accede a tu cuenta para gestionar tus citas</p>
+    </div>
 
-  <div class="content-wrapper">
+    <mat-tab-group class="auth-tabs" [selectedIndex]="indiceActivo" animationDuration="200ms">
+      <mat-tab label="Acceso">
+        <div class="auth-form-wrap" *ngIf="!loading else load" data-aos="fade-up">
+          <form [formGroup]="loginFormGroup" (ngSubmit)="Login()" class="auth-form">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Correo electrónico</mat-label>
+              <mat-icon matPrefix>mail_outline</mat-icon>
+              <input type="email" matInput formControlName="loginEmailControl" [errorStateMatcher]="matcher"
+                placeholder="tu@correo.com" autocomplete="email">
+              <mat-error *ngIf="loginFormGroup.get('loginEmailControl').hasError('email') && !loginFormGroup.get('loginEmailControl').hasError('required')">
+                Ingresa un correo válido
+              </mat-error>
+              <mat-error *ngIf="loginFormGroup.get('loginEmailControl').hasError('required')">
+                El correo es <strong>requerido</strong>
+              </mat-error>
+            </mat-form-field>
 
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Contraseña</mat-label>
+              <mat-icon matPrefix>lock_outline</mat-icon>
+              <input type="password" matInput formControlName="loginPasswordControl" [errorStateMatcher]="matcher"
+                placeholder="••••••••" autocomplete="current-password">
+              <mat-error *ngIf="loginFormGroup.get('loginPasswordControl').hasError('required')">
+                La contraseña es <strong>requerida</strong>
+              </mat-error>
+            </mat-form-field>
 
-    <mat-card>
-      <div class="flex-container">
-        <img class="logo" *ngIf="!loading" src="../../../assets/imgs/logo-alone.png" alt="" loading="lazy">
+            <div class="auth-row">
+              <a href="javascript:void(0)" class="auth-link">Olvidé mi contraseña</a>
+            </div>
 
+            <button type="submit" mat-flat-button color="primary" class="auth-submit" [disabled]="loading">
+              <mat-icon aria-hidden="true">login</mat-icon>
+              Entrar
+            </button>
 
-        <mat-tab-group class="invisible-tabs" [selectedIndex]="indiceActivo">
-          <mat-tab label="Acceso">
-            <mat-card-content class="acceso" *ngIf="!loading else load" data-aos="fade-up">
-              <form [formGroup]="loginFormGroup" (ngSubmit)="Login()" class="login-form">
-                <mat-card-header>
-                  <mat-card-title>Acceso</mat-card-title>
-                </mat-card-header>
+            <p class="auth-switch">
+              ¿No tienes cuenta?
+              <a class="auth-link-strong" (click)="cambiarTab(1)">Regístrate</a>
+            </p>
+          </form>
+        </div>
+      </mat-tab>
 
-                <mat-form-field appearance="outline" class="email">
-                  <mat-label>Correo</mat-label>
-                  <mat-icon matSuffix>account_circle</mat-icon>
-                  <input type="email" matInput formControlName="loginEmailControl" [errorStateMatcher]="matcher"
-                    placeholder="Ingrese su correo">
-                  <mat-error
-                    *ngIf="loginFormGroup.get('loginEmailControl').hasError('email') && !loginFormGroup.get('loginEmailControl').hasError('required')">
-                    Por favor ingrese un correo válido
-                  </mat-error>
-                  <mat-error *ngIf="loginFormGroup.get('loginEmailControl').hasError('required')">
-                    Correo <strong>requerido</strong>
-                  </mat-error>
-                </mat-form-field>
+      <mat-tab label="Registro">
+        <div class="auth-form-wrap" *ngIf="!loading else load" data-aos="fade-up">
+          <form [formGroup]="signupFormGroup" (ngSubmit)="Signup()" class="auth-form">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Correo electrónico</mat-label>
+              <mat-icon matPrefix>mail_outline</mat-icon>
+              <input type="email" matInput formControlName="signupEmailControl" [errorStateMatcher]="matcher"
+                placeholder="tu@correo.com" autocomplete="email">
+              <mat-error *ngIf="signupFormGroup.get('signupEmailControl').hasError('email') && !signupFormGroup.get('signupEmailControl').hasError('required')">
+                Ingresa un correo válido
+              </mat-error>
+              <mat-error *ngIf="signupFormGroup.get('signupEmailControl').hasError('required')">
+                El correo es <strong>requerido</strong>
+              </mat-error>
+            </mat-form-field>
 
-                <mat-form-field appearance="outline" class="password">
-                  <mat-label>Contraseña</mat-label>
-                  <mat-icon matSuffix>password</mat-icon>
-                  <input type="password" matInput formControlName="loginPasswordControl" [errorStateMatcher]="matcher"
-                    placeholder="Ingrese su contraseña">
-                  <mat-error *ngIf="loginFormGroup.get('loginPasswordControl').hasError('required')">
-                    Contraseña <strong>requerida</strong>
-                  </mat-error>
-                </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Contraseña</mat-label>
+              <mat-icon matPrefix>lock_outline</mat-icon>
+              <input matInput type="password" placeholder="Mínimo 5 caracteres" formControlName="password"
+                (input)="onPasswordInput()" autocomplete="new-password">
+              <mat-error *ngIf="signupFormGroup.get('password').hasError('required')">
+                La contraseña es <strong>requerida</strong>
+              </mat-error>
+            </mat-form-field>
 
-                <h5 class="forgotpass"><a href="javascript:void(0)">Olvidé mi contraseña</a></h5>
-                <button type="submit" mat-flat-button color="primary">
-                  <span>Entrar</span>
-                </button>
-                <p class="question">¿No tienes cuenta? <a class="question-action" (click)="cambiarTab(1)">Registrate</a>
-                </p>
-              </form>
-            </mat-card-content>
-          </mat-tab>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Confirmar contraseña</mat-label>
+              <mat-icon matPrefix>lock_outline</mat-icon>
+              <input matInput type="password" placeholder="Repite tu contraseña" formControlName="password2"
+                (input)="onPasswordInput()" autocomplete="new-password">
+              <mat-error *ngIf="signupFormGroup.get('password2').hasError('required')">
+                Confirma tu contraseña
+              </mat-error>
+              <mat-error *ngIf="signupFormGroup.get('password2').invalid && !signupFormGroup.get('password2').hasError('required')">
+                Las contraseñas <strong>no coinciden</strong>
+              </mat-error>
+            </mat-form-field>
 
-          <mat-tab>
-            <mat-card-content class="registro" *ngIf="!loading else load" class="registro" data-aos="fade-up">
+            <button type="submit" mat-flat-button color="primary" class="auth-submit" [disabled]="loading">
+              <mat-icon aria-hidden="true">person_add</mat-icon>
+              Crear cuenta
+            </button>
 
-              <form [formGroup]="signupFormGroup" (ngSubmit)="Signup()" class="signup-form">
-                <mat-card-header>
-                  <mat-card-title>Registro</mat-card-title>
-                </mat-card-header>
-
-                <mat-form-field appearance="outline" class="email">
-                  <mat-label>Correo</mat-label>
-                  <mat-icon matSuffix>account_circle</mat-icon>
-                  <input type="email" matInput formControlName="signupEmailControl" [errorStateMatcher]="matcher"
-                    placeholder="Ingrese su correo">
-                  <mat-error
-                    *ngIf="signupFormGroup.get('signupEmailControl').hasError('email') && !signupFormGroup.get('signupEmailControl').hasError('required')">
-                    Por favor ingrese un correo válido
-                  </mat-error>
-                  <mat-error *ngIf="signupFormGroup.get('signupEmailControl').hasError('required')">
-                    Correo <strong>requerido</strong>
-                  </mat-error>
-                </mat-form-field>
-
-                <mat-form-field appearance="outline">
-                  <mat-icon matSuffix>password</mat-icon>
-                  <input matInput type="password" placeholder="Contraseña" formControlName="password"
-                    (input)="onPasswordInput()">
-                  <mat-error *ngIf="signupFormGroup.get('password').hasError('required')">Contraseña
-                    <strong>requerida</strong></mat-error>
-                </mat-form-field>
-
-                <mat-form-field appearance="outline">
-                  <mat-icon matSuffix>password</mat-icon>
-                  <input matInput type="password" placeholder="Confirme contraseña" formControlName="password2"
-                    (input)="onPasswordInput()">
-                  <mat-error *ngIf="signupFormGroup.get('password2').hasError('required')">Por favor
-                    <strong>confirme</strong> su contraseña
-                  </mat-error>
-                  <mat-error
-                    *ngIf="signupFormGroup.get('password2').invalid && !signupFormGroup.get('password2').hasError('required')">
-                    Contraseñas <strong>no coinciden</strong></mat-error>
-                </mat-form-field>
-
-                <button type="submit" mat-flat-button color="primary">
-                  <span>Registrar</span>
-                </button>
-              </form>
-              <p class="question">¿Tienes cuenta? <a class="question-action" (click)="cambiarTab(0)">Accede</a></p>
-            </mat-card-content>
-          </mat-tab>
-        </mat-tab-group>
-      </div>
-
-    </mat-card>
+            <p class="auth-switch">
+              ¿Ya tienes cuenta?
+              <a class="auth-link-strong" (click)="cambiarTab(0)">Accede</a>
+            </p>
+          </form>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
   </div>
 
-
   <ng-template #load>
-    <div class="progress-content">
-      <mat-progress-spinner style="margin:auto;" [mode]="mode">
-      </mat-progress-spinner>
+    <div class="auth-loading">
+      <mat-progress-spinner [mode]="mode"></mat-progress-spinner>
     </div>
   </ng-template>
-
 </main>
