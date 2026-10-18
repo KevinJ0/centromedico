@@ -1,8 +1,8 @@
-/* ---------------------------------------------------------------------------
-   Documented spacing scale: 4-unit base.
-   Rhythm comes from choosing a step, not from inventing a value.
-   --space-1 tight grouping, --space-4 band padding, --space-7 between bands
-   --------------------------------------------------------------------------- */
+/* =========================================================================
+   Home — redesigned (Persuade mode)
+   Brand: deep medical blue (#186cb2) on white, trustworthy, accessible.
+   ========================================================================= */
+
 .home {
   --space-1: 0.25rem;
   --space-2: 0.5rem;
@@ -12,789 +12,519 @@
   --space-6: 3rem;
   --space-7: 4.5rem;
   --space-8: 6rem;
+
+  --color-primary: #186cb2;
+  --color-primary-dark: #0f4f85;
+  --color-primary-soft: rgba(24, 108, 178, 0.08);
+  --color-text: #1f2937;
+  --color-text-muted: #5b6472;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f4f7fb;
+  --color-border: rgba(24, 108, 178, 0.12);
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-pill: 999px;
+
+  --shadow-sm: 0 2px 6px rgba(15, 40, 80, 0.06);
+  --shadow-md: 0 8px 24px rgba(15, 40, 80, 0.08);
+  --shadow-lg: 0 16px 40px rgba(15, 40, 80, 0.12);
+
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur: 220ms;
+
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  color: var(--color-text);
+  line-height: 1.6;
 }
 
-/* Type rhythm: the interval above a heading always exceeds the one below it,
-   and both grow with the level, so hierarchy reads before weight does. */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  margin-top: 0;
-  margin-bottom: 0;
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .home *,
+  .home *::before,
+  .home *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
-h1 {
-  margin-block: var(--space-6) var(--space-4);
-}
-
-h2 {
-  margin-block: var(--space-6) var(--space-3);
-}
-
-h3 {
-  margin-block: var(--space-5) var(--space-2);
-}
-
-h4,
-h5,
-h6 {
-  margin-block: var(--space-4) var(--space-2);
-}
-
-/* Kept deliberately. It is load-bearing for every element that sets no explicit
-   color, and changing that is a color decision, not a layout one. Reported in
-   the handoff rather than silently altered. */
-* {
-  color: rgb(40, 40, 40);
-}
-
-
-.background {
-  margin: auto;
-  background-repeat: no-repeat;
+/* ---------- Shared section scaffolding ---------- */
+.section__inner {
   width: 100%;
-  background-size: cover;
-  background-position: center;
-  max-width: 1580px;
-  display: flex;
-  /* min-height, not height: the pitch must be able to grow this band on narrow
-     viewports instead of overflowing a fixed box. */
-  min-height: clamp(340px, 44vw, 560px);
-  position: relative;
-  flex-direction: column;
-  justify-content: center;
-  background-image: url(../../../assets/imgs/home.jpg);
-  /* Band intervals are owned by each band's own padding. No margin here, or
-     the gap to the next band doubles. */
-  margin-bottom: 0;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-7) var(--space-5);
 }
 
-.background img {
-  height: 100%;
-  width: 100%;
-  object-fit: contain;
-  max-width: 1920px;
-}
-
-.message-container {
-  padding: var(--space-5);
-  margin: var(--space-5);
-  background-color: white;
-  display: flex;
-  flex-flow: column;
-  max-width: min(30rem, calc(100% - 2 * var(--space-5)));
-  border-radius: 5px;
-}
-
-.message-container>h1 {
-  font-size: clamp(1.9rem, 5.2vw, 3rem);
-  line-height: 1.15;
-  font-weight: 400;
-  color: rgb(40, 40, 40);
-  margin-block: 0 var(--space-3);
-}
-
-
-
-.action-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-4);
-}
-
-.message-intro {
-  display: none;
-}
-
-.title {
-  font-family: "Lato", sans-serif !important;
-  font-size: clamp(2rem, 10vw, 12rem);
-  font-weight: 900;
-  color: white;
-  display: inline-block;
-  text-size-adjust: 100%;
-  transform: translateY(18%);
-}
-
-.sub-title {
-  text-size-adjust: 100%;
-  font-family: "Dancing Script", serif;
-  position: relative;
-  display: inline-block;
-  color: hsl(205, 100%, 18%);
-  font-size: clamp(1.5rem, 7vw, 4rem);
-  transform: translate(-64%, 74%);
-}
-
-/* Removed: .short-menu and .item blocks. Neither class exists in this
-   template. The .item:hover rule also referenced var(--bg-color), which is
-   never defined in :root, so that hsl() could never resolve. */
-
-/* About Section Redesign */
-.about {
-  margin: 0;
-  padding: var(--space-7) var(--main-padding);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  position: relative;
-  background: radial-gradient(circle at center, rgba(24, 108, 178, 0.03) 0%, rgba(255, 255, 255, 0) 70%);
-}
-
-.about::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 4px;
-  background: var(--primary-color);
-  border-radius: 2px;
-}
-
-.about h1 {
-  font-family: 'Playfair Display', serif;
-  /* Or system serif if not available */
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  color: var(--color-text-strong);
-  line-height: 1.3;
+.section__title {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
   font-weight: 700;
-  max-width: 1100px;
-  margin-top: 2rem;
-  letter-spacing: -0.5px;
+  line-height: 1.2;
+  color: var(--color-text);
+  margin: 0 0 var(--space-3);
+  text-wrap: balance;
 }
 
-/* Values Section Redesign */
-.our-values-section {
-  padding: var(--space-7) var(--main-padding);
-  background: var(--color-white);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.values-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  width: 100%;
-  max-width: 1400px;
-  margin-top: 3rem;
-}
-
-.value-card {
-  display: flex;
-  flex-direction: column;
-  background: white;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.06);
-  transition: all 0.4s ease-out;
-  border: 1px solid var(--color-surface-alt);
-  height: 100%;
-}
-
-.value-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.12);
-  border-color: var(--primary-color);
-}
-
-.value-image {
-  width: 100%;
-  height: 220px;
-  overflow: hidden;
-  padding: 0;
-  /* Reset padding */
-  flex-basis: auto;
-  /* Reset flex-basis */
-  max-width: none;
-  /* Reset max-width */
-}
-
-.value-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.6s ease;
-  border-radius: 0;
-  /* Full bleed image */
-  box-shadow: none;
-}
-
-.value-card:hover .value-image img {
-  transform: scale(1.1);
-}
-
-.value-content {
-  padding: var(--space-6) var(--space-5);
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
+.section__lede {
+  font-size: 1.05rem;
+  color: var(--color-text-muted);
+  max-width: 60ch;
+  margin: 0 0 var(--space-6);
 }
 
 .badge {
   display: inline-block;
-  padding: 0.5rem 1.5rem;
-  margin-bottom: 1.5rem;
-  font-size: 0.85rem;
+  padding: 0.4rem 1rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  color: var(--primary-color);
-  background-color: rgba(24, 108, 178, 0.05);
-  /* Very light primary */
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  letter-spacing: 1.5px;
-  border-radius: 50px;
-  /* Pill shape */
-  border: 1px solid rgba(24, 108, 178, 0.2);
-  width: fit-content;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
-  transition: all 0.3s ease;
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  margin-bottom: var(--space-3);
 }
 
-.badge:hover {
-  background-color: var(--primary-color);
-  color: white;
-  border-color: var(--primary-color);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(24, 108, 178, 0.2);
+/* ---------- HERO ---------- */
+.hero {
+  position: relative;
+  min-height: clamp(480px, 70vh, 680px);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: var(--color-surface-alt);
 }
 
-.value-subtitle {
-  font-size: 0.8rem;
+.hero__media {
+  position: absolute;
+  inset: 0;
+  background-image: url(../../../assets/imgs/home.jpg);
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.02);
+}
+
+.hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    rgba(10, 30, 60, 0.78) 0%,
+    rgba(24, 108, 178, 0.55) 45%,
+    rgba(24, 108, 178, 0.15) 100%
+  );
+}
+
+.hero__content {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--space-7) var(--space-5);
+  color: #fff;
+}
+
+.hero__badge {
+  display: inline-block;
+  padding: 0.4rem 1rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  color: var(--primary-color);
-  margin-bottom: 0.5rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  letter-spacing: 2px;
-  background: rgba(24, 108, 178, 0.1);
-  padding: 4px 10px;
-  border-radius: 4px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: var(--radius-pill);
+  backdrop-filter: blur(6px);
+  margin-bottom: var(--space-4);
 }
 
-.value-title {
-  font-size: 1.75rem;
+.hero__title {
+  font-size: clamp(2.25rem, 6vw, 3.75rem);
   font-weight: 800;
-  color: var(--color-text-strong);
-  margin: 0.5rem 0 1rem 0;
-}
-
-.gray-paragraph {
-  font-size: 1rem;
-  color: var(--color-text-muted);
-  line-height: 1.7;
-  margin: 0;
-}
-
-
-/* Removed: .alternate-layout, .default-bg, .alternate-bg, .card-separator.
-   None of these classes exist in this template. */
-
-/* --- MEDIA QUERIES (PARA MÓVILES) --- */
-@media (max-width: 768px) {
-  .our-values-section {
-    padding: var(--space-6) var(--space-4);
-  }
-
-  .value-card {
-    flex-direction: column;
-    min-height: auto;
-    margin: 15px 0;
-    border-radius: 12px;
-  }
-
-  .value-content {
-    padding: 25px 20px;
-    order: 2;
-  }
-
-  .value-image {
-    flex-basis: 100%;
-    max-width: 100%;
-    min-height: 180px;
-    order: 1;
-    padding: 20px;
-  }
-
-  .value-image img {
-    border-radius: 8px;
-  }
-
-  .value-title {
-    font-size: 1.5rem;
-  }
-
-  .value-subtitle {
-    font-size: 0.75rem;
-  }
-
-  .gray-paragraph {
-    font-size: 0.95rem;
-  }
-}
-
-
-/* --- SECCIÓN PRINCIPAL Y TEXTOS INTRODUCTORIOS --- */
-
-
-.doctores-container {
-  padding: var(--space-7) var(--main-padding);
-  background: linear-gradient(180deg, #f8fbff 0%, var(--color-white) 100%);
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 0;
-}
-
-.doctores-container .gray-paragraph {
-  text-align: center;
-  max-width: 45rem;
-  font-size: 1.05rem;
-  line-height: 1.7;
-  color: var(--color-text-muted);
-}
-
-.doctores-container .cards-container {
-  display: flex;
-  flex-direction: row;
-  /* width:100% makes this a definite axis, so max-width centres it and the
-     quote block below can align to the same left/right edges. Without it the
-     band renders three unrelated measures (45rem lede, 1300px grid, 1580px
-     quote) that never share an edge. */
-  width: 100%;
-  margin-bottom: var(--space-7);
-  align-content: center;
-  align-items: stretch;
-  flex-wrap: wrap;
-  margin-top: var(--space-6);
-  justify-content: center;
-  gap: var(--space-4);
-  max-width: 1300px;
-}
-
-.cards-container .card-doctor {
-  width: 280px;
-  max-width: 100%;
-  background-color: white;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  /* Sibling rhythm lives on the container: the card is already a column flex,
-     so gap states the relationship once instead of a child-by-child margin. */
-  gap: var(--space-3);
-  border-radius: 16px;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  padding: var(--space-5) var(--space-4);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-  transition: all 0.3s ease;
-}
-
-.card-doctor:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
-}
-
-/* Scoped heading reset: without it the page-level h4/h5/h6 rule
-   (margin-block: var(--space-4) var(--space-2)) leaks into the card and
-   swamps the gap rhythm with 1.5rem above every label. */
-.card-doctor h5,
-.card-doctor h6 {
-  margin: 0;
-}
-
-.card-doctor img {
-  width: 140px;
-  height: 140px;
-  object-fit: cover;
-  border-radius: 100%;
-  border: 2px solid var(--color-white);
-  transition: transform 0.3s ease;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-}
-
-.card-doctor:hover img {
-  transform: scale(1.05);
-  border-color: var(--primary-color);
-}
-
-.name-doctor {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--color-text-strong);
-}
-
-.highlight {
-  font-weight: 600;
-  font-size: 0.9rem;
-  color: var(--primary-color);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-
-.doctor-recomendation-container {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: flex-end;
-  height: fit-content;
-  /* Definite width so the 65%/35% children below resolve against a real box.
-     At width:auto they resolve against an indefinite, image-driven box, which
-     made the quote's proportions depend on the PNG's intrinsic size. */
-  width: 100%;
-  max-width: 1300px;
-}
-
-
-.doctor-recomendation-container .left-content {
-  width: 65%;
-  /* Aligned to the band's own left edge: the 4rem indent it carried put the
-     quote a full main-padding out of line with the roster grid above it. */
-  margin: 0 0 var(--space-3) 0;
-  text-align: left;
-  /* min-height, not height: space-between still parks .details at the bottom
-     of the box, but a longer quote now grows the block instead of overflowing
-     a fixed 300px. */
-  min-height: 300px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-/* margin:0 reclaims the page-level h2 margin-block. Without it the quote
-   inherited space-6 above and space-3 below, stacking an unowned 3rem onto the
-   space-7 gap the grid already set and landing the real interval on 7.5rem —
-   a value that exists on no scale. */
-.left-content>.recomendation {
-  margin: 0;
-  font-size: 2rem;
-  font-weight: 400;
-}
-
-.left-content .details {
-  text-align: left;
-}
-
-.left-content .details .name {
-
-  font-weight: 600;
-  margin: 0;
-}
-
-/* 10px sat half the band's own label step and below every other type size in
-   this file; 0.8rem matches the subordinate-label step .value-subtitle uses. */
-.details .expertise {
-  font-size: 0.8rem;
-  font-weight: 400;
-  display: inline;
-}
-
-.doctor-recomendation-container .right-content {
-  width: 35%;
-}
-
-.right-content img {
-  width: 100%;
-
-}
-
-/* Band headings are peers of .about h1: same level, same rhythm, same face.
-   This selector previously had NO rule at all, so the directory heading fell
-   back to the browser default h2: visibly smaller and lighter than the .about
-   statement sitting one band above it, inverting the hierarchy. */
-.section-title {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(1.75rem, 4vw, 2.75rem);
-  line-height: 1.25;
-  font-weight: 700;
-  color: var(--color-text-strong);
-  letter-spacing: -0.5px;
-  max-width: 24ch;
-  margin: 0 auto var(--space-3);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin: 0 0 var(--space-4);
+  color: #fff;
+  max-width: 16ch;
   text-wrap: balance;
 }
 
-/* Removed: .directory-cta. No element carries it — the roster's "Ver
-   directorio" button was dropped in the content pass, and the rule was
-   orphaned by that same change. */
+.hero__lede {
+  font-size: clamp(1rem, 1.6vw, 1.2rem);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+  max-width: 52ch;
+  margin: 0 0 var(--space-6);
+}
 
-.queue-section {
-  /* Top spacing is owned by .doctores-container's bottom padding: the queue
-     card belongs to the same band as the directory it belongs with. */
-  padding: 0 var(--main-padding) var(--space-7);
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+}
+
+.hero__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.85rem 1.6rem !important;
+  font-weight: 600;
+  border-radius: var(--radius-md) !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+
+.hero__cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+}
+
+.hero__cta-secondary {
+  color: #fff !important;
+  border-color: rgba(255, 255, 255, 0.6) !important;
+  padding: 0.85rem 1.6rem !important;
+  border-radius: var(--radius-md) !important;
+}
+
+.hero__trust {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4) var(--space-5);
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.hero__trust li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.hero__trust mat-icon {
+  font-size: 1.1rem;
+  width: 1.1rem;
+  height: 1.1rem;
+  color: #7dd3fc;
+}
+
+/* ---------- ABOUT ---------- */
+.about {
+  background: var(--color-surface);
+  text-align: center;
+}
+
+/* ---------- VALUES ---------- */
+.values {
+  background: var(--color-surface-alt);
+}
+
+.values__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-5);
+  margin-top: var(--space-5);
+}
+
+.value-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+  display: flex;
+  flex-direction: column;
+}
+
+.value-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-md);
+}
+
+.value-card__media {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: var(--color-surface-alt);
+}
+
+.value-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s var(--ease);
+}
+
+.value-card:hover .value-card__media img {
+  transform: scale(1.06);
+}
+
+.value-card__body {
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  flex: 1;
+}
+
+.value-card__kicker {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+.value-card__title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--color-text);
+}
+
+.value-card__text {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ---------- DOCTORS ---------- */
+.doctors {
+  background: var(--color-surface);
+}
+
+.doctors__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--space-4);
+  margin-top: var(--space-5);
+  margin-bottom: var(--space-6);
+}
+
+.doctor-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  text-align: center;
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.doctor-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.doctor-card img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--color-surface);
+  box-shadow: 0 0 0 2px var(--color-primary-soft);
+  transition: box-shadow var(--dur) var(--ease);
+}
+
+.doctor-card:hover img {
+  box-shadow: 0 0 0 3px var(--color-primary);
+}
+
+.doctor-card__name {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--color-text);
+}
+
+.doctor-card__role {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-primary);
+}
+
+.doctors__cta {
   display: flex;
   justify-content: center;
+  margin-top: var(--space-2);
 }
 
-.queue-card {
-  width: 100%;
-  max-width: 38rem;
-  background-color: var(--color-white);
-  border: 1px solid rgba(24, 108, 178, 0.18);
-  border-radius: 14px;
-  padding: 2rem;
-  text-align: left;
+/* ---------- TESTIMONIAL ---------- */
+.testimonial {
+  background: var(--color-surface-alt);
 }
 
-.queue-card-head {
+.testimonial__inner {
+  max-width: 900px;
+  text-align: center;
+}
+
+.testimonial__quote {
+  font-size: clamp(1.25rem, 2.5vw, 1.6rem);
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--color-text);
+  font-style: italic;
+  margin: 0 0 var(--space-5);
+  quotes: "“" "”";
+}
+
+.testimonial__quote::before {
+  content: open-quote;
+  color: var(--color-primary);
+  font-size: 2em;
+  line-height: 0;
+  vertical-align: -0.35em;
+  margin-right: 0.1em;
+}
+
+.testimonial__author {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.testimonial__name {
+  font-weight: 700;
+  margin: 0;
+  color: var(--color-text);
+}
+
+.testimonial__role {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* ---------- QUEUE ---------- */
+.queue {
+  background: var(--color-surface);
+}
+
+.queue__card {
+  max-width: 640px;
+  margin: 0 auto;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-sm);
+}
+
+.queue__head {
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  margin-bottom: 1rem;
+  margin-bottom: var(--space-3);
 }
 
-.queue-status-icon {
+.queue__head mat-icon {
+  color: var(--color-primary);
   font-size: 1.75rem;
   width: 1.75rem;
   height: 1.75rem;
-  color: var(--primary-color);
 }
 
-.queue-title {
-  margin: 0;
-  font-size: 1.5rem;
+.queue__title {
+  font-size: 1.35rem;
   font-weight: 700;
-  color: var(--color-text-strong);
-}
-
-.queue-message {
-  margin-bottom: 1.5rem;
-}
-
-.queue-actions {
-  display: flex;
-  gap: 1rem;
-}
-
-/* Removed: .doctor-recomendation-container, .left-content, .right-content,
-   .details, .expertise, the whole .preguntas-respuestas-container FAQ, and the
-   mat-panel / mat-expansion-panel rules that styled its accordion. None of
-   these elements exist in this template any more. */
-
-
-
-.location-bg {
-  width: 100%;
-  height: 250px;
-  background-position: left center;
-  background-size: cover;
-  background-image: url(../../../assets/imgs/location-search.jpg);
-}
-
-.location-wrapper {
-  margin: 0 0 var(--space-7);
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  flex-direction: row;
-  align-content: center;
-
-  background: #F7F7F7;
-}
-
-.location-content {
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.content-wrapper {
-  padding: 0 clamp(0.5rem, 4vw, 6rem);
-}
-
-.location-text p {
-  margin-top: 0;
-}
-
-.gps-icon {
-  height: 3rem;
-  width: 3rem;
-  font-size: 3rem;
-  margin: 5px;
-  color: var(--primary-color);
-}
-
-.location-title {
-  color: var(--primary-color);
-  font-weight: 400;
-  display: flex;
-  align-items: center;
   margin: 0;
-  font-size: clamp(1.2rem, 5vw, 1.5rem);
+  color: var(--color-text);
 }
 
-.feature {
-  width: 100%;
-  height: 100%;
+.queue__message {
+  color: var(--color-text-muted);
+  margin: 0 0 var(--space-4);
+  line-height: 1.6;
 }
 
-app-barner {}
-
-/* Removed: @media (max-width: 500px) styling the hero image node. The hero
-   uses a CSS background-image; there is no image element inside .background,
-   so it never applied. It implied a mobile hero treatment that does not exist. */
-
-@media screen and (max-width: 680px) {
-
-  .location-bg {
-    background-image: url(../../../assets/imgs/location-search-mobile.jpg);
-    height: 150px;
-    background-position: center;
-  }
-
-  .content-wrapper {
-    text-align: center;
-    padding: 1rem clamp(0.5rem, 4vw, 6rem);
-  }
-
-  .location-wrapper {
-    flex-direction: column;
-    align-content: center;
-    align-items: center;
-  }
-
-  .location-content {
-    order: 2;
-    justify-content: center;
-  }
-
-  .location-title {
-    justify-content: center;
-    width: 100%;
-  }
+/* ---------- LOCATION ---------- */
+.location {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 360px;
+  background: var(--color-surface-alt);
 }
 
+.location__media {
+  background-image: url(../../../assets/imgs/location-search.jpg);
+  background-size: cover;
+  background-position: center;
+}
 
-/* Removed: two duplicate 880px blocks.
-   One carried the last transform: scale(0.7) rung on .message-container.
-   The other targeted .short-menu and .our-values .value-*; neither class
-   exists in this template. Reflow is handled at 850px. */
+.location__content {
+  display: flex;
+  align-items: center;
+  padding: var(--space-6) var(--space-5);
+}
 
-/* Removed: @media (max-width: 1040px). Every selector in it targeted markup
-   that does not exist: .about-content, .about p and .about h3 (that band
-   contains only a badge and an h1), and .preguntas-respuestas-container from
-   the FAQ. The doctor roster was restored later and now owns the 1040px block
-   further down; this comment no longer refers to it. */
+.location__title {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: clamp(1.35rem, 3vw, 1.75rem);
+  font-weight: 700;
+  color: var(--color-primary);
+  margin: 0 0 var(--space-3);
+}
 
-/* ---------------------------------------------------------------------------
-   Reflow, not scale.
+.location__title mat-icon {
+  font-size: 1.75rem;
+  width: 1.75rem;
+  height: 1.75rem;
+}
 
-   The pitch used to be transform: scale()d through four descending breakpoints
-   and then set display:none below 850px, which deleted the headline, the
-   description and BOTH calls to action on every phone, leaving only the
-   wordmark over the photo. Type is now fluid via clamp(), so this band simply
-   reflows and the conversion path survives every viewport.
-   --------------------------------------------------------------------------- */
-@media screen and (max-width: 1040px) {
-  .doctor-recomendation-container {
-    flex-direction: column;
-    height: fit-content;
-    align-items: center;
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 900px) {
+  .location {
+    grid-template-columns: 1fr;
   }
-
-  /* One rule, not two: this selector was declared twice back to back. */
-  .doctor-recomendation-container .left-content {
-    order: 2;
-    text-align: center;
-    margin: 0 0 var(--space-3);
-    width: 100%;
-    /* Cancels the base min-height: 300px. `height: auto` did not, so the
-       stacked layout inherited a 300px floor it should not have. */
-    min-height: 0;
-  }
-
-  .left-content .details {
-    text-align: center;
-  }
-
-
-  .doctor-recomendation-container .right-content {
-    width: 100%;
-    /* The img is inline and capped at max-width:20rem, so in this stacked
-       layout it sat hard left while the quote above it was centred. */
-    text-align: center;
-  }
-
-  .doctor-recomendation-container .right-content img {
-    max-width: 20rem;
-  }
-
-  .doctores-container .recomendation {
-    font-size: clamp(1.2rem, 3vw, 1.5rem);
-
-  }
-
-  .doctores-container .right-content {
-    order: 1;
+  .location__media {
+    min-height: 200px;
   }
 }
 
-@media screen and (max-width: 850px) {
-
-  .message-container {
-    margin: var(--space-4);
-    padding: var(--space-4);
-    text-align: center;
-    align-items: center;
-  }
-
-  .message-container>h1 {
-    font-size: clamp(1.6rem, 7vw, 2.2rem);
-  }
-
-  .action-buttons {
-    justify-content: center;
-  }
-
-  /* The wordmark becomes a secondary mark BENEATH the pitch, never a
-     replacement for it. */
-  .message-intro {
-    display: flex;
-    justify-content: center;
-    padding: 0 var(--space-4) var(--space-5);
-  }
-
-  /* Keep the interlock. These transforms are percentages of each element's own
-     box, so they travel with the type instead of drifting apart. */
-  .title {
-    font-size: clamp(2.5rem, 13vw, 5rem);
-  }
-
-  .sub-title {
-    font-size: clamp(1.5rem, 8vw, 2.5rem);
-  }
-}
-
-@media screen and (max-width: 600px) {
-  /* Band rhythm still owns the vertical interval here; only the inline padding
-     tightens for a phone. Re-introducing a margin here would double the gap. */
-  .about {
+@media (max-width: 720px) {
+  .section__inner {
     padding: var(--space-6) var(--space-4);
   }
-
-  /* Deliberately no font-size/font-weight override. The clamp() above already
-     resolves to a legible size at this width; the old fixed 1.3rem/600 override
-     made this band heading render smaller and lighter than the paragraph under
-     it, inverting the hierarchy on exactly the screens that need it most. */
-  .about h1 {
-    margin-top: var(--space-3);
+  .hero__content {
+    padding: var(--space-6) var(--space-4);
+  }
+  .hero__title {
+    max-width: 100%;
+  }
+  .doctors__grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   }
 }
-.leftRightBlock {
-  display: block;
-  width: 100%;
+
+@media (max-width: 480px) {
+  .hero__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .hero__cta,
+  .hero__cta-secondary {
+    justify-content: center;
+  }
+  .values__grid {
+    grid-template-columns: 1fr;
+  }
 }
-
-.cmp { display: block; }
-.cmp-title { display: block; }
-.contentblocktext { display: block; }
-.callToAction { display: flex; gap: var(--space-2); flex-wrap: wrap; }
-
