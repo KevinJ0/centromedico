@@ -5,6 +5,9 @@
 
 mat-card {
   margin-bottom: clamp(1rem, 7vh, 3rem);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(15, 40, 80, 0.08);
+  border: 1px solid rgba(24, 108, 178, 0.1);
 }
 
 mat-form-field {
