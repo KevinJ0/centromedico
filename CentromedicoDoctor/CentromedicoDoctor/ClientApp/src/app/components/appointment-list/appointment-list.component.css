@@ -135,22 +135,39 @@ th {
   position: relative;
 }
 
-.done {
-  padding: 4px;
-  font-size: small;
-  border-radius: 5px;
-  color: white;
-  background-color: var(--primary-color);
+.filter {
+  border-radius: 16px !important;
+  box-shadow: 0 8px 24px rgba(15, 40, 80, 0.08) !important;
+  border: 1px solid rgba(24, 108, 178, 0.1) !important;
+  margin-bottom: 1.5rem;
+}
 
+.container-table {
+  margin-top: 2rem;
+  position: relative;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(15, 40, 80, 0.08);
+  border: 1px solid rgba(24, 108, 178, 0.1);
+  overflow: hidden;
+}
+
+.done {
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 999px;
+  color: #fff;
+  background-color: #46a35e;
 }
 
 .undone {
-  padding: 4px;
-  font-size: small;
-  border-radius: 5px;
-  color: white;
-  background-color: #ff00008c;
-
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 999px;
+  color: #fff;
+  background-color: #ef4444;
 }
 
 table {
