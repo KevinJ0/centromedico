@@ -1,6 +1,14 @@
 .title-container {
   margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border, #e2e8f0);
+}
 
+.title-container .title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary, #1a202c);
+  margin: 0 0 0.5rem;
 }
 
 h3 {
