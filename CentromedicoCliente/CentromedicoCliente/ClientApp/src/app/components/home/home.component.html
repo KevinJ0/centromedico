@@ -187,23 +187,21 @@
   </section>
 
   <!-- ============ TESTIMONIAL ============ -->
-  <section class="testimonial" aria-labelledby="testimonial-title">
-    <div class="section__inner testimonial__inner">
-      <div class="testimonial__media">
-        <img src="../../../assets/imgs/experto-recomendacion.png" alt="Mario Beltré, nutricionista experto" loading="lazy" width="280" height="320">
-      </div>
-      <div class="testimonial__body">
-        <blockquote class="testimonial__quote">
-          “Una dieta equilibrada, rica en alimentos naturales, es fundamental para mantener una buena salud y
-          bienestar, además de ayudar a prevenir enfermedades crónicas.”
-        </blockquote>
-        <div class="testimonial__author">
-          <p class="testimonial__name">Mario Beltré</p>
-          <p class="testimonial__role">Nutricionista experto</p>
-        </div>
+  <div class="doctor-recomendation-container" data-aos="fade-up">
+    <div class="left-content">
+      <h2 data-aos="fade-right" class="recomendation">“Una dieta equilibrada, rica en alimentos naturales, es
+        fundamental para mantener una buena salud y
+        bienestar,
+        además de ayudar a prevenir enfermedades crónicas.”</h2>
+      <div data-aos="fade-right" class="details">
+        <p class="name">Mario Beltré</p>
+        <p class="expertise gray-paragraph">Nutricionita Experto</p>
       </div>
     </div>
-  </section>
+    <div data-aos="fade-left" class="right-content">
+      <img src="../../../assets/imgs/experto-recomendacion.png" alt="Imagen de doctor" loading="lazy">
+    </div>
+  </div>
 
   <!-- ============ QUEUE STATUS ============ -->
   <section class="queue" aria-labelledby="queue-title">
@@ -237,6 +235,81 @@
         </p>
         <a mat-flat-button color="primary" [routerLink]="['/ubicacion']">Ver ubicaciones</a>
       </div>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section class="contact" aria-labelledby="contact-title">
+    <div class="section__inner">
+      <span class="badge">Contacto</span>
+      <h2 id="contact-title" class="section__title">Contáctanos</h2>
+      <p class="section__lede">
+        Estamos aquí para ayudarte. Comunícate con nosotros por cualquiera de nuestros canales.
+      </p>
+
+      <div class="contact__grid">
+        <div class="contact__card">
+          <mat-icon aria-hidden="true">location_on</mat-icon>
+          <h3>Dirección</h3>
+          <p>Av. Gregorio Luperón, La Romana 22000</p>
+        </div>
+        <div class="contact__card">
+          <mat-icon aria-hidden="true">phone</mat-icon>
+          <h3>Teléfono</h3>
+          <p>809-550-5565</p>
+        </div>
+        <div class="contact__card">
+          <mat-icon aria-hidden="true">email</mat-icon>
+          <h3>Email</h3>
+          <p>info@hospitalsalvador.com</p>
+        </div>
+        <div class="contact__card">
+          <mat-icon aria-hidden="true">schedule</mat-icon>
+          <h3>Horario</h3>
+          <p>Lun - Vie: 7:00 a.m. - 10:00 p.m.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="faq" aria-labelledby="faq-title">
+    <div class="section__inner">
+      <span class="badge">Preguntas Frecuentes</span>
+      <h2 id="faq-title" class="section__title">¿Tienes dudas?</h2>
+      <p class="section__lede">
+        Aquí respondemos las preguntas más comunes de nuestros pacientes.
+      </p>
+
+      <mat-accordion class="faq__accordion" multi>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>¿Cómo puedo agendar una cita?</mat-panel-title>
+          </mat-expansion-panel-header>
+          <p>Puedes agendar tu cita desde el directorio médico. Selecciona un doctor, elige el servicio, la fecha y hora, y completa tus datos. Recibirás un ticket de confirmación.</p>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>¿Qué seguros aceptan?</mat-panel-title>
+          </mat-expansion-panel-header>
+          <p>Aceptamos la mayoría de los seguros médicos. Durante el proceso de agendamiento puedes seleccionar tu seguro para calcular la cobertura.</p>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>¿Puedo cancelar o reprogramar mi cita?</mat-panel-title>
+          </mat-expansion-panel-header>
+          <p>Sí, desde "Mis Citas" puedes ver y gestionar tus citas programadas, incluyendo reprogramar o cancelar.</p>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>¿Dónde están ubicados?</mat-panel-title>
+          </mat-expansion-panel-header>
+          <p>Tenemos ubicaciones en todo el territorio nacional. Visita la sección de Ubicaciones para encontrar el centro más cercano a ti.</p>
+        </mat-expansion-panel>
+      </mat-accordion>
     </div>
   </section>
 
