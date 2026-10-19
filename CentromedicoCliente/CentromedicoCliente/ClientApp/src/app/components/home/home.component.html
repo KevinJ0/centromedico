@@ -5,7 +5,6 @@
     <div class="hero__overlay"></div>
 
     <div class="hero__content">
-      <span class="hero__badge">Centro Médico Salvador</span>
       <h1 id="hero-title" class="hero__title">
         Tu salud, en las mejores manos
       </h1>
@@ -34,34 +33,40 @@
   <!-- ============ ABOUT ============ -->
   <section class="about" aria-labelledby="about-title">
     <div class="about__inner">
-      <div class="about__media">
-        <img src="../../../assets/imgs/hospital_front.jpg" alt="Fachada del Hospital Salvador" loading="lazy" width="600" height="400">
-        <div class="about__badge-float">
+      <div class="about__media" data-aos="fade">
+        <span class="about__media-frame" aria-hidden="true"></span>
+        <figure class="about__media-main">
+          <img src="../../../assets/imgs/hospital_front.jpg" alt="Fachada del Hospital Salvador" loading="lazy" width="600" height="450">
+        </figure>
+        <img class="about__media-inset"
+             src="../../../assets/imgs/hospital_recinto.jpg"
+             alt="" aria-hidden="true" loading="lazy" width="320" height="240">
+        <p class="about__badge-float">
           <mat-icon aria-hidden="true">favorite</mat-icon>
           <span>Desde 1995 cuidando tu salud</span>
-        </div>
+        </p>
       </div>
-      <div class="about__content">
-        <span class="badge">Acerca de Salvador</span>
-        <h2 id="about-title" class="section__title">
+
+      <div class="about__content" data-aos="fade-up" data-aos-delay="120">
+        <h2 id="about-title" class="about__title">
           Cuidado compasivo para ti y tu familia
         </h2>
-        <p class="section__lede">
+        <p class="about__lede">
           Salvador nació con la misión de hacer la salud accesible para todos: conectamos el asesoramiento
           médico experto con la práctica diaria, impulsados por una pasión por el bienestar y el deseo de
           mejorar vidas.
         </p>
         <ul class="about__points">
           <li>
-            <mat-icon aria-hidden="true">check_circle</mat-icon>
+            <span class="about__point-icon"><mat-icon aria-hidden="true">check_circle</mat-icon></span>
             <span>Atención personalizada para cada paciente</span>
           </li>
           <li>
-            <mat-icon aria-hidden="true">check_circle</mat-icon>
+            <span class="about__point-icon"><mat-icon aria-hidden="true">check_circle</mat-icon></span>
             <span>Equipo médico certificado y multidisciplinario</span>
           </li>
           <li>
-            <mat-icon aria-hidden="true">check_circle</mat-icon>
+            <span class="about__point-icon"><mat-icon aria-hidden="true">check_circle</mat-icon></span>
             <span>Tecnología de vanguardia al servicio de tu salud</span>
           </li>
         </ul>
@@ -75,7 +80,6 @@
   <!-- ============ VALUES ============ -->
   <section class="values" aria-labelledby="values-title">
     <div class="section__inner">
-      <span class="badge">Nuestros Valores</span>
       <h2 id="values-title" class="section__title">Lo que nos guía</h2>
 
       <div class="values__grid">
@@ -127,7 +131,6 @@
   <!-- ============ DOCTORS ============ -->
   <section class="doctors" aria-labelledby="doctors-title">
     <div class="section__inner">
-      <span class="badge">Nuestro Equipo</span>
       <h2 id="doctors-title" class="section__title">Conoce a Nuestros Expertos</h2>
       <p class="section__lede">
         Un equipo dedicado de directores médicos y especialistas comprometidos con tu salud y bienestar.
@@ -226,7 +229,6 @@
     <div class="location__overlay"></div>
     <div class="location__content">
       <div class="section__inner">
-        <span class="badge">Ubicaciones</span>
         <h2 id="location-title" class="location__title">
           <mat-icon aria-hidden="true">room</mat-icon>
           Encuentra un centro cerca de ti
@@ -248,7 +250,7 @@
         <map-marker #marker="mapMarker" *ngFor="let hospital of markers" (mapClick)="openInfoWindow(marker)"
           [position]="hospital.position">
           <map-info-window>
-            <h4>{{ hospital.name }}</h4>
+            <h3>{{ hospital.name }}</h3>
             <p>lat: {{ hospital.position.lat }}</p>
             <p>long: {{ hospital.position.lng }}</p>
             <p>Teléfono: 809-555-8754</p>
@@ -504,7 +506,6 @@
   <!-- ============ FAQ ============ -->
   <section class="faq" aria-labelledby="faq-title">
     <div class="section__inner">
-      <span class="badge">Preguntas Frecuentes</span>
       <h2 id="faq-title" class="section__title">¿Tienes dudas?</h2>
       <p class="section__lede">
         Aquí respondemos las preguntas más comunes de nuestros pacientes.

@@ -128,7 +128,7 @@ The palette is restrained: one primary hue carries all emphasis, everything else
 - **Headline** (700, clamp(1.75rem, 4vw, 2.5rem), 1.2): Section titles. Balanced with `text-wrap: balance`.
 - **Title** (700, 1.35rem, 1.3): Card titles, subsection headers.
 - **Body** (400, 1rem, 1.6): Paragraphs, descriptions. Max ~65ch per line.
-- **Label** (700, 0.75rem, 1.4, 0.12em tracking, uppercase): Badges, kickers, metadata.
+- **Label** (700, 0.75rem, 1.4, 0.12em tracking, uppercase): Badges, metadata.
 
 ### Named Rules
 **The System-First Rule.** Use system fonts exclusively. No external font loading. Performance and native feel over decorative typography.
@@ -195,7 +195,7 @@ Borders are 1px solid with `rgba(24, 108, 178, 0.12)` (primary at low opacity). 
 
 ### Badges
 - **Style:** Pill shape, blue text on light blue background, uppercase, 0.75rem, 700 weight, 0.12em tracking.
-- **Usage:** Section labels, status indicators, trust signals.
+- **Usage:** Status indicators and trust signals. Never as a section label above a heading — let the heading carry the section.
 
 ## Do's and Don'ts
 
@@ -217,6 +217,7 @@ Borders are 1px solid with `rgba(24, 108, 178, 0.12)` (primary at low opacity). 
 - **Don't** use generic stock 3D illustrations or floating shapes.
 - **Don't** use pill buttons everywhere — reserve for badges/tags.
 - **Don't** use gradient-blob heroes or glassmorphism.
+- **Don't** place a kicker/eyebrow label above a heading. The heading carries its own weight; if the words matter, work them into the heading or body.
 - **Don't** truncate the identifying field of a list row.
 - **Don't** use `transform: scale()` for responsive reflow — use fluid type and grid.
 - **Don't** leave entrance motion on without a reduced-motion variant.
