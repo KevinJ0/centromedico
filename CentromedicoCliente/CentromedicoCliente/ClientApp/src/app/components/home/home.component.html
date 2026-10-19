@@ -223,6 +223,7 @@
   <!-- ============ LOCATION ============ -->
   <section class="location" aria-labelledby="location-title">
     <div class="location__media" role="img" aria-label="Mapa de ubicaciones"></div>
+    <div class="location__overlay"></div>
     <div class="location__content">
       <div class="section__inner">
         <span class="badge">Ubicaciones</span>
@@ -234,6 +235,59 @@
           Tenemos ubicaciones en todo el territorio nacional. Encuentra la más cercana a ti.
         </p>
         <a mat-flat-button color="primary" [routerLink]="['/ubicacion']">Ver ubicaciones</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ LOCATION DETAILS ============ -->
+  <section class="location-details" aria-labelledby="location-details-title">
+    <div class="section__inner">
+      <div class="location-map-wrapper">
+        <div class="location-card-grid">
+          <div class="location-card" data-aos="fade-up">
+            <div class="location-card__header">
+              <mat-icon aria-hidden="true">location_city</mat-icon>
+              <h3>La Romana</h3>
+            </div>
+            <p class="location-card__address">Av. Gregorio Luperón, La Romana 22000</p>
+            <div class="location-card__actions">
+              <button mat-stroked-button color="primary" (click)="setFocus(18.4296925, -68.9656023)">
+                <mat-icon aria-hidden="true">my_location</mat-icon> Ubicar
+              </button>
+              <a mat-stroked-button color="primary" href="https://www.google.com/maps/place/18%C2%B026'00.5%22N+68%C2%B057'54.2%22W/@18.4334841,-68.9672327,17z" target="_blank">
+                <mat-icon aria-hidden="true">open_in_new</mat-icon> Abrir mapa
+              </a>
+            </div>
+          </div>
+
+          <div class="location-card" data-aos="fade-up" data-aos-delay="100">
+            <div class="location-card__header">
+              <mat-icon aria-hidden="true">location_city</mat-icon>
+              <h3>Santo Domingo</h3>
+            </div>
+            <p class="location-card__address">Rafael Augusto Sanchez 45, Santo Domingo</p>
+            <div class="location-card__actions">
+              <button mat-stroked-button color="primary" (click)="setFocus(18.4634403, -69.9499557)">
+                <mat-icon aria-hidden="true">my_location</mat-icon> Ubicar
+              </button>
+              <a mat-stroked-button color="primary" href="https://www.google.com/maps/@18.455369,-69.9643642,13.94z" target="_blank">
+                <mat-icon aria-hidden="true">open_in_new</mat-icon> Abrir mapa
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="location-info">
+          <h3>Atención excepcional y accesible a todas horas</h3>
+          <mat-divider></mat-divider>
+          <p>
+            El Hospital Salvador es uno de los sistemas de atención médica académica integrados más completos
+            del país, con más de 5 clínicas y grupos médicos de atención primaria y especializada, y una
+            variedad de servicios de telemedicina. Con ubicaciones en la Ciudad de La Romana y Santo Domingo,
+            contamos con especialistas líderes en todos los campos de la medicina que brindan atención
+            conveniente y de alta calidad a nuestros pacientes.
+          </p>
+        </div>
       </div>
     </div>
   </section>
