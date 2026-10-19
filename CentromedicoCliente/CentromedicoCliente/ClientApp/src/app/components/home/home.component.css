@@ -209,7 +209,7 @@
   padding: var(--space-7) var(--space-5);
 }
 
-/* Media: main photo + offset outline frame + inset aerial + trust chip */
+/* Media: main photo + offset outline frame + trust chip */
 .about__media {
   position: relative;
 }
@@ -260,30 +260,6 @@
 
 .about__media.aos-animate .about__media-main img {
   clip-path: inset(0 0 0 0);
-}
-
-.about__media-inset {
-  position: absolute;
-  z-index: 2;
-  top: -20px;
-  right: -20px;
-  width: 38%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-  display: block;
-  border: 6px solid var(--color-surface);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
-  opacity: 0;
-  transform: translateY(14px);
-  transition:
-    opacity 0.7s var(--ease) 0.5s,
-    transform 0.7s var(--ease) 0.5s;
-}
-
-.about__media.aos-animate .about__media-inset {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 .about__badge-float {
@@ -410,12 +386,6 @@
 
   .about__media-main {
     aspect-ratio: 16 / 10;
-  }
-
-  .about__media-inset {
-    width: 34%;
-    top: -14px;
-    right: -14px;
   }
 
   .about__content {
