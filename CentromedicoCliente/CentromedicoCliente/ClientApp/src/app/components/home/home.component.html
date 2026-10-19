@@ -239,216 +239,267 @@
     </div>
   </section>
 
-  <!-- ============ LOCATION DETAILS ============ -->
-  <section class="location-details" aria-labelledby="location-details-title">
-    <div class="section__inner">
-      <div class="location-map-wrapper">
-        <div class="location-card-grid">
-          <div class="location-card" data-aos="fade-up">
-            <div class="location-card__header">
-              <mat-icon aria-hidden="true">location_city</mat-icon>
-              <h3>La Romana</h3>
-            </div>
-            <p class="location-card__address">Av. Gregorio Luperón, La Romana 22000</p>
-            <div class="location-card__actions">
-              <button mat-stroked-button color="primary" (click)="setFocus(18.4296925, -68.9656023)">
-                <mat-icon aria-hidden="true">my_location</mat-icon> Ubicar
-              </button>
-              <a mat-stroked-button color="primary" href="https://www.google.com/maps/place/18%C2%B026'00.5%22N+68%C2%B057'54.2%22W/@18.4334841,-68.9672327,17z" target="_blank">
-                <mat-icon aria-hidden="true">open_in_new</mat-icon> Abrir mapa
-              </a>
-            </div>
-          </div>
-
-          <div class="location-card" data-aos="fade-up" data-aos-delay="100">
-            <div class="location-card__header">
-              <mat-icon aria-hidden="true">location_city</mat-icon>
-              <h3>Santo Domingo</h3>
-            </div>
-            <p class="location-card__address">Rafael Augusto Sanchez 45, Santo Domingo</p>
-            <div class="location-card__actions">
-              <button mat-stroked-button color="primary" (click)="setFocus(18.4634403, -69.9499557)">
-                <mat-icon aria-hidden="true">my_location</mat-icon> Ubicar
-              </button>
-              <a mat-stroked-button color="primary" href="https://www.google.com/maps/@18.455369,-69.9643642,13.94z" target="_blank">
-                <mat-icon aria-hidden="true">open_in_new</mat-icon> Abrir mapa
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div class="location-info">
-          <h3>Atención excepcional y accesible a todas horas</h3>
-          <mat-divider></mat-divider>
-          <p>
-            El Hospital Salvador es uno de los sistemas de atención médica académica integrados más completos
-            del país, con más de 5 clínicas y grupos médicos de atención primaria y especializada, y una
-            variedad de servicios de telemedicina. Con ubicaciones en la Ciudad de La Romana y Santo Domingo,
-            contamos con especialistas líderes en todos los campos de la medicina que brindan atención
-            conveniente y de alta calidad a nuestros pacientes.
-          </p>
-        </div>
-      </div>
+  <!-- ============ UBICACIONES (contenido completo) ============ -->
+  <div class="ubica-wrapper" data-aos="fade-in">
+    <div class="map-wrapper" style="position: relative;">
+      <button class="button-center-map" color="primary" (click)="setCenter(18.436234, -69.46064)" mat-flat-button
+        data-aos="fade-down" data-aos-delay="500">País completo</button>
+      <google-map width="100%" height="450px" [(zoom)]="zoom" [(center)]="center" [options]="options">
+        <map-marker #marker="mapMarker" *ngFor="let hospital of markers" (mapClick)="openInfoWindow(marker)"
+          [position]="hospital.position">
+          <map-info-window>
+            <h4>{{ hospital.name }}</h4>
+            <p>lat: {{ hospital.position.lat }}</p>
+            <p>long: {{ hospital.position.lng }}</p>
+            <p>Teléfono: 809-555-8754</p>
+          </map-info-window>
+        </map-marker>
+      </google-map>
     </div>
-  </section>
 
-  <!-- ============ CONTACT ============ -->
-  <section class="contact" aria-labelledby="contact-title">
-    <div class="section__inner">
-      <span class="badge">Contacto</span>
-      <h2 id="contact-title" class="section__title">Contáctanos</h2>
-      <p class="section__lede">
-        Estamos aquí para ayudarte. Comunícate con nosotros por cualquiera de nuestros canales.
-      </p>
+    <main class="ubica-main">
+      <mat-card>
+        <mat-card-content>
+          <div class="map-container swiper-container" data-aos="fade-up">
+            <div class="swiper-wrapper">
 
-      <div class="contact__locations">
-        <!-- La Romana -->
-        <div class="contact__card">
-          <h3 class="contact__location-title">La Romana - Ciudad de La Romana</h3>
-          <div class="contact__info">
-            <div class="contact__row">
-              <mat-icon aria-hidden="true">place</mat-icon>
-              <span><b>Dolores Tejedas, La Romana 22000</b></span>
-            </div>
-            <div class="contact__row">
-              <mat-icon aria-hidden="true">phone_in_talk</mat-icon>
-              <span><b>809-555-5555</b> <small>Número principal</small></span>
-            </div>
-            <div class="contact__row">
-              <mat-icon aria-hidden="true">phone_in_talk</mat-icon>
-              <span><b>809-555-5555</b> <small>Oficina de citas</small></span>
-            </div>
-            <div class="contact__row">
-              <mat-icon aria-hidden="true">phone_in_talk</mat-icon>
-              <span><b>809-555-5555</b> <small>Oficina de citas (llamadas gratuita)</small></span>
-            </div>
-            <div class="contact__row">
-              <mat-icon aria-hidden="true">phone_in_talk</mat-icon>
-              <span><b>809-555-5555</b> <small>Seguros y facturación</small></span>
-            </div>
-            <div class="contact__row">
-              <mat-icon aria-hidden="true">phone_in_talk</mat-icon>
-              <span><b>809-555-5555</b> <small>Solicitudes de registros médicos</small></span>
-            </div>
-            <div class="contact__row">
-              <mat-icon aria-hidden="true">email</mat-icon>
-              <span><b>info-romana@hospitalsalvador.do</b></span>
-            </div>
-            <div class="contact__row">
-              <mat-icon aria-hidden="true">schedule</mat-icon>
-              <span><b>Horarios de servicios administrativos: 7:00 a.m a 10:00 p.m</b></span>
-            </div>
-            <div class="contact__row">
-              <mat-icon aria-hidden="true">schedule</mat-icon>
-              <span><b>Horarios de visitas: 7:00 a.m a 8:00 p.m</b></span>
-            </div>
-            <div class="contact__row">
-              <mat-icon aria-hidden="true">schedule</mat-icon>
-              <span><b>Horarios de consulta: 8:00 a.m a 8:00 p.m</b></span>
-            </div>
-          </div>
-          <div class="contact__actions">
-            <a mat-stroked-button color="primary" href="https://www.google.com/maps/place/Hipermercados+Iberia/@18.4289398,-68.9693356,16z" target="_blank">
-              <mat-icon aria-hidden="true">map</mat-icon> Ver ubicación
-            </a>
-          </div>
-        </div>
+              <div class="swiper-slide romana location-slide">
+                <p class="title">La Romana</p>
+                <div class="overlay"></div>
+                <div (click)="setFocus(18.4296925, -68.9656023)" class="button-locate"><a>Ubicar</a></div>
+                <div class="button-open-map">
+                  <a target="_blank"
+                    href="https://www.google.com/maps/place/18%C2%B026'00.5%22N+68%C2%B057'54.2%22W/@18.4334841,-68.9672327,17z/data=!3m1!4b1!4m6!3m5!1s0x0:0x0!7e2!8m2!3d18.4334794!4d-68.9650441?hl=en-US">
+                    Abrir
+                    mapa
+                  </a>
+                </div>
+              </div>
 
-        <!-- Santo Domingo -->
-        <div class="contact__card">
-          <h3 class="contact__location-title">Santo Domingo - Distrito Nacional</h3>
-          <div class="contact__info">
-            <div class="contact__row">
-              <mat-icon aria-hidden="true">place</mat-icon>
-              <span><b>Rafael Augusto Sanchez 45, Santo Domingo</b></span>
+              <div class="swiper-slide sd location-slide">
+                <p class="title">Santo Domingo</p>
+                <div class="overlay"></div>
+                <div (click)="setFocus(18.4634403, -69.9499557)" class="button-locate"><a>Ubicar</a></div>
+                <div class="button-open-map">
+                  <a target="_blank" href="https://www.google.com/maps/@18.455369,-69.9643642,13.94z?hl=en-US">Abrir
+                    mapa</a>
+                </div>
+              </div>
             </div>
-            <div class="contact__row">
-              <mat-icon aria-hidden="true">phone_in_talk</mat-icon>
-              <span><b>809-555-5555</b> <small>Número principal</small></span>
-            </div>
-            <div class="contact__row">
-              <mat-icon aria-hidden="true">phone_in_talk</mat-icon>
-              <span><b>809-555-5555</b> <small>Facturación</small></span>
-            </div>
-            <div class="contact__row">
-              <mat-icon aria-hidden="true">phone_in_talk</mat-icon>
-              <span><b>809-555-5555</b> <small>Oficina de citas (llamadas gratuita)</small></span>
-            </div>
-            <div class="contact__row">
-              <mat-icon aria-hidden="true">phone_in_talk</mat-icon>
-              <span><b>809-555-5555</b> <small>Solicitud de registros de imágenes de radiología</small></span>
-            </div>
-            <div class="contact__row">
-              <mat-icon aria-hidden="true">phone_in_talk</mat-icon>
-              <span><b>809-555-5555</b> <small>Solicitud de pasantía</small></span>
-            </div>
-            <div class="contact__row">
-              <mat-icon aria-hidden="true">phone_in_talk</mat-icon>
-              <span><b>809-555-5555</b> <small>Traslado de pacientes (24 horas)</small></span>
-            </div>
-            <div class="contact__row">
-              <mat-icon aria-hidden="true">email</mat-icon>
-              <span><b>info-sd@hospitalsalvador.do</b></span>
-            </div>
-            <div class="contact__row">
-              <mat-icon aria-hidden="true">schedule</mat-icon>
-              <span><b>Horarios de servicios administrativos: 6:00 a.m a 12:00 p.m</b></span>
-            </div>
-            <div class="contact__row">
-              <mat-icon aria-hidden="true">schedule</mat-icon>
-              <span><b>Horarios de visitas: 7:00 a.m a 6:00 p.m</b></span>
-            </div>
-            <div class="contact__row">
-              <mat-icon aria-hidden="true">schedule</mat-icon>
-              <span><b>Horarios de consulta: 8:00 a.m a 6:00 p.m</b></span>
-            </div>
+
+            <!-- Add Arrows -->
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
           </div>
-          <div class="contact__actions">
-            <a mat-stroked-button color="primary" href="https://www.google.com/maps/@18.455369,-69.9643642,13.94z" target="_blank">
-              <mat-icon aria-hidden="true">map</mat-icon> Ver ubicación
-            </a>
+        </mat-card-content>
+      </mat-card>
+
+      <div class="info">
+        <h2>
+          Atención excepcional y accesible a todas horas
+        </h2>
+        <mat-divider style="margin-bottom:1rem;"></mat-divider>
+        <div class="info-body">
+          <div class="brief-descrip">
+            El Hospital Salvador es uno de los sistemas de atención médica académica integrados más completos del país,
+            más
+            de 5
+            clínicas y grupos médicos de atención primaria y especializada, y una variedad de servicios de telemedicina.
+            Con
+            ubicaciones en la Ciudad de La Romana, contamos con especialistas líderes en todos los campos de la medicina
+            que
+            brindan atención conveniente y de alta calidad a nuestros pacientes.
           </div>
         </div>
       </div>
+    </main>
+  </div>
 
-      <!-- Contact Form -->
-      <div class="contact__form-wrapper">
-        <h3 class="contact__form-title">Envíanos tus preguntas y comentarios</h3>
-        <form class="contact__form" [formGroup]="contactFormGroup" (ngSubmit)="onClickSubmit()">
-          <div class="contact__form-row">
-            <mat-form-field appearance="outline">
-              <mat-label>Tu nombre</mat-label>
-              <input formControlName="nameControl" matInput required>
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-              <mat-label>Tu número de teléfono</mat-label>
-              <input formControlName="phoneControl" mask="000-000-0000" type="tel" matInput required>
-            </mat-form-field>
-          </div>
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Email</mat-label>
-            <input formControlName="emailControl" type="email" matInput>
+  <!-- ============ CONTACTOS (contenido completo original) ============ -->
+  <div class="contacto-wrapper" data-aos="fade-in">
+    <main class="contacto-main">
+      <section class="contact-wrapper">
+        <div class="bg"></div>
+        <div class="title" data-aos="fade">
+          <h1>Contactos</h1>
+        </div>
+
+        <div class="location-container">
+
+          <mat-card data-aos="fade-up">
+            <mat-card-content>
+              <h2>La Romana - Ciudad de La Romana</h2>
+              <p>
+                <mat-icon aria-hidden="true">place</mat-icon>
+                <b>Dolores Tejedas, La Romana 22000</b>
+              </p>
+              <p>
+                <mat-icon aria-hidden="true">phone_in_talk</mat-icon>
+                <b class="numbers">809-555-5555&nbsp;</b><span><small> Número principal</small></span>
+              </p>
+              <p>
+                <mat-icon aria-hidden="true">phone_in_talk</mat-icon>
+                <b class="numbers">809-555-5555&nbsp;</b><span><small> Oficina de citas</small></span>
+              </p>
+              <p>
+                <mat-icon aria-hidden="true">phone_in_talk</mat-icon>
+                <b class="numbers">809-555-5555&nbsp;</b><span><small> Oficina de citas (llamadas gratuita)</small></span>
+              </p>
+              <p>
+                <mat-icon aria-hidden="true">phone_in_talk</mat-icon>
+                <b class="numbers">809-555-5555&nbsp;</b><span><small> Seguros y facturación</small></span>
+              </p>
+              <p>
+                <mat-icon aria-hidden="true">phone_in_talk</mat-icon>
+                <b class="numbers">809-555-5555&nbsp;</b><span><small> Solicitudes de registros médicos</small></span>
+              </p>
+              <p>
+                <mat-icon aria-hidden="true">email</mat-icon>
+                <b>info-romana@hospitalsalvador.do</b>
+              </p>
+              <p>
+                <mat-icon aria-hidden="true">schedule</mat-icon>
+                <b>Horarios de servicios administrativos: 7:00 a.m a 10:00 p.m</b>
+              </p>
+              <p>
+                <mat-icon aria-hidden="true">schedule</mat-icon>
+                <b>Horarios de visitas: 7:00 a.m a 8:00 p.m</b>
+              </p>
+              <p>
+                <mat-icon aria-hidden="true">schedule</mat-icon>
+                <b>Horarios de consulta: 8:00 a.m a 8:00 p.m</b>
+              </p>
+
+            </mat-card-content>
+            <mat-card-actions>
+              <button
+                onclick="window.open('https://www.google.com/maps/place/Hipermercados+Iberia/@18.4289398,-68.9693356,16z/data=!4m5!3m4!1s0x8eaf5465dff06dc9:0x25af0ecc1cf85d3e!8m2!3d18.4280949!4d-68.9643478?hl=en-US')"
+                mat-stroked-button color="primary">
+                Ver ubicación
+              </button>
+            </mat-card-actions>
+          </mat-card>
+
+          <mat-card data-aos="fade-up">
+            <mat-card-content>
+              <h2>Santo Domingo - Distrito Nacional</h2>
+              <p>
+                <mat-icon aria-hidden="true">place</mat-icon>
+                <b>Rafael Augusto Sanchez 45, Santo Domingo</b>
+              </p>
+              <p>
+                <mat-icon aria-hidden="true">phone_in_talk</mat-icon>
+                <b class="numbers">809-555-5555&nbsp;</b><span><small> Número principal</small></span>
+              </p>
+              <p>
+                <mat-icon aria-hidden="true">phone_in_talk</mat-icon>
+                <b class="numbers">809-555-5555&nbsp; </b><span><small>Facturación</small></span>
+              </p>
+              <p>
+                <mat-icon aria-hidden="true">phone_in_talk</mat-icon>
+                <b class="numbers">809-555-5555&nbsp;</b><span><small> Oficina de citas (llamadas gratuita)</small></span>
+              </p>
+              <p>
+                <mat-icon aria-hidden="true">phone_in_talk</mat-icon>
+                <b class="numbers">809-555-5555&nbsp;</b><span>
+                  <small>
+                    Solicitud de registros de imágenes de
+                    radiología
+                  </small>
+                </span>
+              </p>
+              <p>
+                <mat-icon aria-hidden="true">phone_in_talk</mat-icon>
+                <b class="numbers">809-555-5555&nbsp;</b><span><small> Solicitud de pasantia</small></span>
+              </p>
+              <p>
+                <mat-icon aria-hidden="true">phone_in_talk</mat-icon>
+                <b class="numbers">809-555-5555&nbsp;</b><span>
+                  <small>
+                    Traslado de pacientes a otro hospital (centro de
+                    transferencia de adminsión, 24 horas del día)
+                  </small>
+                </span>
+              </p>
+              <p>
+                <mat-icon aria-hidden="true">email</mat-icon>
+                <b>info-sd@hospitalsalvador.do</b>
+              </p>
+              <p>
+                <mat-icon aria-hidden="true">schedule</mat-icon>
+                <b>Horarios de servicios administrativos: 6:00 a.m a 12:00 p.m</b>
+              </p>
+              <p>
+                <mat-icon aria-hidden="true">schedule</mat-icon>
+                <b>Horarios de visitas: 7:00 a.m a 6:00 p.m</b>
+              </p>
+              <p>
+                <mat-icon aria-hidden="true">schedule</mat-icon>
+                <b>Horarios de consulta: 8:00 a.m a 6:00 p.m</b>
+              </p>
+
+            </mat-card-content>
+            <mat-card-actions>
+              <button onclick="window.open('https://www.google.com/maps/@18.455369,-69.9643642,13.94z?hl=en-US')"
+                mat-stroked-button color="primary">
+                Ver ubicación
+              </button>
+            </mat-card-actions>
+          </mat-card>
+
+        </div>
+
+      </section>
+
+    </main>
+
+    <section class="form-wrapper" id="contactus">
+      <h1 data-aos="fade-down">Envianos tus preguntas y comentarios</h1>
+      <form data-aos="fade-down" [formGroup]="contactFormGroup" (ngSubmit)="onClickSubmit()"
+        class="form-group _row contact-form">
+        <div class="name">
+          <mat-form-field class="example-full-width" appearance="fill">
+            <mat-label>Tu nombre</mat-label>
+            <input formControlName="nameControl" matInput required>
           </mat-form-field>
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Motivo de contacto</mat-label>
-            <mat-select formControlName="reasonControl" name="reason" required>
-              <mat-option [value]=0>General</mat-option>
-              <mat-option [value]=1>Donación</mat-option>
-              <mat-option [value]=2>Medios de comunicación</mat-option>
-            </mat-select>
+          <mat-form-field class="example-full-width" appearance="fill">
+            <mat-label>Tu número de teléfono</mat-label>
+            <input formControlName="phoneControl" mask="000-000-0000" type="tel" matInput required>
           </mat-form-field>
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Tu mensaje</mat-label>
-            <textarea formControlName="messageControl" rows="5" matInput required></textarea>
-          </mat-form-field>
-          <div *ngIf="serverMsj.length != 0" class="server-msj">{{serverMsj}}</div>
-          <button type="submit" mat-flat-button color="primary" [disabled]="isSent" class="contact__submit">
-            <mat-icon aria-hidden="true">send</mat-icon> Enviar
-          </button>
-        </form>
-      </div>
-    </div>
-  </section>
+        </div>
+
+        <mat-form-field class="example-full-width" appearance="fill">
+          <mat-label>Email</mat-label>
+          <input formControlName="emailControl" type="email" matInput [errorStateMatcher]="matcher" placeholder="">
+          <mat-error
+            *ngIf="contactFormGroup.get('emailControl').hasError('email') && !contactFormGroup.get('emailControl').hasError('required')">
+            Por favor ingrese un correo válido
+          </mat-error>
+          <mat-error *ngIf="contactFormGroup.get('emailControl').hasError('required')">
+            Correo es <strong>requerido</strong>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="example-full-width" appearance="fill">
+          <mat-label>Motivo de su contactar</mat-label>
+          <mat-select formControlName="reasonControl" name="reason" required>
+            <mat-option [value]=0>General</mat-option>
+            <mat-option [value]=1>Donación</mat-option>
+            <mat-option [value]=2>Medios de comunicación</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="example-full-width" appearance="fill">
+          <mat-label>Tu mensaje</mat-label>
+          <textarea formControlName="messageControl" rows=10 matInput placeholder="" required></textarea>
+        </mat-form-field>
+        <div *ngIf="serverMsj.length != 0" class="server-msj">{{serverMsj}}</div>
+
+        <button type="submit" mat-flat-button [disabled]="isSent" color="primary">Enviar</button>
+
+      </form>
+    </section>
+  </div>
 
   <!-- ============ FAQ ============ -->
   <section class="faq" aria-labelledby="faq-title">
