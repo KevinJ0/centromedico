@@ -33,16 +33,42 @@
 
   <!-- ============ ABOUT ============ -->
   <section class="about" aria-labelledby="about-title">
-    <div class="section__inner">
-      <span class="badge">Acerca de Salvador</span>
-      <h2 id="about-title" class="section__title">
-        Cuidado compasivo para ti y tu familia
-      </h2>
-      <p class="section__lede">
-        Salvador nació con la misión de hacer la salud accesible para todos: conectamos el asesoramiento
-        médico experto con la práctica diaria, impulsados por una pasión por el bienestar y el deseo de
-        mejorar vidas.
-      </p>
+    <div class="section__inner about__inner">
+      <div class="about__media">
+        <img src="../../../assets/imgs/hospital_front.jpg" alt="Fachada del Hospital Salvador" loading="lazy" width="600" height="400">
+        <div class="about__badge-float">
+          <mat-icon aria-hidden="true">favorite</mat-icon>
+          <span>Desde 1995 cuidando tu salud</span>
+        </div>
+      </div>
+      <div class="about__content">
+        <span class="badge">Acerca de Salvador</span>
+        <h2 id="about-title" class="section__title">
+          Cuidado compasivo para ti y tu familia
+        </h2>
+        <p class="section__lede">
+          Salvador nació con la misión de hacer la salud accesible para todos: conectamos el asesoramiento
+          médico experto con la práctica diaria, impulsados por una pasión por el bienestar y el deseo de
+          mejorar vidas.
+        </p>
+        <ul class="about__points">
+          <li>
+            <mat-icon aria-hidden="true">check_circle</mat-icon>
+            <span>Atención personalizada para cada paciente</span>
+          </li>
+          <li>
+            <mat-icon aria-hidden="true">check_circle</mat-icon>
+            <span>Equipo médico certificado y multidisciplinario</span>
+          </li>
+          <li>
+            <mat-icon aria-hidden="true">check_circle</mat-icon>
+            <span>Tecnología de vanguardia al servicio de tu salud</span>
+          </li>
+        </ul>
+        <a mat-flat-button color="primary" [routerLink]="['/medicos']" class="about__cta">
+          Conoce a nuestros médicos
+        </a>
+      </div>
     </div>
   </section>
 
