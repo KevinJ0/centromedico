@@ -188,7 +188,7 @@ export class AppointmentAddComponent implements OnInit {
               this.Horas = keys.map((key, index) => {
                 return {
                   id: new Date(key),
-                  descrip: _moment(key).utc().format(' hh:mm A') + " - Turno " + r[key]
+                  descrip: moment(key).utc().format(' hh:mm A') + " - Turno " + r[key]
                 };
               });
 

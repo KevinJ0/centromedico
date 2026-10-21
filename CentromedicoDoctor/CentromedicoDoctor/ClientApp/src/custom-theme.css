@@ -1,0 +1,13 @@
+/*
+ * Tema Material del portal administrativo (doctor).
+ *
+ * Nota: el archivo original vivía (sin versionar) en
+ * node_modules/@angular/material/prebuilt-themes/custom-theme.css y se
+ * perdió al reinstalar node_modules. Se reconstruye aquí, versionado,
+ * para que vuelva a sobrevivir a npm ci.
+ *
+ * Base: indigo-pink (el prebuilt azul más cercano a la paleta de marca).
+ * Los colores de la marca (#067ACC, header/sidebar oscuro #1e1e2d) se
+ * aplican encima vía src/styles.css.
+ */
+@import url('../node_modules/@angular/material/prebuilt-themes/indigo-pink.css');

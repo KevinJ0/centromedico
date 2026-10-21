@@ -133,7 +133,7 @@ export class CitaService {
       );
   }
 
-  CreateCita(_cita: CitaCreate): Observable<any> {
+  CreateCita(_cita: cita | CitaCreate): Observable<any> {
     console.info(_cita);
     try {
       return this.http.post<citaResult>(this.baseUrl +
