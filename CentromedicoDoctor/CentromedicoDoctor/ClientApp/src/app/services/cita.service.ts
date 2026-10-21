@@ -99,11 +99,11 @@ export class CitaService {
   }
 
   GetCitaList(inicio = "", fin = "", estado = "", servicioId = "", seguroId = ""): Observable<citaCalendar[]> {
-    console.log(this.baseUrl + `api/citas/getCitasList?medicoid=${this.GetMedicoId}&inicio=${inicio}&fin=${fin}&seguroId=${seguroId}&servicioId=${servicioId}&estado=${estado}`);
+    console.log(this.baseUrl + `api/citas/getCitasListDoctor?medicoid=${this.GetMedicoId}&inicio=${inicio}&fin=${fin}&seguroId=${seguroId}&servicioId=${servicioId}&estado=${estado}`);
 
     return this.http
       .get<citaCalendar[]>(
-        this.baseUrl + `api/citas/getCitasList?medicoid=${this.GetMedicoId}&inicio=${inicio}&fin=${fin}&seguroId=${seguroId}&servicioId=${servicioId}&estado=${estado}`
+        this.baseUrl + `api/citas/getCitasListDoctor?medicoid=${this.GetMedicoId}&inicio=${inicio}&fin=${fin}&seguroId=${seguroId}&servicioId=${servicioId}&estado=${estado}`
       )
       .pipe(
         catchError((err) => {
@@ -121,7 +121,7 @@ export class CitaService {
 
   GetCitaForm(): Observable<citaForm> {
     return this.http
-      .get(this.baseUrl + `api/citas/getCitaForm?medicoid=${this.GetMedicoId}`)
+      .get(this.baseUrl + `api/citas/getCitaFormDoctor?medicoid=${this.GetMedicoId}`)
       .pipe(
         catchError((err) => {
           this.errorMsg = err.message;
@@ -137,7 +137,7 @@ export class CitaService {
     console.info(_cita);
     try {
       return this.http.post<citaResult>(this.baseUrl +
-        `api/citas/createCita`, _cita)
+        `api/citas/createCitaDoctor`, _cita)
         .pipe(map(result => {
           result;
           return result;
