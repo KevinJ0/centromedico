@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { catchError } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { doctorCard, especialidad, seguro } from 'src/app/interfaces/InterfacesDto';
@@ -10,6 +11,7 @@ import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { AutoUnsubscribe } from "ngx-auto-unsubscribe";
 import { fadeInAnimation } from '../../animations/animations';
+import * as AOS from 'aos';
 
 @AutoUnsubscribe()
 @Component({
@@ -25,7 +27,8 @@ export class MedicalDirectoryComponent implements OnInit {
     private doctorSvc: DoctorService,
     private especialidadSvc: EspecialidadService,
     private seguroSvc: SeguroService,
-    private _formBuilder: FormBuilder) { }
+    private _formBuilder: FormBuilder,
+    private route: ActivatedRoute) { }
 
   prueba: doctorCard;
   doctorCardList: doctorCard[];
@@ -42,13 +45,30 @@ export class MedicalDirectoryComponent implements OnInit {
   mode: ProgressSpinnerMode = 'indeterminate';
 
   ngOnInit(): void {
+    const qp = this.route.snapshot.queryParams;
+    const initialName = qp['nombre'] || '';
+    const initialSpecialty = qp['especialidad'] ? (Number(qp['especialidad']) || qp['especialidad']) : '';
+    const initialInsurance = qp['seguro'] ? (Number(qp['seguro']) || qp['seguro']) : '';
+
     this.searchFormGroup = this._formBuilder.group({
-      nameControl: [''],
-      specialityControl: [''],
-      insuranceControl: [''],
+      nameControl: [initialName],
+      specialityControl: [initialSpecialty],
+      insuranceControl: [initialInsurance],
     });
 
     this.Search();
+
+    this.route.queryParams.subscribe(params => {
+      if (params['nombre'] !== undefined || params['especialidad'] !== undefined || params['seguro'] !== undefined) {
+        this.searchFormGroup.patchValue({
+          nameControl: params['nombre'] || '',
+          specialityControl: params['especialidad'] ? (Number(params['especialidad']) || params['especialidad']) : '',
+          insuranceControl: params['seguro'] ? (Number(params['seguro']) || params['seguro']) : ''
+        }, { emitEvent: false });
+        this.isSent = false;
+        this.Search();
+      }
+    });
 
     this.seguros$ = this.seguroSvc.GetSeguros()
       .pipe(catchError(err => {
@@ -84,6 +104,7 @@ export class MedicalDirectoryComponent implements OnInit {
               this.doctorCardList = r;
               this.showNoContent = false;
               this.animateCount(this.doctorsCount);
+              setTimeout(() => { try { AOS.refresh(); } catch(e){} }, 50);
             } else {
               this.doctorsCount = 0;
               this.pageLength = 0;
@@ -130,6 +151,7 @@ export class MedicalDirectoryComponent implements OnInit {
   pageChangeEvent(event) {
     const offset = ((event.pageIndex + 1) - 1) * event.pageSize;
     this.splicedData = this.doctorCardList.slice(offset).slice(0, event.pageSize);
+    setTimeout(() => { try { AOS.refresh(); } catch(e){} }, 50);
   }
   ngOnDestroy() {
 

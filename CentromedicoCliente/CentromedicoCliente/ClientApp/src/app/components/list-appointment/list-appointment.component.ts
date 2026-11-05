@@ -31,25 +31,21 @@ export class ListAppointmentComponent implements OnInit {
   gruposUnidos: { grupo: string, callback: (data: any) => void }[] = [];
   private joinedGroups: { grupo: string, callback: (data: any) => void, medicoId: number }[] = [];
 
-
   turno: number;
 
   constructor(
-
     private router: Router,
     private rutaActiva: ActivatedRoute,
     private turnosSvc: TurnosMedicoService,
     private signalRSvc: SignalrCustomService,
     private zone: NgZone,
     public citaSvc: CitaService,
-    public dialog: MatDialog) {
-
-  }
+    public dialog: MatDialog
+  ) {}
 
   navigateToTurnos(medicoId: number, fecha: Date) {
     localStorage.setItem('fecha_hora_cita', fecha.toString());
-
-    this.router.navigate(['/ver-turnos/' + medicoId]); // Cambia '/ruta-deseada' por la ruta a la que quieras redirigir
+    this.router.navigate(['/ver-turnos/' + medicoId]);
   }
 
   navigateToMedicos() {
@@ -65,7 +61,6 @@ export class ListAppointmentComponent implements OnInit {
       }
       updateWaitingTime(r);
 
-
       this.citaCardList$.next(r);
 
       this.signalRSvc.Connect().then(() => {
@@ -79,30 +74,25 @@ export class ListAppointmentComponent implements OnInit {
       this.showNoContent = true;
       console.error(err);
     });
-
   }
 
   connectTurnosSignalR(citaCard: citaCard) {
-
-    //*Hub
-    //*Obtengo el nombre del grupo de turnos
     this.turnosSvc.GetGrupoTurnos(citaCard.medicosID).subscribe(
       (grupoTurno: group) => {
         if (grupoTurno) {
           let grupoNombre: string = grupoTurno.group_name;
 
           let grupos: string[] = JSON.parse(localStorage.getItem("grupo_turno")) || [];
-          grupos.push(grupoNombre);
-          localStorage.setItem("grupo_turno", JSON.stringify(grupos));
-
-          //*Me conecto al grupo de turnos
+          if (!grupos.includes(grupoNombre)) {
+            grupos.push(grupoNombre);
+            localStorage.setItem("grupo_turno", JSON.stringify(grupos));
+          }
 
           if (this.signalRSvc.hubConnection.state == HubConnectionState.Connected) {
             this.signalRSvc.joinGroup(citaCard.medicosID, grupoNombre, (msj: string) => {
               this.updateTurns(citaCard);
             });
           }
-
         }
       },
       catchError((err) => {
@@ -110,83 +100,83 @@ export class ListAppointmentComponent implements OnInit {
         this.showNoContent = true;
         console.error(err);
         return null;
-      }));
-
+      })
+    );
   }
 
   updateTurns(citaCard: citaCard) {
-
     this.zone.run(() => {
       if (this.router.url.includes("mis-citas")) {
         this.turnosSvc.GetPacienteTurno(citaCard.medicosID, citaCard.fecha_hora).subscribe((turno: turno_paciente) => {
-
           const currentList = this.citaCardList$.getValue();
           const index = currentList.findIndex(c => c.medicosID === citaCard.medicosID && c.fecha_hora === citaCard.fecha_hora);
           if (index !== -1) {
-
-            currentList[index] = { ...currentList[index], turno_paciente: turno }; // <- cambia referencia
+            currentList[index] = { ...currentList[index], turno_paciente: turno };
             updateWaitingTime(currentList);
-            this.citaCardList$.next([...currentList]); // <- emite nueva copia
+            this.citaCardList$.next([...currentList]);
           }
-
         });
       }
     });
   }
 
   trackByCita(index: number, item: citaCard): any {
-    console.log(item)
-    return item.id;
+    return item?.id || index;
   }
 
   toggleDialogPospone(cita: citaCard) {
     const dialogRef = this.dialog.open(DialogPosponeAppointmentComponent, {
-      width: '400px',
+      width: '480px',
+      maxWidth: '92vw',
+      panelClass: 'custom-pospone-dialog-panel',
       data: { cita: cita }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result?.confirmed) {
         console.log('Cita pospuesta', result.reason);
-        // Here you would typically call a service to update the appointment status
       }
     });
   }
 
-
   getTurnoKey(cita: any): string {
     return 'turno-' + cita.turno;
   }
+
   convertDateFull(date: string): string {
     return _moment(date).format('dddd DD MMM Y hh:mm A');
   }
+
   convertDateHours(date: string): string {
     return _moment(date).format('hh:mm A');
   }
+
   convertDate(date: string): string {
     return _moment(date).format('dddd DD MMM Y');
   }
+
   ngOnDestroy() {
     this.signalRSvc.Disconnect();
-
   }
 }
+
 function updateWaitingTime(r: citaCard[]) {
   r.forEach((citaCard) => {
-    const timePerPatient = (new Date(citaCard.turno_paciente.ultima_entrada).getTime() - new Date(citaCard.turno_paciente.primera_entrada).getTime()) / citaCard.turno_paciente.turno_atendido;
-    const diffHoras = timePerPatient / (1000 * 60 * 60);
+    if (!citaCard.turno_paciente) { return; }
+    if (!citaCard.turno_paciente.ultima_entrada || !citaCard.turno_paciente.primera_entrada) {
+      citaCard.turno_paciente.tiempo_aprox = `Aún no disponible.`;
+      return;
+    }
+    const timePerPatient = (new Date(citaCard.turno_paciente.ultima_entrada).getTime() - new Date(citaCard.turno_paciente.primera_entrada).getTime()) / (citaCard.turno_paciente.turno_atendido || 1);
     const diffMinutos = timePerPatient / (1000 * 60);
 
     const horas = Math.floor(diffMinutos / 60);
     const minutos = Math.floor(diffMinutos % 60);
 
-    if (!Number.isFinite(timePerPatient) || timePerPatient == 0) {
+    if (!Number.isFinite(timePerPatient) || timePerPatient <= 0) {
       citaCard.turno_paciente.tiempo_aprox = `Aún no disponible.`;
     } else {
-      citaCard.turno_paciente.tiempo_aprox = `${horas}h ${minutos}min`;
+      citaCard.turno_paciente.tiempo_aprox = `${horas > 0 ? horas + 'h ' : ''}${minutos}min`;
     }
-
-
   });
 }
-

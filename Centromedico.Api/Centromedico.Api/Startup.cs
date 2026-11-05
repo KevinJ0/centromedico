@@ -2,6 +2,7 @@ using Amazon;
 using Amazon.Runtime;
 using Amazon.S3;
 using AutoMapper;
+using CloudinaryDotNet;
 using Centromedico.Database.Context;
 using Centromedico.Database.DbModels;
 using CentromedicoCliente.Exceptions;
@@ -89,6 +90,16 @@ namespace Centromedico.Api
 
             services.AddSingleton<CentromedicoCliente.Interfaces.Services.IS3Service, CentromedicoCliente.Services.S3Service>();
             services.AddAWSService<IAmazonS3>();
+
+            // ---------- Cloudinary ----------
+            var cloudinaryAccount = new Account(
+                Configuration["Cloudinary:CloudName"],
+                Configuration["Cloudinary:ApiKey"],
+                Configuration["Cloudinary:ApiSecret"]
+            );
+            var cloudinary = new Cloudinary(cloudinaryAccount);
+            cloudinary.Api.Secure = true;
+            services.AddSingleton(cloudinary);
 
             // ---------- Doctor services ----------
             services.AddScoped<CentromedicoDoctor.Services.Interfaces.ITokenService, CentromedicoDoctor.Services.TokenService>();

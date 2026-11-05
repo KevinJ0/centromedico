@@ -1,36 +1,7 @@
-/* You can add global styles to this file, and also import other style files */
-/* This is a tag that I need to override some of its properties */
-@font-face {
-  font-family: "Lato";
-  src: url("assets/fonts/Lato-Regular.ttf");
-}
+/* Leaflet CSS */
+@import '~leaflet/dist/leaflet.css';
 
-@font-face {
-  font-family: "Lato-Black";
-  src: url("assets/fonts/Lato-Black.ttf");
-}
-
-@font-face {
-  font-family: "Lato-Bold";
-  src: url("assets/fonts/Lato-Bold.ttf");
-}
-
-@font-face {
-  font-family: "Lato-Light";
-  src: url("assets/fonts/Lato-Light.ttf");
-}
-
-@font-face {
-  font-family: "DancingScript";
-  src: url("assets/fonts/DancingScript.ttf") format("opentype");
-}
-
-@font-face {
-  font-family: "DancingScript-Regular";
-  src: url("assets/fonts/static/DancingScript-Regular.ttf");
-}
-
-/* ----------------- */
+/* ----------------- Loader ----------------- */
 #loader {
   gap: 1rem;
   position: absolute;
@@ -57,37 +28,43 @@
 }
 
 :root {
-  --primary-color: #186CB2;
-  --secondary-color: #f5f5f5;
-  --subtitle-color: #666;
-  --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --primary-color: #186cb2;
+  --secondary-color: #f8fafc;
+  --subtitle-color: #64748b;
+  --card-shadow: 0 4px 14px rgba(10, 37, 64, 0.08);
   --max-width: 1360px;
-  --border-radius: 5px;
+  --border-radius: 8px;
   --screen-width: 320px;
   --screen-height: 560px;
-  --header-bg-color: #25283d;
-  --splash-bg-color: #186CB2;
+  --header-bg-color: #0a2540;
+  --splash-bg-color: #186cb2;
   --main-padding: 2rem;
-  --text-color: #343a40;
-  --highlight-color: #6c757d;
-  /* Extended design tokens (slate scale) */
-  --color-text-strong: #1a202c;
-  --color-text: #2d3748;
+  --text-color: #1e293b;
+  --highlight-color: #64748b;
+  /* Extended design tokens (Nordic Clinical Scale — DESIGN.md canonical) */
+  --color-primary: #186cb2;
+  --color-primary-dark: #0f4f85;
+  --color-navy: #0a2540;
+  --color-primary-soft: rgba(24, 108, 178, 0.08);
+  --color-accent-mint: #10b981;
+  --color-accent-mint-soft: rgba(16, 185, 129, 0.12);
+  --color-text-strong: #0a2540;
+  --color-text: #1e293b;
   --color-text-muted: #64748b;
   --color-text-subtle: #94a3b8;
-  --color-surface: #f8fafc;
-  --color-surface-alt: #f1f5f9;
-  --color-border: #e2e8f0;
-  --color-border-strong: #cbd5e1;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f4f7fb;
+  --color-border: rgba(24, 108, 178, 0.14);
+  --color-border-strong: rgba(24, 108, 178, 0.28);
   --color-white: #ffffff;
   --color-danger: #ef4444;
-  --color-info: #3b82f6;
-  --color-success: #46a35e;
-  --font-display: "Segoe UI", "Helvetica Neue", sans-serif;
-  --font-body: "Segoe UI", "Helvetica Neue", sans-serif;
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
+  --color-info: #0284c7;
+  --color-success: #10b981;
+  --font-display: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
   --space-xs: 0.25rem;
   --space-sm: 0.5rem;
   --space-md: 1rem;
@@ -97,7 +74,35 @@
 }
 
 
+html {
+  height: 100%;
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  height: 100%;
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
+  position: relative;
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background-color: var(--color-surface);
+}
+
 app-root {
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -105,33 +110,8 @@ app-root {
   flex-wrap: nowrap;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-display);
-}
-
-.btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
-}
-
-.background-red {
-  background-color: rgb(153, 50, 50);
-  color: white;
-}
-
-html,
-body {
-  height: 100%;
-}
-
-body {
-  margin: 0;
-  font-family: "Segoe UI", "Helvetica Neue", sans-serif;
-}
-
 :focus-visible {
-  outline: 2px solid var(--primary-color, #186cb2);
+  outline: 2px solid var(--primary-color, #0d5c9e);
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -141,7 +121,7 @@ button:focus-visible,
 .mat-button:focus-visible,
 .mat-flat-button:focus-visible,
 .mat-stroked-button:focus-visible {
-  outline: 2px solid var(--primary-color, #186cb2);
+  outline: 2px solid var(--primary-color, #0d5c9e);
   outline-offset: 2px;
 }
 
@@ -196,29 +176,761 @@ mat-expansion-panel-header .mat-content {
   border-radius: 0;
 }
 
-#menu-mobile {
-  display: none;
-}
-
-@media only screen and (max-width: 850px) {
-  #menu-principal {
-    display: none;
-  }
-
-  #menu-mobile {
-    background-color: #e0e0e0;
-    display: block;
-  }
-
+@media only screen and (max-width: 1000px) {
   mat-expansion-panel-header .mat-content {
     flex-direction: column;
     align-items: flex-start;
   }
-
-
 }
 
 .TrengoOnlineStatus__iframe,
 .TrengoWidgetPanel__iframe {
   z-index: 999 !important;
 }
+
+/* Custom Pospone Dialog Panel */
+.custom-pospone-dialog-panel .mat-dialog-container {
+  padding: 0 !important;
+  border-radius: 20px !important;
+  overflow: hidden !important;
+  box-shadow: 0 20px 45px -10px rgba(10, 37, 64, 0.22) !important;
+  border: 1px solid rgba(24, 108, 178, 0.16) !important;
+}
+
+/* =========================================================================
+   Leaflet Medical Map Styles (Hospital del Salvador)
+   ========================================================================= */
+
+.medical-map-pin-container {
+  background: transparent !important;
+  border: none !important;
+}
+
+.medical-map-pin {
+  width: 38px;
+  height: 38px;
+  border-radius: 50% 50% 50% 0;
+  background: #186cb2;
+  transform: rotate(-45deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(24, 108, 178, 0.45);
+  border: 2px solid #ffffff;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.2s ease;
+}
+
+.medical-map-pin:hover {
+  transform: rotate(-45deg) scale(1.12);
+  background: #0f4f85;
+}
+
+.medical-map-pin svg {
+  transform: rotate(45deg);
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 14px !important;
+  box-shadow: 0 10px 30px rgba(15, 40, 80, 0.16) !important;
+  padding: 0 !important;
+  border: 1px solid rgba(24, 108, 178, 0.12) !important;
+  overflow: hidden;
+}
+
+.leaflet-popup-content {
+  margin: 0 !important;
+  padding: 0.95rem 1.15rem !important;
+  line-height: 1.5 !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+}
+
+.leaflet-container {
+  font-family: inherit;
+}
+
+/* =========================================================================
+   Angular Material Global Brand Alignment (Hospital Salvador)
+   Ensures all Material components strictly follow the app's brand tokens.
+   ========================================================================= */
+
+/* Steppers (Horizontal & Vertical) */
+.mat-step-header .mat-step-icon-selected,
+.mat-step-header .mat-step-icon-state-edit {
+  background-color: var(--color-primary, #0d5c9e) !important;
+  color: #ffffff !important;
+}
+
+.mat-step-header .mat-step-icon-state-done {
+  background-color: var(--color-success, #10b981) !important;
+  color: #ffffff !important;
+}
+
+.mat-step-header .mat-step-label.mat-step-label-active {
+  color: var(--color-navy, #0a2540) !important;
+  font-weight: 700 !important;
+}
+
+.mat-stepper-vertical-line::before {
+  border-left-color: var(--color-border, rgba(13, 92, 158, 0.14)) !important;
+}
+
+.mat-stepper-horizontal-line {
+  border-top-color: var(--color-border, rgba(13, 92, 158, 0.14)) !important;
+}
+
+/* Form Fields & Outlines */
+.mat-form-field.mat-focused:not(.search-form__field) .mat-form-field-label,
+.mat-form-field.mat-focused.mat-primary:not(.search-form__field) .mat-form-field-label {
+  color: var(--color-primary, #0d5c9e) !important;
+}
+
+.mat-form-field-appearance-outline.mat-focused:not(.search-form__field) .mat-form-field-outline-thick {
+  color: var(--color-primary, #0d5c9e) !important;
+}
+
+.mat-form-field.mat-focused .mat-form-field-ripple {
+  background-color: var(--color-primary, #0d5c9e) !important;
+}
+
+.mat-form-field.mat-focused .mat-select-arrow {
+  color: var(--color-primary, #0d5c9e) !important;
+}
+
+.mat-focused .mat-form-field-required-marker {
+  color: var(--color-danger, #ef4444) !important;
+}
+
+/* Select Panels & Options */
+.mat-select-panel .mat-option.mat-selected:not(.mat-option-disabled) {
+  color: var(--color-primary, #0d5c9e) !important;
+}
+
+.mat-select-panel .mat-option:hover:not(.mat-option-disabled),
+.mat-select-panel .mat-option.mat-active {
+  background: var(--color-primary-soft, rgba(13, 92, 158, 0.08)) !important;
+}
+
+.mat-pseudo-checkbox-checked,
+.mat-pseudo-checkbox-indeterminate,
+.mat-primary .mat-pseudo-checkbox-checked,
+.mat-accent .mat-pseudo-checkbox-checked {
+  background: var(--color-primary, #0d5c9e) !important;
+}
+
+/* Datepicker & Calendar */
+.mat-calendar-body-selected {
+  background-color: var(--color-primary, #0d5c9e) !important;
+  color: #ffffff !important;
+}
+
+.mat-calendar-body-today:not(.mat-calendar-body-selected) {
+  border-color: var(--color-primary, #0d5c9e) !important;
+}
+
+.mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected) {
+  background-color: var(--color-primary-soft, rgba(13, 92, 158, 0.12)) !important;
+}
+
+.mat-datepicker-toggle-active {
+  color: var(--color-primary, #0d5c9e) !important;
+}
+
+/* Radio Buttons & Checkboxes */
+.mat-radio-button.mat-radio-checked .mat-radio-outer-circle {
+  border-color: var(--color-primary, #0d5c9e) !important;
+}
+
+.mat-radio-button .mat-radio-inner-circle {
+  background-color: var(--color-primary, #0d5c9e) !important;
+}
+
+.mat-checkbox-checked .mat-checkbox-background,
+.mat-checkbox-indeterminate .mat-checkbox-background {
+  background-color: var(--color-primary, #0d5c9e) !important;
+}
+
+/* Slide Toggles */
+.mat-slide-toggle.mat-checked .mat-slide-toggle-bar {
+  background-color: rgba(13, 92, 158, 0.45) !important;
+}
+
+.mat-slide-toggle.mat-checked .mat-slide-toggle-thumb {
+  background-color: var(--color-primary, #0d5c9e) !important;
+}
+
+/* Progress Spinners */
+.mat-progress-spinner circle,
+.mat-spinner circle {
+  stroke: var(--color-primary, #0d5c9e) !important;
+}
+
+.mat-progress-spinner.mat-accent circle,
+.mat-spinner.mat-accent circle {
+  stroke: var(--color-accent-mint, #10b981) !important;
+}
+
+/* Tabs & Ink Bar */
+.mat-tab-group .mat-ink-bar,
+.mat-tab-nav-bar .mat-ink-bar {
+  background-color: var(--color-primary, #0d5c9e) !important;
+}
+
+.mat-tab-label.mat-tab-label-active {
+  color: var(--color-primary, #0d5c9e) !important;
+}
+
+/* Badges */
+.mat-badge-content {
+  background-color: var(--color-primary, #0d5c9e) !important;
+  color: #ffffff !important;
+}
+
+/* =========================================================================
+   Unified Clinical Ambient Background (Hospital del Salvador Signature)
+   Matches the aesthetic of the Medical Directory (soft gradient + dot grid + glow)
+   ========================================================================= */
+
+.doctor-profile,
+.booking-page,
+.ticket-page,
+.citas-page,
+.login-main,
+.campuses,
+.user-settings-page,
+.page-bg {
+  background: linear-gradient(180deg, #eef4fc 0%, #f7faff 50%, #edf3fb 100%) !important;
+  position: relative !important;
+  isolation: isolate;
+  min-height: calc(100vh - 64px);
+}
+
+.doctor-profile::before,
+.booking-page::before,
+.ticket-page::before,
+.citas-page::before,
+.login-main::before,
+.campuses::before,
+.user-settings-page::before,
+.page-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(13, 92, 158, 0.14) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(ellipse 85% 75% at 50% 30%, #000 25%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 85% 75% at 50% 30%, #000 25%, transparent 100%);
+  opacity: 0.55;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.doctor-profile,
+.booking-page,
+.ticket-page,
+.citas-page,
+.login-main,
+.campuses,
+.user-settings,
+.user-settings-page,
+.settings-page,
+.page-bg {
+  position: relative;
+  overflow-x: clip;
+  max-width: 100%;
+}
+
+.doctor-profile::after,
+.booking-page::after,
+.ticket-page::after,
+.citas-page::after,
+.login-main::after,
+.campuses::after,
+.user-settings-page::after,
+.settings-page::after,
+.page-bg::after {
+  content: "";
+  position: absolute;
+  top: -80px;
+  right: 0;
+  max-width: 100%;
+  width: min(520px, 90vw);
+  height: min(520px, 90vw);
+  border-radius: 50%;
+  background: radial-gradient(circle closest-side, rgba(14, 165, 233, 0.12) 0%, rgba(13, 92, 158, 0.04) 55%, transparent 100%);
+  pointer-events: none;
+  z-index: -1;
+  filter: blur(16px);
+}
+
+/* ==========================================================================
+   MAT-PAGINATOR REDESIGN — Accessible, Tactile & Clinical Scale (DESIGN.md)
+   ========================================================================== */
+
+.mat-paginator {
+  background: var(--color-surface, #ffffff);
+  color: var(--color-navy, #0a2540);
+  font-family: inherit;
+  border-radius: var(--radius-pill, 999px);
+  border: 1px solid var(--color-border, rgba(24, 108, 178, 0.14));
+  box-shadow: 0 6px 20px -8px rgba(10, 37, 64, 0.12);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.mat-paginator-outer-container {
+  width: 100%;
+}
+
+.mat-paginator-container {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: wrap !important;
+  gap: 0.75rem 1.25rem !important;
+  min-height: 58px !important;
+  padding: 0.5rem 1.15rem !important;
+}
+
+/* Page Size Selector */
+.mat-paginator-page-size {
+  display: inline-flex !important;
+  align-items: center !important;
+  margin: 0 !important;
+  gap: 0.65rem !important;
+}
+
+.mat-paginator-page-size-label {
+  font-size: 0.90rem !important;
+  font-weight: 600 !important;
+  color: var(--color-text-muted, #5b6472) !important;
+  margin: 0 !important;
+  white-space: nowrap;
+}
+
+.mat-paginator-page-size-select.mat-form-field {
+  width: 82px !important;
+  margin: 0 !important;
+}
+
+.mat-paginator-page-size-select .mat-form-field-wrapper {
+  padding-bottom: 0 !important;
+}
+
+.mat-paginator-page-size-select .mat-form-field-infix {
+  padding: 0 !important;
+  border-top: none !important;
+  width: 82px !important;
+}
+
+.mat-paginator-page-size-select .mat-form-field-underline,
+.mat-paginator-page-size-select .mat-form-field-subscript-wrapper {
+  display: none !important;
+}
+
+.mat-paginator-page-size-select .mat-select-trigger {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  box-sizing: border-box;
+  background-color: var(--color-surface-alt, #f4f7fb);
+  border: 1.5px solid var(--color-border, rgba(24, 108, 178, 0.18));
+  border-radius: 10px;
+  padding: 0.4rem 0.75rem 0.4rem 0.9rem !important;
+  min-height: 40px !important;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mat-paginator-page-size-select .mat-select-trigger:hover,
+.mat-paginator-page-size-select.mat-focused .mat-select-trigger {
+  background-color: #ffffff;
+  border-color: var(--color-primary, #186cb2);
+  box-shadow: 0 0 0 3px rgba(24, 108, 178, 0.14);
+}
+
+.mat-paginator-page-size-select .mat-select-value {
+  max-width: none !important;
+  width: auto !important;
+  flex: 1 1 auto !important;
+  display: flex !important;
+  align-items: center !important;
+  font-size: 0.95rem !important;
+  font-weight: 700 !important;
+  color: var(--color-navy, #0a2540) !important;
+  text-align: left;
+  line-height: 1;
+}
+
+.mat-paginator-page-size-select .mat-select-arrow-wrapper {
+  transform: none !important;
+  display: flex;
+  align-items: center;
+}
+
+.mat-paginator-page-size-select .mat-select-arrow {
+  color: var(--color-primary, #186cb2);
+  border-top-color: var(--color-primary, #186cb2) !important;
+  border-top-width: 6px !important;
+  border-right-width: 5px !important;
+  border-left-width: 5px !important;
+  margin: 0 !important;
+}
+
+/* Range Label & Navigation Buttons */
+.mat-paginator-range-actions {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+}
+
+.mat-paginator-range-label {
+  font-size: 0.92rem !important;
+  font-weight: 700 !important;
+  color: var(--color-navy, #0a2540) !important;
+  background: var(--color-surface-alt, #f4f7fb);
+  border: 1.5px solid var(--color-border, rgba(24, 108, 178, 0.16));
+  border-radius: 999px;
+  padding: 0.45rem 1rem !important;
+  margin: 0 0.5rem 0 0 !important;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
+/* Navigation Buttons: 44px WCAG AA touch targets */
+.mat-paginator-range-actions .mat-icon-button {
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  min-height: 44px !important;
+  line-height: 44px !important;
+  border-radius: 12px !important;
+  border: 1.5px solid var(--color-border, rgba(24, 108, 178, 0.22)) !important;
+  background-color: var(--color-surface, #ffffff) !important;
+  color: var(--color-primary, #186cb2) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 2px !important;
+  box-shadow: 0 2px 6px rgba(10, 37, 64, 0.06);
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.mat-paginator-range-actions .mat-icon-button .mat-button-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.mat-paginator-range-actions .mat-icon-button .mat-paginator-icon {
+  width: 24px !important;
+  height: 24px !important;
+  fill: currentColor !important;
+  transition: transform 0.18s ease;
+}
+
+.mat-paginator-range-actions .mat-icon-button:hover:not([disabled]) {
+  background-color: var(--color-primary, #186cb2) !important;
+  border-color: var(--color-primary, #186cb2) !important;
+  color: #ffffff !important;
+  box-shadow: 0 6px 16px rgba(24, 108, 178, 0.32) !important;
+  transform: translateY(-1.5px);
+}
+
+.mat-paginator-range-actions .mat-icon-button:active:not([disabled]) {
+  transform: translateY(0) scale(0.96);
+}
+
+.mat-paginator-range-actions .mat-icon-button[disabled] {
+  opacity: 0.55 !important;
+  background-color: var(--color-surface-alt, #f4f7fb) !important;
+  border: 1.5px solid rgba(24, 108, 178, 0.10) !important;
+  color: var(--color-text-subtle, #94a3b8) !important;
+  cursor: not-allowed !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+/* Mobile responsive layout */
+@media (max-width: 680px) {
+  .mat-paginator {
+    border-radius: 18px !important;
+  }
+
+  .mat-paginator-container {
+    flex-direction: column !important;
+    justify-content: center !important;
+    gap: 0.75rem !important;
+    padding: 0.85rem !important;
+  }
+
+  .mat-paginator-page-size {
+    justify-content: center !important;
+    width: 100% !important;
+  }
+
+  .mat-paginator-range-actions {
+    justify-content: center !important;
+    width: 100% !important;
+  }
+}
+
+/* =========================================================================
+   Global Entrance Animations for Elements When Displayed
+   ========================================================================= */
+
+@keyframes appFadeInUp {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 26px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes appFadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes appPopIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.95) translate3d(0, 10px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+}
+
+/* Route transition: every routed view animates smoothly on entrance */
+router-outlet + * {
+  display: block;
+  animation: appFadeIn 0.32s ease-out both;
+}
+
+/* Reusable animation utilities */
+.animate-fade-up {
+  animation: appFadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-pop-in {
+  animation: appPopIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stagger-1 { animation-delay: 0.05s !important; }
+.stagger-2 { animation-delay: 0.10s !important; }
+.stagger-3 { animation-delay: 0.15s !important; }
+.stagger-4 { animation-delay: 0.20s !important; }
+.stagger-5 { animation-delay: 0.25s !important; }
+.stagger-6 { animation-delay: 0.30s !important; }
+
+/* 1. HOME: Staggered entry for hero elements */
+.hero__title {
+  animation: appFadeInUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.05s;
+}
+
+.hero__lede {
+  animation: appFadeInUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.12s;
+}
+
+.hero-search-dock {
+  animation: appFadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.20s;
+}
+
+.hero__badges,
+.hero__trust {
+  animation: appFadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.28s;
+}
+
+.specialty-chip {
+  animation: appFadeInUp 0.36s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.specialty-chip:nth-child(1) { animation-delay: 0.04s; }
+.specialty-chip:nth-child(2) { animation-delay: 0.08s; }
+.specialty-chip:nth-child(3) { animation-delay: 0.12s; }
+.specialty-chip:nth-child(4) { animation-delay: 0.16s; }
+.specialty-chip:nth-child(5) { animation-delay: 0.20s; }
+.specialty-chip:nth-child(6) { animation-delay: 0.24s; }
+
+/* 2. DOCTOR PROFILE: Subtle orchestrated reveal */
+.profile-portrait {
+  animation: appPopIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.04s;
+}
+
+.doctor-name {
+  animation: appFadeInUp 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.08s;
+}
+
+.specialties-wrap {
+  animation: appFadeInUp 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.12s;
+}
+
+.accreditation-bar {
+  animation: appFadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.16s;
+}
+
+.profile-hero__actions {
+  animation: appFadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.20s;
+}
+
+/* 3. LOGIN PAGE: Organic staggered presentation */
+.login-aside {
+  animation: appFadeInUp 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.login-aside__feature-item:nth-child(1) { animation: appFadeInUp 0.36s cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: 0.08s; }
+.login-aside__feature-item:nth-child(2) { animation: appFadeInUp 0.36s cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: 0.14s; }
+.login-aside__feature-item:nth-child(3) { animation: appFadeInUp 0.36s cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: 0.20s; }
+
+.login-card {
+  animation: appPopIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.08s;
+}
+
+/* 4. MEDICAL DIRECTORY: Search dock */
+.search-hero__copy {
+  animation: appFadeInUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.05s;
+}
+
+.search-form {
+  animation: appFadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.12s;
+}
+
+/* 5. APPOINTMENTS & SETTINGS: Clean clinical cards */
+.citas-header,
+.booking-topbar,
+.settings-header {
+  animation: appFadeInUp 0.36s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.04s;
+}
+
+.citas-filter-bar,
+.booking-stepper-wrap,
+.settings-sculpt {
+  animation: appFadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.08s;
+}
+
+.citas-card,
+.booking-summary-card,
+.ticket-wrapper,
+.stepper-container {
+  animation: appFadeInUp 0.42s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.12s;
+}
+
+/* Dialog and Modal entrances */
+.mat-dialog-container {
+  animation: appPopIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) both !important;
+}
+
+/* Toast/snack bar entrance */
+.mat-snack-bar-container {
+  animation: appPopIn 0.24s cubic-bezier(0.16, 1, 0.3, 1) both !important;
+}
+
+/* =========================================================================
+   SCROLL REVEAL ENGINE (AOS + IntersectionObserver Universal Hybrid)
+   Elements start slightly displaced and transparent, and smoothly reveal
+   as the user scrolls down into view.
+   ========================================================================= */
+
+[data-aos],
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translate3d(0, 42px, 0);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+[data-aos="fade"] {
+  transform: translate3d(0, 0, 0);
+}
+
+[data-aos="fade-left"] {
+  transform: translate3d(32px, 0, 0);
+}
+
+[data-aos="fade-right"] {
+  transform: translate3d(-32px, 0, 0);
+}
+
+[data-aos].is-revealed,
+[data-aos].aos-animate,
+.reveal-on-scroll.is-revealed,
+.reveal-on-scroll.aos-animate {
+  opacity: 1 !important;
+  transform: translate3d(0, 0, 0) !important;
+}
+
+/* Stagger transition delays for scroll down */
+[data-aos-delay="40"],  .reveal-delay-1 { transition-delay: 0.05s !important; }
+[data-aos-delay="60"]   { transition-delay: 0.08s !important; }
+[data-aos-delay="80"],  .reveal-delay-2 { transition-delay: 0.12s !important; }
+[data-aos-delay="100"]  { transition-delay: 0.15s !important; }
+[data-aos-delay="120"], .reveal-delay-3 { transition-delay: 0.18s !important; }
+[data-aos-delay="150"]  { transition-delay: 0.22s !important; }
+[data-aos-delay="160"], .reveal-delay-4 { transition-delay: 0.24s !important; }
+[data-aos-delay="180"]  { transition-delay: 0.26s !important; }
+[data-aos-delay="200"]  { transition-delay: 0.30s !important; }
+[data-aos-delay="220"], .reveal-delay-5 { transition-delay: 0.32s !important; }
+[data-aos-delay="250"]  { transition-delay: 0.36s !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  router-outlet + *,
+  .hero__title,
+  .hero__lede,
+  .hero-search-dock,
+  .hero__badges,
+  .hero__trust,
+  .specialty-chip,
+  .profile-portrait,
+  .doctor-name,
+  .specialties-wrap,
+  .accreditation-bar,
+  .profile-hero__actions,
+  .login-aside,
+  .login-aside__feature-item,
+  .login-card,
+  .ticket-wrapper,
+  .stepper-container,
+  .citas-card,
+  .settings-sculpt,
+  .profile-hero__showcase,
+  .sculpt-panel,
+  .search-hero__copy,
+  .search-form,
+  .cards-grid app-doctor-card,
+  .doctors__grid .doctor-card,
+  .values__grid .value-card,
+  .mat-expansion-panel,
+  .mat-dialog-container,
+  .mat-snack-bar-container {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+

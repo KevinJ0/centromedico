@@ -1,8 +1,300 @@
-.reason-field {
-    width: 100%;
-    margin-top: 1rem;
+/* ==========================================================================
+   MODAL DE POSPONER CITA — HOSPITAL DEL SALVADOR
+   Art Direction: Confianza Cercana • Sculptural 24px • Full Capsule Controls
+   ========================================================================== */
+
+.pospone-dialog {
+  --color-primary: #0d5c9e;
+  --color-primary-dark: #073b66;
+  --color-navy: #0a2540;
+  --color-primary-soft: rgba(13, 92, 158, 0.09);
+  --color-text: #1f2937;
+  --color-text-muted: #5b6472;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f8fafc;
+  --color-border: rgba(13, 92, 158, 0.14);
+  --color-amber-bg: rgba(245, 158, 11, 0.1);
+  --color-amber: #d97706;
+
+  font-family: var(--font-body, "Inter", sans-serif);
+  color: var(--color-text);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
 }
 
-mat-dialog-actions {
-    margin-bottom: 0.5rem;
+/* ---------- Header ---------- */
+.pospone-dialog__header {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 1.5rem 1.5rem 1.15rem;
+  border-bottom: 1px solid var(--color-border);
+  position: relative;
+}
+
+.pospone-dialog__icon-orb {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--color-amber-bg);
+  color: var(--color-amber);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.pospone-dialog__icon-orb mat-icon {
+  font-size: 1.4rem;
+  width: 1.4rem;
+  height: 1.4rem;
+}
+
+.pospone-dialog__titles {
+  flex: 1;
+  min-width: 0;
+}
+
+.pospone-dialog__title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--color-navy);
+  line-height: 1.2;
+}
+
+.pospone-dialog__subtitle {
+  margin: 0.2rem 0 0;
+  font-size: 0.84rem;
+  color: var(--color-text-muted);
+}
+
+.pospone-dialog__close {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.pospone-dialog__close:hover {
+  background: var(--color-surface-alt);
+  color: var(--color-navy);
+}
+
+.pospone-dialog__close mat-icon {
+  font-size: 1.2rem;
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+/* ---------- Body ---------- */
+.pospone-dialog__body {
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+/* Appointment Preview Card */
+.appointment-preview {
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  padding: 0.85rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.appointment-preview__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 0.88rem;
+}
+
+.preview-label {
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.preview-value {
+  color: var(--color-navy);
+  font-weight: 600;
+  text-align: right;
+}
+
+.preview-value--date {
+  color: var(--color-primary-dark);
+  text-transform: capitalize;
+}
+
+.preview-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  background: var(--color-primary);
+  color: #ffffff;
+  font-size: 0.76rem;
+  font-weight: 750;
+  letter-spacing: 0.02em;
+}
+
+/* Informative Notice */
+.pospone-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+}
+
+.notice-icon {
+  color: var(--color-primary);
+  font-size: 1.15rem;
+  width: 1.15rem;
+  height: 1.15rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.notice-copy p {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--color-navy);
+}
+
+/* Reason Section */
+.reason-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.reason-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--color-navy);
+}
+
+.optional-badge {
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  background: var(--color-surface-alt);
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+}
+
+.reason-field {
+  width: 100%;
+}
+
+.reason-field ::ng-deep .mat-form-field-wrapper {
+  padding-bottom: 0;
+  margin: 0;
+}
+
+/* ---------- Actions Footer ---------- */
+.pospone-dialog__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.65rem;
+  padding: 1rem 1.5rem 1.35rem;
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface-alt);
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+/* ---------- Pill Buttons ---------- */
+.pill-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.65rem 1.3rem;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.2;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+              background-color 0.2s ease,
+              box-shadow 0.2s ease,
+              color 0.2s ease;
+}
+
+.pill-btn mat-icon {
+  font-size: 1.05rem;
+  width: 1.05rem;
+  height: 1.05rem;
+}
+
+.pill-btn--ghost {
+  background: var(--color-surface);
+  color: var(--color-navy);
+  border-color: var(--color-border);
+}
+
+.pill-btn--ghost:hover {
+  background: var(--color-surface-alt);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.pill-btn--danger {
+  background: #dc2626;
+  color: #ffffff;
+  box-shadow: 0 4px 14px -4px rgba(220, 38, 38, 0.4);
+}
+
+.pill-btn--danger:hover {
+  background: #b91c1c;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px -4px rgba(185, 28, 28, 0.5);
+}
+
+@media (max-width: 480px) {
+  .pospone-dialog__header {
+    padding: 1.15rem 1.15rem 0.95rem;
+  }
+
+  .pospone-dialog__body {
+    padding: 1rem 1.15rem;
+  }
+
+  .pospone-dialog__actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    padding: 0.95rem 1.15rem 1.15rem;
+  }
+
+  .pill-btn {
+    width: 100%;
+  }
 }

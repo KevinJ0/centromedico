@@ -1,12 +1,27 @@
-<div class="barner-container">
-  <div class="black-screen"> </div>
-  <div class="item">
-    <h3 class="btn">
-      Encuentra el día y reserva tu cita con tu médico de primera calidad
-    </h3>
+<section class="closing-cta" aria-labelledby="closing-cta-title">
+  <div class="closing-cta__inner">
+    <div class="closing-cta__panel">
+      <div class="closing-cta__copy">
+        <h2 id="closing-cta-title" class="closing-cta__title">
+          Reserva tu cita médica con especialistas de primera&nbsp;línea
+        </h2>
+        <p class="closing-cta__text">
+          Consulta disponibilidad por especialidad, selecciona tu horario preferido y obtén tu confirmación digital al&nbsp;instante.
+        </p>
+      </div>
+
+      <div class="closing-cta__actions">
+        <a [routerLink]="['/medicos']" class="closing-cta__btn-primary">
+          <span>Buscar un médico</span>
+          <span class="closing-cta__btn-circle" aria-hidden="true">
+            <mat-icon>arrow_forward</mat-icon>
+          </span>
+        </a>
+        <a href="tel:809-550-5565" class="closing-cta__btn-secondary">
+          <mat-icon aria-hidden="true">phone_in_talk</mat-icon>
+          <span>Asistencia: 809-550-5565</span>
+        </a>
+      </div>
+    </div>
   </div>
-  <div class="item btn-container">
-    <a class="btn" href="tel:809-550-5565">Asistencia al: 809-550-5565</a>
-    <a [routerLink]="['/medicos']" class="search-doctor-btn">Buscar un médico</a>
-  </div>
-</div>
+</section>

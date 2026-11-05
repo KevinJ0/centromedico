@@ -1,4 +1,4 @@
-﻿using Amazon.S3;
+using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Transfer;
 using AutoMapper;
@@ -8,6 +8,8 @@ using Centromedico.Database.DbModels;
 using CentromedicoDoctor.Exceptions;
 using CentromedicoDoctor.Services.Interfaces;
 using Doctor.DTO;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 using Doctor.Repository.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -34,6 +36,7 @@ namespace CentromedicoDoctor.Services
         private readonly IMedicoRepository _medicoRepos;
         private readonly ISecretariaRepository _secretaryRepo;
         private readonly IAmazonS3 _amazons3;
+        private readonly Cloudinary _cloudinary;
 
         public AccountService(RoleManager<IdentityRole> roleManager,
             IHttpContextAccessor httpContextAccessor,
@@ -43,7 +46,8 @@ namespace CentromedicoDoctor.Services
             IMapper mapper,
             ISecretariaRepository secretaryRepo,
             IMedicoRepository medicoRepos,
-            IAmazonS3 amazonS3)
+            IAmazonS3 amazonS3,
+            Cloudinary cloudinary = null)
         {
             _secretaryRepo = secretaryRepo;
             _balanceRepo = balanceRepo;
@@ -53,6 +57,7 @@ namespace CentromedicoDoctor.Services
             _userManager = userManager;
             _db = db;
             _amazons3 = amazonS3;
+            _cloudinary = cloudinary;
             _mapper = mapper;
 
         }
@@ -118,50 +123,63 @@ namespace CentromedicoDoctor.Services
 
                 }
 
-                string BucketName = "centromedico-assets";
                 IFormFile profilePhoto = formuser.ProfilePhoto;
                 if (profilePhoto != null)
                 {
-                    String realFileName = "D" + _medico.ID + System.IO.Path.GetExtension(profilePhoto.FileName);
-
-                    try
+                    if (_cloudinary != null)
                     {
-                        var transferUtility = new TransferUtility(_amazons3);
-                        var putRequest = new PutObjectRequest()
+                        var uploadParams = new ImageUploadParams()
                         {
-                            BucketName = BucketName,
-                            Key = realFileName,
-                            InputStream = profilePhoto.OpenReadStream(),
-                            ContentType = profilePhoto.ContentType,
-                            CannedACL = S3CannedACL.PublicRead,
-
+                            File = new FileDescription(profilePhoto.FileName, profilePhoto.OpenReadStream()),
+                            Folder = "centromedico/doctores",
+                            PublicId = "doctor_" + _medico.ID,
+                            Overwrite = true,
+                            Transformation = new Transformation()
+                                .Width(600).Height(720).Crop("fill").Gravity("face").Quality("auto").FetchFormat("auto")
                         };
 
-                        // Create a CopyObject request
-                        GetPreSignedUrlRequest request = new GetPreSignedUrlRequest
+                        var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+                        if (uploadResult.Error != null)
                         {
-                            BucketName = "centromedico-assets",
-                            Key = realFileName,
-                        };
-
-                        // Get path for request
-                        var result = await _amazons3.PutObjectAsync(putRequest);
-                        var url = "https://" + BucketName + ".s3." + _amazons3.Config.RegionEndpoint.SystemName + ".amazonaws.com/" + realFileName;
-
-                        _medico.ProfilePhoto = url;
-
-                    }
-                    catch (AmazonS3Exception amazonS3Exception)
-                    {
-                        if (amazonS3Exception.ErrorCode != null &&
-                        (amazonS3Exception.ErrorCode.Equals("InvalidAccessKeyId")
-                        ||
-                        amazonS3Exception.ErrorCode.Equals("InvalidSecurity")))
-                        {
-                            throw new Exception("Check the provided AWS Credentials.");
+                            throw new Exception("Error al subir imagen a Cloudinary: " + uploadResult.Error.Message);
                         }
 
-                        throw amazonS3Exception;
+                        _medico.ProfilePhoto = uploadResult.SecureUrl?.ToString() ?? uploadResult.Url?.ToString();
+                    }
+                    else if (_amazons3 != null)
+                    {
+                        string BucketName = "centromedico-assets";
+                        String realFileName = "D" + _medico.ID + System.IO.Path.GetExtension(profilePhoto.FileName);
+
+                        try
+                        {
+                            var transferUtility = new TransferUtility(_amazons3);
+                            var putRequest = new PutObjectRequest()
+                            {
+                                BucketName = BucketName,
+                                Key = realFileName,
+                                InputStream = profilePhoto.OpenReadStream(),
+                                ContentType = profilePhoto.ContentType,
+                                CannedACL = S3CannedACL.PublicRead,
+                            };
+
+                            var result = await _amazons3.PutObjectAsync(putRequest);
+                            var url = "https://" + BucketName + ".s3." + _amazons3.Config.RegionEndpoint.SystemName + ".amazonaws.com/" + realFileName;
+
+                            _medico.ProfilePhoto = url;
+                        }
+                        catch (AmazonS3Exception amazonS3Exception)
+                        {
+                            if (amazonS3Exception.ErrorCode != null &&
+                            (amazonS3Exception.ErrorCode.Equals("InvalidAccessKeyId")
+                            ||
+                            amazonS3Exception.ErrorCode.Equals("InvalidSecurity")))
+                            {
+                                throw new Exception("Check the provided AWS Credentials.");
+                            }
+
+                            throw amazonS3Exception;
+                        }
                     }
                 }
 

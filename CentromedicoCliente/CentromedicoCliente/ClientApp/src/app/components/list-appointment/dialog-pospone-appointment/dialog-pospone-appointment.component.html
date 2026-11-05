@@ -1,15 +1,70 @@
-<h2 mat-dialog-title>Posponer Cita</h2>
-<mat-dialog-content class="mat-typography">
-    <p>¿Está seguro que desea posponer su cita?</p>
-    <p>Esta acción notificará al personal médico para reagendar.</p>
+<div class="pospone-dialog">
+  <!-- Dialog Header with Icon Orb and Close Button -->
+  <header class="pospone-dialog__header">
+    <div class="pospone-dialog__icon-orb" aria-hidden="true">
+      <mat-icon>event_repeat</mat-icon>
+    </div>
+    <div class="pospone-dialog__titles">
+      <h2 class="pospone-dialog__title">Posponer Cita Médica</h2>
+      <p class="pospone-dialog__subtitle">Solicitud para reagendar fecha y turno</p>
+    </div>
+    <button type="button" class="pospone-dialog__close" (click)="onNoClick()" aria-label="Cerrar modal">
+      <mat-icon aria-hidden="true">close</mat-icon>
+    </button>
+  </header>
 
-    <mat-form-field appearance="outline" class="reason-field">
-        <mat-label>Motivo (Opcional)</mat-label>
-        <textarea matInput [(ngModel)]="reason" placeholder="Ej. Imprevisto familiar" rows="3"></textarea>
-    </mat-form-field>
+  <div class="pospone-dialog__body">
+    <!-- Appointment Summary Card -->
+    <div class="appointment-preview" *ngIf="cita">
+      <div class="appointment-preview__row">
+        <span class="preview-label">Especialista</span>
+        <strong class="preview-value">Dr(a). {{ cita.medico_nombre }} {{ cita.medico_apellido }}</strong>
+      </div>
+      <div class="appointment-preview__row" *ngIf="cita.servicio_descrip">
+        <span class="preview-label">Servicio</span>
+        <span class="preview-value">{{ cita.servicio_descrip }}</span>
+      </div>
+      <div class="appointment-preview__row" *ngIf="formattedDate">
+        <span class="preview-label">Fecha actual</span>
+        <span class="preview-value preview-value--date">{{ formattedDate }}</span>
+      </div>
+      <div class="appointment-preview__row" *ngIf="cita.turno">
+        <span class="preview-label">Turno asignado</span>
+        <span class="preview-badge">Turno #{{ cita.turno }}</span>
+      </div>
+    </div>
 
-</mat-dialog-content>
-<mat-dialog-actions align="end">
-    <button mat-button (click)="onNoClick()">Cancelar</button>
-    <button mat-flat-button color="primary" (click)="confirm()">Confirmar</button>
-</mat-dialog-actions>
+    <!-- Informative Notice -->
+    <div class="pospone-notice">
+      <mat-icon class="notice-icon" aria-hidden="true">info</mat-icon>
+      <div class="notice-copy">
+        <p>Al confirmar, su turno actual se liberará y nuestro personal de atención al paciente se comunicará con usted para coordinar su nueva fecha.</p>
+      </div>
+    </div>
+
+    <!-- Reason Textarea -->
+    <div class="reason-section">
+      <label class="reason-label" for="posponeReasonInput">
+        <span>Motivo de la solicitud</span>
+        <span class="optional-badge">Opcional</span>
+      </label>
+      <mat-form-field appearance="outline" class="reason-field">
+        <textarea id="posponeReasonInput" matInput [(ngModel)]="reason"
+          placeholder="Ej: Imprevisto laboral, viaje familiar, cambio de horario..."
+          rows="3" maxlength="200" #reasonInput></textarea>
+        <mat-hint align="end">{{ reasonInput.value?.length || 0 }}/200</mat-hint>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <!-- Dialog Actions -->
+  <footer class="pospone-dialog__actions">
+    <button type="button" class="pill-btn pill-btn--ghost" (click)="onNoClick()">
+      <span>Mantener mi cita</span>
+    </button>
+    <button type="button" class="pill-btn pill-btn--danger" (click)="confirm()">
+      <mat-icon aria-hidden="true">event_repeat</mat-icon>
+      <span>Confirmar y posponer</span>
+    </button>
+  </footer>
+</div>

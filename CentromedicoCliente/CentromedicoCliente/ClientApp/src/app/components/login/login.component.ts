@@ -30,6 +30,9 @@ export class LoginComponent implements OnInit {
   ErrorMessage: string;
   invalidLogin: boolean = false;
   indiceActivo: number = 0;
+  hideLoginPassword: boolean = true;
+  hideSignupPassword: boolean = true;
+  hideSignupPassword2: boolean = true;
 
   constructor(private router: Router,
     private rutaActiva: ActivatedRoute,
@@ -43,7 +46,7 @@ export class LoginComponent implements OnInit {
   }
 
   cambiarTab(indice: number): void {
-    this.indiceActivo = indice; // Cambia el índice activo
+    this.indiceActivo = indice;
   }
 
   openSnackBar(message: string) {
@@ -54,7 +57,6 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     this.returnUrl = this.rutaActiva.snapshot.queryParams['returnUrl'] || '/';
 
     this.loginFormGroup = this._formBuilder.group({
@@ -70,10 +72,9 @@ export class LoginComponent implements OnInit {
         Validators.required,
         Validators.email,
       ]],
-      password: ['', [Validators.required]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
       password2: ['', [Validators.required]]
     }, { validator: passwordMatchValidator });
-
   }
 
   get password() { return this.signupFormGroup.get('password'); }
@@ -87,17 +88,14 @@ export class LoginComponent implements OnInit {
   }
 
   Login(): void {
-
     if (this.loginFormGroup.valid) {
       if (!this.loading) {
         this.loading = true;
-        const credentials = JSON.stringify(this.loginFormGroup.value);
         let userLogin = this.loginFormGroup.value;
 
         this.accountSvc
           .Login(userLogin.loginEmailControl, userLogin.loginPasswordControl)
           .subscribe(result => {
-
             this.loading = false;
             let token = (<any>result).authToken.token;
             console.log("User Logged In Successfully");
@@ -107,23 +105,20 @@ export class LoginComponent implements OnInit {
               this.router.navigateByUrl('/mis-citas');
             else
               this.router.navigateByUrl(this.returnUrl);
-
           },
             (error) => {
               this.invalidLogin = true;
               this.loading = false;
-
-              this.ErrorMessage = "Ha ocurrido un error al intentar iniciar sessión";
+              this.ErrorMessage = "Ha ocurrido un error al intentar iniciar sesión";
               this.openSnackBar(error);
               console.log(error);
             }
-          )
+          );
       }
     }
   }
 
   Signup(): void {
-
     if (this.signupFormGroup.valid) {
       if (!this.loading) {
         this.loading = true;
@@ -132,28 +127,24 @@ export class LoginComponent implements OnInit {
         this.accountSvc
           .Signup(userSignup.signupEmailControl, userSignup.password)
           .subscribe(result => {
-
             this.loading = false;
             let token = (<any>result).authToken.token;
             console.log("User Register and Login In Successfully");
             this.router.navigateByUrl(this.returnUrl);
-
           },
             (error) => {
               this.invalidLogin = true;
               this.loading = false;
-
-              this.ErrorMessage = "Ha ocurrido un error al intentar iniciar sessión";
+              this.ErrorMessage = "Ha ocurrido un error al intentar registrar la cuenta";
               this.openSnackBar(error);
               console.log(error);
             }
-          )
+          );
       }
     }
-
   }
-  ngOnDestroy() {
 
+  ngOnDestroy() {
   }
 }
 

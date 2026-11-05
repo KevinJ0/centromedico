@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -68,6 +68,17 @@ namespace Cliente.Repository.Repositories
                     //datos extras de los turnos
                     if (int.TryParse(citaDTO.medicosID.ToString(), out int _medicoID))
                     {
+                        if (citaDTO.turno_paciente == null)
+                        {
+                            citaDTO.turno_paciente = new turnoDTO
+                            {
+                                medicosID = _medicoID,
+                                turno_actual = 0,
+                                turno_atendido = 0,
+                                fecha = DateTime.Now
+                            };
+                        }
+
                         citaDTO.turno_paciente.cant_pacientes_adelante = getCantCitasPendientes(citaDTO.fecha_hora, _medicoID);
                         citaDTO.turno_paciente.ultima_entrada = getLastTurnByDate(citaDTO.fecha_hora, _medicoID);
                         citaDTO.turno_paciente.primera_entrada = getFirstTurnByDate(citaDTO.fecha_hora, _medicoID);
@@ -144,7 +155,7 @@ namespace Cliente.Repository.Repositories
             try
             {
                 citas result = _db.citas.FirstOrDefault(x => x.medicos == medico
-                  && x.pacientes.doc_identidad == docIdentidad && x.estado == true && x.pacientes.confirm_doc_identidad);
+                  && x.pacientes.doc_identidad == docIdentidad && x.estado == true);
 
                 if (result != null)
                     return true;

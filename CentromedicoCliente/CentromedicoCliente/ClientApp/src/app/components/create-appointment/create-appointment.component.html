@@ -1,289 +1,564 @@
-<main>
-  <mat-card data-aos="fade-in">
-    <mat-stepper [orientation]="(stepperOrientation | async)!" *ngIf="!loading else load">
+<main class="booking-page">
+  <!-- ============ COMPACT SMART HEADER ============ -->
+  <header class="booking-topbar">
+    <div class="booking-topbar__inner">
+      <div class="booking-topbar__left">
+        <a class="back-pill" [routerLink]="['/medicos', medicoId]" aria-label="Volver al perfil del médico">
+          <mat-icon aria-hidden="true">arrow_back</mat-icon>
+          <span class="back-pill__text">Volver al perfil</span>
+        </a>
 
-      <mat-step [stepControl]="firstFormGroup" label="Servicio y Seguro" state="payments"
-        errorMessage="Datos requeridos">
-        <form [formGroup]="firstFormGroup" class="form-group _row insurance-form">
-
-          <mat-card-header>
-            <mat-card-title>ESCOGE EL SERVICIO Y COBERTURA</mat-card-title>
-          </mat-card-header>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Tipo de servicio</mat-label>
-            <mat-select formControlName="serviceTypeControl" name="service" required>
-              <mat-option *ngFor="let servicio of servicios" [value]="servicio.id">
-                {{servicio.descrip}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Seguro</mat-label>
-            <mat-select required formControlName="insuranceControl">
-              <mat-option *ngFor="let seguro of coberturas" [value]="seguro.segurosID">
-                {{seguro.descrip}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          <ng-template [ngIf]="loadingPayment" [ngIfElse]="payment">
-            <section class="payment-form dark">
-              <div class="content-payment">
-                <div class="item">
-                  <p class="item-description">Cargando...</p>
-                </div>
-              </div>
-            </section>
-          </ng-template>
-
-
-
-          <ng-template #payment>
-            <section class="payment-form dark">
-              <div class="products">
-                <h3 class="title">Pago</h3>
-                <div class="item">
-                  <span class="price">RD${{pago}}</span>
-                  <p class="item-name">Costo</p>
-                  <p class="item-description">Costo de la consulta con el médico</p>
-                </div>
-                <div class="item">
-                  <span class="price">RD${{cobertura}}</span>
-                  <p class="item-name">Cobertura</p>
-                  <p class="item-description">Cobertura que aplica el seguro médico</p>
-                </div>
-                <div class="total">Diferencia<span class="price">RD${{diferencia}}</span></div>
-              </div>
-            </section>
-          </ng-template>
-
-          <div class="btn-container">
-            <button mat-button matStepperNext>Siguiente</button>
+        <div class="booking-doctor-chip" *ngIf="medicoData">
+          <div class="booking-doctor-chip__avatar">
+            <img src="assets/imgs/no-image.png" [src]="medicoData.profilePhoto | noProfilePhoto: medicoData.id"
+                 (error)="$any($event.target).src = 'assets/imgs/doctors/doctor-' + (medicoData.id || 1) + '.jpg'"
+                 [alt]="'Dr(a). ' + medicoData.nombre" loading="lazy">
           </div>
-        </form>
-      </mat-step>
-
-      <mat-step [stepControl]="secondFormGroup" label="Fecha y Hora" state="date" errorMessage="Datos requeridos">
-        <form [formGroup]="secondFormGroup" class="form-group _row datetime-form">
-          <mat-card-header>
-            <mat-card-title>ESCOGE LA FECHA Y HORA</mat-card-title>
-          </mat-card-header>
-
-          <mat-form-field (click)="picker.open()" appearance="outline">
-            <mat-label>Fecha</mat-label>
-            <input class="date-appointment" formControlName="dateControl" [matDatepickerFilter]="dateFilter" matInput
-              [matDatepicker]="picker" required (click)="picker.open()" [readonly]="true">
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker touchUi #picker></mat-datepicker>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Hora</mat-label>
-            <mat-select formControlName="timeControl" name="hora" required [disabled]="loadingDateControl">
-              <mat-option *ngFor="let hora of Horas" [value]="hora.id">
-                {{hora.descrip}}
-              </mat-option>
-            </mat-select>
-            <mat-hint><span *ngIf="!loadingDateControl else loadHours"></span></mat-hint>
-
-          </mat-form-field>
-          <div class="btn-container">
-            <button mat-button matStepperPrevious>Volver</button>
-            <button mat-button matStepperNext>Siguiente</button>
+          <div class="booking-doctor-chip__info">
+            <span class="booking-doctor-chip__label">Cita médica con</span>
+            <strong class="booking-doctor-chip__name">
+              {{ medicoData.sexo === 'f' ? 'Dra.' : 'Dr.' }} {{ medicoData.nombre }} {{ medicoData.apellido }}
+            </strong>
           </div>
-        </form>
-      </mat-step>
+        </div>
+      </div>
 
-      <mat-step [stepControl]="thirdFormGroup" label="Datos del paciente" state="userdata"
-        errorMessage="Datos requeridos">
+      <div class="booking-topbar__right">
+        <!-- Live Unified Form Status -->
+        <div class="unified-status-pill" *ngIf="!hasExistingAppointment">
+          <span class="unified-status-pill__indicator" [class.is-complete]="isFormValid" aria-hidden="true">
+            <mat-icon>{{ isFormValid ? 'check' : 'edit_note' }}</mat-icon>
+          </span>
+          <span class="unified-status-pill__text">
+            <span>{{ completedSectionsCount }} de 3 secciones listas</span>
+          </span>
+        </div>
 
-        <form [formGroup]="thirdFormGroup" (ngSubmit)="onClickSubmit()" class="form-group _row user-data-form">
+        <div class="existing-topbar-badge" *ngIf="hasExistingAppointment">
+          <mat-icon aria-hidden="true">event_busy</mat-icon>
+          <span>Cita registrada</span>
+        </div>
+      </div>
+    </div>
+  </header>
 
-          <mat-card-header>
-            <mat-card-title>DATOS DEL PACIENTE</mat-card-title>
-          </mat-card-header>
+  <!-- ============ ALERTA: CITA PREVIA EXISTENTE ============ -->
+  <section class="booking-workspace" *ngIf="hasExistingAppointment">
+    <div class="booking-workspace__inner">
+      <div class="sculpt-panel existing-appointment-card">
+        <div class="existing-appointment-badge">
+          <mat-icon aria-hidden="true">event_busy</mat-icon>
+        </div>
+        
+        <div class="existing-appointment-text">
+          <h2 class="existing-title">Ya tienes una cita activa con este especialista</h2>
+          <p class="existing-desc">
+            Actualmente cuentas con una cita médica agendada con 
+            <strong>{{ medicoData ? (medicoData.sexo === 'f' ? 'la Dra. ' : 'el Dr. ') + medicoData.nombre + ' ' + medicoData.apellido : 'este especialista' }}</strong>.
+            Por políticas del centro médico, no es posible programar una cita adicional hasta completar o posponer la actual.
+          </p>
 
-          <section>
-            <h4>¿Quién es el paciente?</h4>
-            <mat-button-toggle-group formControlName="appointmentTypeControl" aria-label="Font Style">
-              <mat-button-toggle checked style="min-width: 5rem;" value=0>Yo</mat-button-toggle>
-              <mat-button-toggle value=1>Menor de edad</mat-button-toggle>
-            </mat-button-toggle-group>
-          </section>
+          <div class="existing-details" *ngIf="existingAppointment">
+            <div class="existing-detail-chip">
+              <mat-icon aria-hidden="true">medical_services</mat-icon>
+              <span>{{ existingAppointment.servicio_descrip || 'Consulta Médica' }}</span>
+            </div>
+            <div class="existing-detail-chip" *ngIf="existingAppointment.cod_verificacionID">
+              <mat-icon aria-hidden="true">tag</mat-icon>
+              <span>Código: <strong>#{{ existingAppointment.cod_verificacionID }}</strong></span>
+            </div>
+          </div>
 
-          <div class="under-age" [style.display]="underAgeShow">
-            <div class="userdata-content">
+          <div class="existing-actions">
+            <a routerLink="/mis-citas" class="pill-btn pill-btn--primary">
+              <mat-icon aria-hidden="true">event_note</mat-icon>
+              <span>Ver mis citas agendadas</span>
+            </a>
+            <a [routerLink]="['/medicos', medicoId]" class="pill-btn pill-btn--ghost">
+              <span>Volver al perfil</span>
+            </a>
+            <a routerLink="/medicos" class="pill-btn pill-btn--ghost">
+              <span>Elegir otro especialista</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-              <div class="sub-title">
-                <p>Datos del dependiente</p>
-                <mat-divider inset></mat-divider>
+  <!-- ============ UNIFIED SINGLE-PAGE BOOKING WORKSPACE ============ -->
+  <section class="booking-workspace" *ngIf="!hasExistingAppointment">
+    <div class="booking-workspace__inner">
+      <div class="booking-unified-grid" *ngIf="!loading; else load">
+        
+        <!-- LEFT COLUMN: CATEGORICAL SECTIONS -->
+        <div class="booking-main-col">
+
+          <!-- ==================== CATEGORÍA 1: SERVICIO Y SEGURO ==================== -->
+          <article id="sec-service" class="booking-category-card sculpt-panel" [formGroup]="firstFormGroup">
+            <header class="category-head">
+              <div class="category-badge">
+                <span class="category-num">01</span>
+                <mat-icon aria-hidden="true">medical_services</mat-icon>
+              </div>
+              <div class="category-head__copy">
+                <span class="category-pill-label">Sección 1 · Servicio y Cobertura</span>
+                <h2 class="category-title">Selecciona el servicio y tu seguro médico</h2>
+                <p class="category-desc">
+                  Elige la consulta o procedimiento y tu aseguradora (ARS) para calcular automáticamente tu cobertura y diferencia.
+                </p>
+              </div>
+            </header>
+
+            <div class="category-body">
+              <div class="fields-grid-2">
+                <mat-form-field appearance="outline" class="booking-field">
+                  <mat-label>Tipo de servicio médico</mat-label>
+                  <mat-select formControlName="serviceTypeControl" name="service" required>
+                    <mat-option *ngFor="let servicio of servicios" [value]="servicio.id">
+                      {{servicio.descrip}}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="firstFormGroup.get('serviceTypeControl')?.hasError('required')">
+                    Debe seleccionar un servicio médico
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="booking-field">
+                  <mat-label>Seguro médico (ARS) o Privado</mat-label>
+                  <mat-select required formControlName="insuranceControl" [disabled]="!firstFormGroup.get('serviceTypeControl')?.value">
+                    <mat-option *ngFor="let seguro of coberturas" [value]="seguro.segurosID">
+                      {{seguro.descrip}}
+                    </mat-option>
+                  </mat-select>
+                  <mat-hint *ngIf="!firstFormGroup.get('serviceTypeControl')?.value">
+                    Primero elija el tipo de servicio
+                  </mat-hint>
+                  <mat-error *ngIf="firstFormGroup.get('insuranceControl')?.hasError('required')">
+                    Debe seleccionar su cobertura o seguro
+                  </mat-error>
+                </mat-form-field>
               </div>
 
-              <div class="userdata-item">
-                <div class="name-wrapper">
-                  <mat-form-field class="name" appearance="outline">
-                    <mat-label>Nombre del dependiente</mat-label>
+              <!-- Live Coverage Card right inside Section 1 -->
+              <div class="coverage-live-card" *ngIf="firstFormGroup.get('serviceTypeControl')?.value">
+                <div class="coverage-live-card__loading" *ngIf="loadingPayment; else coverageContent">
+                  <mat-progress-spinner mode="indeterminate" diameter="24"></mat-progress-spinner>
+                  <span>Calculando cobertura ARS con el centro...</span>
+                </div>
+                <ng-template #coverageContent>
+                  <div class="coverage-live-card__grid">
+                    <div class="coverage-item">
+                      <span class="coverage-item__label">Honorarios Consulta</span>
+                      <strong class="coverage-item__val">RD${{pago | number}}</strong>
+                    </div>
+                    <div class="coverage-item coverage-item--ars">
+                      <span class="coverage-item__label">Cobertura Estimada ARS</span>
+                      <strong class="coverage-item__val coverage-val--covered">- RD${{cobertura | number}}</strong>
+                    </div>
+                    <div class="coverage-item coverage-item--total">
+                      <span class="coverage-item__label">Diferencia a Pagar</span>
+                      <strong class="coverage-item__val coverage-val--total">RD${{diferencia | number}}</strong>
+                    </div>
+                  </div>
+                </ng-template>
+              </div>
+            </div>
+          </article>
+
+          <!-- ==================== CATEGORÍA 2: FECHA Y TURNO ==================== -->
+          <article id="sec-datetime" class="booking-category-card sculpt-panel" [formGroup]="secondFormGroup">
+            <header class="category-head">
+              <div class="category-badge">
+                <span class="category-num">02</span>
+                <mat-icon aria-hidden="true">event</mat-icon>
+              </div>
+              <div class="category-head__copy">
+                <span class="category-pill-label">Sección 2 · Agenda y Horarios</span>
+                <h2 class="category-title">Elige la fecha y el turno de atención</h2>
+                <p class="category-desc">
+                  El calendario habilita únicamente los días con consulta disponible. Al seleccionar el día, verás los turnos en tiempo real.
+                </p>
+              </div>
+            </header>
+
+            <div class="category-body">
+              <div class="fields-grid-2">
+                <mat-form-field (click)="picker.open()" appearance="outline" class="booking-field">
+                  <mat-label>Fecha de la consulta</mat-label>
+                  <input class="date-appointment" formControlName="dateControl" [matDatepickerFilter]="dateFilter"
+                    matInput [matDatepicker]="picker" required (click)="picker.open()" [readonly]="true"
+                    placeholder="Elige un día en el calendario">
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker touchUi #picker></mat-datepicker>
+                  <mat-error *ngIf="secondFormGroup.get('dateControl')?.hasError('required')">
+                    Debe seleccionar una fecha disponible
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="booking-field">
+                  <mat-label>Horario / Turno disponible</mat-label>
+                  <mat-select formControlName="timeControl" name="hora" required [disabled]="loadingDateControl || !secondFormGroup.get('dateControl')?.value">
+                    <mat-option *ngFor="let hora of Horas" [value]="hora.id">
+                      {{hora.descrip}}
+                    </mat-option>
+                  </mat-select>
+                  <mat-hint>
+                    <span *ngIf="loadingDateControl">Cargando turnos disponibles...</span>
+                    <span *ngIf="!loadingDateControl && secondFormGroup.get('dateControl')?.value && (!Horas || Horas.length === 0)">
+                      No hay turnos disponibles para este día
+                    </span>
+                    <span *ngIf="!secondFormGroup.get('dateControl')?.value">Selecciona una fecha primero</span>
+                  </mat-hint>
+                  <mat-error *ngIf="secondFormGroup.get('timeControl')?.hasError('required')">
+                    Debe seleccionar un turno
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+              <!-- Inline feedback if selected -->
+              <div class="datetime-selected-chip" *ngIf="selectedDateFormatted && selectedHourDescription">
+                <mat-icon aria-hidden="true">check_circle</mat-icon>
+                <div class="datetime-selected-chip__copy">
+                  <strong>Turno confirmado:</strong>
+                  <span>{{ selectedDateFormatted }} • {{ selectedHourDescription }}</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- ==================== CATEGORÍA 3: DATOS DEL PACIENTE ==================== -->
+          <article id="sec-patient" class="booking-category-card sculpt-panel" [formGroup]="thirdFormGroup">
+            <header class="category-head">
+              <div class="category-badge">
+                <span class="category-num">03</span>
+                <mat-icon aria-hidden="true">person</mat-icon>
+              </div>
+              <div class="category-head__copy">
+                <span class="category-pill-label">Sección 3 · Expediente y Contacto</span>
+                <h2 class="category-title">Datos del paciente</h2>
+                <p class="category-desc">
+                  Indica para quién es la consulta médica y confirma tus datos oficiales de contacto para el ticket digital.
+                </p>
+              </div>
+            </header>
+
+            <div class="category-body">
+              <!-- Patient Type Selector -->
+              <div class="patient-toggle-bar">
+                <span class="patient-toggle-bar__label">¿Para quién es la consulta médica?</span>
+                <mat-button-toggle-group class="pill-toggle-group" formControlName="appointmentTypeControl"
+                  aria-label="¿Para quién es la consulta?">
+                  <mat-button-toggle value="0">Para mí (Titular)</mat-button-toggle>
+                  <mat-button-toggle value="1">Menor de edad (Dependiente)</mat-button-toggle>
+                </mat-button-toggle-group>
+              </div>
+
+              <!-- Dependent Section (if Minor) -->
+              <div class="under-age-box" *ngIf="isDependent">
+                <div class="form-section-divider">
+                  <mat-icon aria-hidden="true">child_care</mat-icon>
+                  <h3 class="form-section-title">Datos del paciente menor de edad</h3>
+                </div>
+
+                <div class="fields-grid-2">
+                  <mat-form-field appearance="outline" class="booking-field">
+                    <mat-label>Nombre(s) del menor</mat-label>
                     <input [required]="isDependent" formControlName="dependentNameControl" matInput
-                      placeholder="Nombre del paciente">
+                      placeholder="Nombre del menor">
+                    <mat-error *ngIf="thirdFormGroup.get('dependentNameControl')?.hasError('required')">
+                      El nombre del menor es requerido
+                    </mat-error>
                   </mat-form-field>
 
-                  <mat-form-field class="lastName" appearance="outline">
-                    <mat-label>Apellido(s) del dependiente</mat-label>
+                  <mat-form-field appearance="outline" class="booking-field">
+                    <mat-label>Apellido(s) del menor</mat-label>
                     <input [required]="isDependent" formControlName="dependentLastNameControl" matInput
-                      placeholder="Apellido(s) del paciente">
+                      placeholder="Apellidos del menor">
+                    <mat-error *ngIf="thirdFormGroup.get('dependentLastNameControl')?.hasError('required')">
+                      El apellido del menor es requerido
+                    </mat-error>
                   </mat-form-field>
-                </div>
-              </div>
 
-              <div class="userdata-item">
-                <div class="radio-wrapper">
-                  <label>Sexo del dependiente: </label>
-                  <mat-radio-group [required]="isDependent" ariaLabel="Sexo:" style="display: block;"
-                    class="radio-group" formControlName="dependentSexControl">
-                    <mat-radio-button class="insurance-radio-button" value="m">Masculino</mat-radio-button>
-                    <mat-radio-button class="insurance-radio-button" value="f">Femenino</mat-radio-button>
-                    <mat-error *ngIf="thirdFormGroup.get('dependentSexControl').invalid && loading">
+                  <div class="radio-field-box">
+                    <label class="radio-field-label">Sexo del menor</label>
+                    <mat-radio-group [required]="isDependent" ariaLabel="Sexo del dependiente" class="radio-group"
+                      formControlName="dependentSexControl">
+                      <mat-radio-button class="insurance-radio-button" value="m">Masculino</mat-radio-button>
+                      <mat-radio-button class="insurance-radio-button" value="f">Femenino</mat-radio-button>
+                    </mat-radio-group>
+                    <mat-error *ngIf="thirdFormGroup.get('dependentSexControl')?.invalid && thirdFormGroup.get('dependentSexControl')?.touched">
                       {{getDSexErrorMessage()}}
                     </mat-error>
-                  </mat-radio-group>
+                  </div>
+
+                  <mat-form-field appearance="outline" class="booking-field">
+                    <mat-label>Fecha de nacimiento del menor</mat-label>
+                    <input [required]="isDependent" formControlName="dependentBirthDateControl"
+                      placeholder="Escoge una fecha" matInput [min]="minDBDDate" [max]="maxDBDDate"
+                      [matDatepicker]="DBDpicker">
+                    <mat-datepicker-toggle matSuffix [for]="DBDpicker"></mat-datepicker-toggle>
+                    <mat-datepicker #DBDpicker></mat-datepicker>
+                    <mat-error *ngIf="thirdFormGroup.get('dependentBirthDateControl')?.hasError('required')">
+                      Fecha de nacimiento requerida
+                    </mat-error>
+                  </mat-form-field>
                 </div>
-
-                <mat-form-field appearance="outline">
-                  <mat-label>Fecha de nacimiento</mat-label>
-                  <input [required]="isDependent" formControlName="dependentBirthDateControl"
-                    placeholder="Escoge una fecha" matInput [min]="minDBDDate" [max]="maxDBDDate"
-                    [matDatepicker]="DBDpicker">
-                  <mat-datepicker-toggle matSuffix [for]="DBDpicker"></mat-datepicker-toggle>
-                  <mat-datepicker #DBDpicker></mat-datepicker>
-                </mat-form-field>
               </div>
-            </div>
-          </div>
 
+              <!-- Adult / Guardian Personal Info -->
+              <div class="form-section-divider">
+                <mat-icon aria-hidden="true">badge</mat-icon>
+                <h3 class="form-section-title">{{ isDependent ? 'Datos del padre, madre o tutor responsable' : 'Datos del titular de la cuenta' }}</h3>
+              </div>
 
-          <div class="userdata-content">
-
-            <div class="sub-title">
-              <p>Mis datos</p>
-              <mat-divider inset></mat-divider>
-            </div>
-
-            <div class="userdata-item">
-
-              <mat-form-field appearance="outline">
-                <mat-label>Tipo de documento</mat-label>
-                <mat-select formControlName="typeIdentityDocControl" name="tipoDoc" required>
-
-                  <mat-option [value]=0 selected>Cédula</mat-option>
-                  <mat-option [value]=1>Pasaporte</mat-option>
-                  <mat-option [value]=2>RNC</mat-option>
-                </mat-select>
-              </mat-form-field>
-
-              <mat-form-field appearance="outline">
-                <mat-label>Documento de identidad</mat-label>
-                <mat-icon matSuffix>badge</mat-icon>
-                <input required [mask]="identDocMask" [readonly]="isUserConfirmed" formControlName="identityDocControl"
-                  maxlength="15" matInput placeholder="Documento de identidad">
-              </mat-form-field>
-
-              <div class="name-wrapper">
-                <mat-form-field class="name" appearance="outline">
-                  <mat-label>Nombre</mat-label>
+              <div class="fields-grid-2">
+                <mat-form-field appearance="outline" class="booking-field">
+                  <mat-label>Nombre(s)</mat-label>
                   <input required formControlName="userNameControl" matInput [readonly]="isUserConfirmed"
                     placeholder="Nombre">
+                  <mat-error *ngIf="thirdFormGroup.get('userNameControl')?.hasError('required')">
+                    Nombre requerido
+                  </mat-error>
                 </mat-form-field>
 
-                <mat-form-field class="lastName" appearance="outline">
+                <mat-form-field appearance="outline" class="booking-field">
                   <mat-label>Apellido(s)</mat-label>
                   <input required formControlName="userLastNameControl" [readonly]="isUserConfirmed" matInput
-                    placeholder="Apellido(s)">
+                    placeholder="Apellidos">
+                  <mat-error *ngIf="thirdFormGroup.get('userLastNameControl')?.hasError('required')">
+                    Apellido requerido
+                  </mat-error>
+                </mat-form-field>
+
+                <div class="doc-row">
+                  <mat-form-field appearance="outline" class="booking-field doc-row__type">
+                    <mat-label>Tipo doc.</mat-label>
+                    <mat-select formControlName="typeIdentityDocControl" name="tipoDoc" required>
+                      <mat-option [value]="0">Cédula</mat-option>
+                      <mat-option [value]="1">Pasaporte</mat-option>
+                      <mat-option [value]="2">RNC</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="booking-field doc-row__num">
+                    <mat-label>Documento de identidad</mat-label>
+                    <mat-icon matSuffix>badge</mat-icon>
+                    <input required [mask]="identDocMask" [readonly]="isUserConfirmed"
+                      formControlName="identityDocControl" maxlength="15" matInput
+                      placeholder="Número de documento">
+                    <mat-error *ngIf="thirdFormGroup.get('identityDocControl')?.hasError('required')">
+                      Documento requerido
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <mat-form-field appearance="outline" class="booking-field">
+                  <mat-label>Fecha de nacimiento</mat-label>
+                  <input required [readonly]="isUserConfirmed" formControlName="birthDateControl"
+                    placeholder="Escoge una fecha" matInput [min]="minBDDate" [max]="maxBDDate"
+                    [matDatepicker]="BDpicker">
+                  <mat-datepicker-toggle [disabled]="isUserConfirmed" matSuffix [for]="BDpicker">
+                  </mat-datepicker-toggle>
+                  <mat-datepicker #BDpicker></mat-datepicker>
+                  <mat-error *ngIf="thirdFormGroup.get('birthDateControl')?.hasError('required')">
+                    Fecha de nacimiento requerida
+                  </mat-error>
+                </mat-form-field>
+
+                <div class="radio-field-box">
+                  <label class="radio-field-label">Sexo del titular</label>
+                  <mat-radio-group required ariaLabel="Sexo" class="radio-group" formControlName="userSexControl">
+                    <mat-radio-button [disabled]="isUserConfirmed" class="insurance-radio-button" value="m">
+                      Masculino
+                    </mat-radio-button>
+                    <mat-radio-button [disabled]="isUserConfirmed" class="insurance-radio-button" value="f">
+                      Femenino
+                    </mat-radio-button>
+                  </mat-radio-group>
+                  <mat-error *ngIf="thirdFormGroup.get('userSexControl')?.invalid && thirdFormGroup.get('userSexControl')?.touched">
+                    {{getSexErrorMessage()}}
+                  </mat-error>
+                </div>
+
+                <mat-form-field appearance="outline" class="booking-field">
+                  <mat-label>Teléfono móvil o contacto</mat-label>
+                  <input required formControlName="contactControl" mask="000-000-0000" type="tel" matInput
+                    placeholder="809-555-1234">
+                  <mat-icon matSuffix>phone</mat-icon>
+                  <mat-error *ngIf="thirdFormGroup.get('contactControl')?.hasError('required')">
+                    Teléfono requerido
+                  </mat-error>
+                </mat-form-field>
+
+                <div class="whatsapp-check-row full-col">
+                  <mat-checkbox class="wsReach" formControlName="wsReachControl" color="primary">
+                    Deseo recibir confirmación y recordatorios de mi cita vía WhatsApp
+                  </mat-checkbox>
+                </div>
+
+                <mat-form-field appearance="outline" class="booking-field full-col">
+                  <mat-label>Nota o motivo de consulta (opcional)</mat-label>
+                  <textarea formControlName="noteControl" rows="3" #matInputNote maxlength="200" matInput
+                    placeholder="Describa brevemente síntomas o comentarios para el médico"></textarea>
+                  <mat-hint align="end">{{matInputNote.value?.length || 0}}/200</mat-hint>
                 </mat-form-field>
               </div>
 
-              <!--mantiene el width ration del los mat-form-field -->
-              <div class="radio-wrapper">
-                <label>Sexo: </label>
-                <mat-radio-group required ariaLabel="Sexo:" style="display: block;" required class="radio-group"
-                  formControlName="userSexControl">
-                  <mat-radio-button [disabled]="isUserConfirmed" class="insurance-radio-button" value="m">
-                    Masculino
-                  </mat-radio-button>
-                  <mat-radio-button [disabled]="isUserConfirmed" class="insurance-radio-button" value="f">
-                    Femenino
-                  </mat-radio-button>
-                  <mat-error *ngIf="thirdFormGroup.get('userSexControl').invalid && loading">
-
-                    {{getSexErrorMessage()}}
-                  </mat-error>
-                </mat-radio-group>
+              <!-- Mobile Submit Button at bottom of form -->
+              <div class="mobile-cta-box">
+                <button type="button" (click)="onClickSubmit()" class="pill-btn pill-btn--primary pill-btn--full"
+                  [disabled]="loading">
+                  <mat-spinner diameter="20" *ngIf="loading"></mat-spinner>
+                  <mat-icon *ngIf="!loading" aria-hidden="true">check_circle</mat-icon>
+                  <span>{{ loading ? 'Agendando cita...' : 'Confirmar y agendar cita' }}</span>
+                </button>
               </div>
             </div>
-            <div class="userdata-item">
+          </article>
+        </div>
 
-              <mat-form-field appearance="outline">
-                <mat-label>Fecha de nacimiento</mat-label>
-                <input required [readonly]="isUserConfirmed" formControlName="birthDateControl"
-                  placeholder="Escoge una fecha" matInput [min]="minBDDate" [max]="maxBDDate"
-                  [matDatepicker]="BDpicker">
-                <mat-datepicker-toggle [disabled]="isUserConfirmed" matSuffix [for]="BDpicker">
-                </mat-datepicker-toggle>
-                <mat-datepicker #BDpicker></mat-datepicker>
-              </mat-form-field>
+        <!-- RIGHT COLUMN: STICKY LIVE SUMMARY & CONFIRMATION -->
+        <aside class="booking-sidebar-col">
+          <div class="sidebar-sticky-wrap">
+            <div class="sculpt-panel sidebar-summary-card">
+              <header class="sidebar-summary-card__head">
+                <span class="sidebar-summary-card__badge">
+                  <mat-icon aria-hidden="true">receipt_long</mat-icon>
+                  Resumen en Vivo
+                </span>
+                <h3 class="sidebar-summary-card__title">Tu Cita Médica</h3>
+              </header>
 
-              <mat-form-field appearance="outline">
-                <mat-label>Teléfono</mat-label>
-                <input required formControlName="contactControl" mask="000-000-0000" type="tel" matInput
-                  placeholder="555-555-1234">
-                <mat-icon matSuffix>phone</mat-icon>
-              </mat-form-field>
+              <!-- Doctor Mini Card -->
+              <div class="sidebar-doctor-box" *ngIf="medicoData">
+                <div class="sidebar-doctor-avatar">
+                  <img src="assets/imgs/no-image.png" [src]="medicoData.profilePhoto | noProfilePhoto: medicoData.id"
+                       (error)="$any($event.target).src = 'assets/imgs/doctors/doctor-' + (medicoData.id || 1) + '.jpg'"
+                       [alt]="'Dr(a). ' + medicoData.nombre" loading="lazy">
+                </div>
+                <div class="sidebar-doctor-meta">
+                  <span class="sidebar-doctor-specialty">{{ medicoData.especialidad_descrip || 'Especialista Médico' }}</span>
+                  <strong class="sidebar-doctor-name">
+                    {{ medicoData.sexo === 'f' ? 'Dra.' : 'Dr.' }} {{ medicoData.nombre }} {{ medicoData.apellido }}
+                  </strong>
+                  <span class="sidebar-doctor-campus">Hospital del Salvador</span>
+                </div>
+              </div>
 
-              <mat-checkbox class="wsReach" formControlName="wsReachControl">
-                Contactarme vía Whatsapp
-              </mat-checkbox>
+              <div class="sidebar-divider"></div>
 
+              <!-- Live Fields Summary List -->
+              <dl class="sidebar-summary-list">
+                <div class="summary-list-item">
+                  <dt class="summary-list-label">
+                    <mat-icon aria-hidden="true">medical_services</mat-icon>
+                    <span>Servicio</span>
+                  </dt>
+                  <dd class="summary-list-value" [class.is-pending]="!selectedServiceName">
+                    {{ selectedServiceName || 'Por seleccionar' }}
+                  </dd>
+                </div>
 
-              <mat-form-field appearance="outline">
-                <mat-label>Nota</mat-label>
-                <textarea formControlName="noteControl" rows="8" #matInputNote maxlength="200" matInput
-                  placeholder="Nota para el médico"></textarea>
-                <mat-hint align="end">{{matInputNote.value?.length || 0}}/200</mat-hint>
-              </mat-form-field>
+                <div class="summary-list-item">
+                  <dt class="summary-list-label">
+                    <mat-icon aria-hidden="true">security</mat-icon>
+                    <span>Seguro ARS</span>
+                  </dt>
+                  <dd class="summary-list-value" [class.is-pending]="!selectedInsuranceName">
+                    {{ selectedInsuranceName || 'Por seleccionar' }}
+                  </dd>
+                </div>
+
+                <div class="summary-list-item">
+                  <dt class="summary-list-label">
+                    <mat-icon aria-hidden="true">event</mat-icon>
+                    <span>Fecha</span>
+                  </dt>
+                  <dd class="summary-list-value summary-list-value--highlight" [class.is-pending]="!selectedDateFormatted">
+                    {{ selectedDateFormatted || 'Por seleccionar' }}
+                  </dd>
+                </div>
+
+                <div class="summary-list-item">
+                  <dt class="summary-list-label">
+                    <mat-icon aria-hidden="true">schedule</mat-icon>
+                    <span>Turno</span>
+                  </dt>
+                  <dd class="summary-list-value" [class.is-pending]="!selectedHourDescription">
+                    {{ selectedHourDescription || 'Por seleccionar' }}
+                  </dd>
+                </div>
+
+                <div class="summary-list-item">
+                  <dt class="summary-list-label">
+                    <mat-icon aria-hidden="true">person</mat-icon>
+                    <span>Paciente</span>
+                  </dt>
+                  <dd class="summary-list-value">
+                    {{ patientDisplayName }}
+                  </dd>
+                </div>
+              </dl>
+
+              <div class="sidebar-divider"></div>
+
+              <!-- Cost breakdown -->
+              <div class="sidebar-pricing-box">
+                <div class="pricing-line">
+                  <span>Honorarios consulta:</span>
+                  <strong>RD${{pago | number}}</strong>
+                </div>
+                <div class="pricing-line pricing-line--covered" *ngIf="cobertura > 0">
+                  <span>Cobertura ARS estimada:</span>
+                  <strong class="text-teal">- RD${{cobertura | number}}</strong>
+                </div>
+                <div class="pricing-total">
+                  <span class="pricing-total__label">Diferencia a pagar</span>
+                  <span class="pricing-total__amount">RD${{diferencia | number}}</span>
+                </div>
+                <p class="pricing-disclaimer">
+                  * Monto estimado sujeto a verificación del carnet físico o digital en recepción.
+                </p>
+              </div>
+
+              <!-- Desktop CTA Button -->
+              <div class="sidebar-action-wrap">
+                <button type="button" (click)="onClickSubmit()" class="pill-btn pill-btn--primary pill-btn--full"
+                  [disabled]="loading">
+                  <mat-spinner diameter="20" *ngIf="loading"></mat-spinner>
+                  <mat-icon *ngIf="!loading" aria-hidden="true">check_circle</mat-icon>
+                  <span>{{ loading ? 'Agendando cita...' : 'Confirmar y agendar cita' }}</span>
+                </button>
+              </div>
+
+              <!-- Trust & Security Signals -->
+              <div class="sidebar-guarantees">
+                <div class="guarantee-row">
+                  <mat-icon aria-hidden="true">verified</mat-icon>
+                  <span>Ticket digital con código de verificación</span>
+                </div>
+                <div class="guarantee-row">
+                  <mat-icon aria-hidden="true">event_available</mat-icon>
+                  <span>Gestión o posposición desde "Mis Citas"</span>
+                </div>
+                <div class="guarantee-row">
+                  <mat-icon aria-hidden="true">lock</mat-icon>
+                  <span>Expediente clínico confidencial y seguro</span>
+                </div>
+              </div>
             </div>
           </div>
+        </aside>
 
-          <div class="btn-container">
-            <button mat-button matStepperPrevious>Volver</button>
-            <button (click)="scrollToTop()" id="scrollToTop" mat-flat-button color="primary" [disabled]="loading"
-              type="submit">Terminar</button>
-
-          </div>
-        </form>
-      </mat-step>
-
-      <!-- Icon overrides. -->
-      <ng-template matStepperIcon="payments">
-        <mat-icon>attach_money</mat-icon>
-      </ng-template>
-      <ng-template matStepperIcon="date">
-        <mat-icon>event</mat-icon>
-      </ng-template>
-      <ng-template matStepperIcon="userdata">
-        <mat-icon>person</mat-icon>
-      </ng-template>
-    </mat-stepper>
-  </mat-card>
-
+      </div>
+    </div>
+  </section>
 </main>
 
 <ng-template #load>
   <div class="progress-content">
-    <mat-progress-spinner [mode]="mode">
-    </mat-progress-spinner>
+    <mat-progress-spinner [mode]="mode" diameter="50"></mat-progress-spinner>
+    <p class="progress-label">Preparando agenda del especialista...</p>
   </div>
-</ng-template>
-
-<ng-template #loadHours>
-  Cargando...
 </ng-template>

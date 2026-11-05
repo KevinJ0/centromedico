@@ -45,16 +45,13 @@ import { DoctorComponent } from './components/doctor/doctor.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { AuthGuardService } from './guards/auth-guard.service';
 import { ListAppointmentComponent } from './components/list-appointment/list-appointment.component';
-import { LocationComponent } from './components/location/location.component';
-import { ContactComponent, DialogSuccessedEmail } from './components/contact/contact.component';
+import { DialogSuccessedEmail } from './components/dialog-successed-email/dialog-successed-email.component';
 import { DialogPosponeAppointmentComponent } from './components/list-appointment/dialog-pospone-appointment/dialog-pospone-appointment.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { FaqComponent } from './components/faq/faq.component';
-import { FaqExpansionPanelComponent } from './components/faq/faq-expansion-panel/faq-expansion-panel.component';
-import { GoogleMapsModule } from '@angular/google-maps';
+
 import { SwiperModule } from 'ngx-swiper-wrapper';
 import { PreguntaService } from './services/pregunta.service';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -101,11 +98,7 @@ export const MY_FORMATS = {
     TicketAppointmentComponent,
     DoctorCardComponent,
     DoctorComponent,
-    ContactComponent,
-    LocationComponent,
     ListAppointmentComponent,
-    FaqComponent,
-    FaqExpansionPanelComponent,
     DialogSuccessedEmail,
     ImageLoaderComponent,
     DialogPosponeAppointmentComponent,
@@ -115,7 +108,7 @@ export const MY_FORMATS = {
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
-    GoogleMapsModule,
+
     SwiperModule,
     NgxMaskModule.forRoot(),
     LottieModule.forRoot({ player: playerFactory }),
@@ -161,12 +154,13 @@ export const MY_FORMATS = {
       { path: 'medicos', component: MedicalDirectoryComponent },
       { path: 'medicos/:id', component: DoctorComponent },
       { path: 'mis-citas', component: ListAppointmentComponent, canActivate: [AuthGuardService] },
-      { path: 'ubicacion', component: LocationComponent },
-      { path: 'contactos', component: ContactComponent },
-      { path: 'faq', component: FaqComponent },
       { path: 'ajustes-usuario', component: UserSettingsComponent, canActivate: [AuthGuardService] },
+      // Ubicaciones, contactos y FAQ viven ahora como secciones del home (#sedes, #contacto, #faq).
+      { path: 'ubicacion', redirectTo: '', pathMatch: 'full' },
+      { path: 'contactos', redirectTo: '', pathMatch: 'full' },
+      { path: 'faq', redirectTo: '', pathMatch: 'full' },
       { path: '**', component: HomeComponent },
-    ], { scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled', useHash: false }),
+    ], { scrollPositionRestoration: 'top', anchorScrolling: 'enabled', scrollOffset: [0, 80], useHash: false }),
     A11yModule
   ],
   providers: [

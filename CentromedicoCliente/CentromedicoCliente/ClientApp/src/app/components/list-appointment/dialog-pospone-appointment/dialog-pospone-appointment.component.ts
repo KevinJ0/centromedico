@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import * as _moment from 'moment';
 
 @Component({
     selector: 'app-dialog-pospone-appointment',
@@ -17,6 +18,15 @@ export class DialogPosponeAppointmentComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
+    }
+
+    get cita(): any {
+        return this.data?.cita;
+    }
+
+    get formattedDate(): string {
+        if (!this.cita?.fecha_hora) return '';
+        return _moment(this.cita.fecha_hora).locale('es').format('dddd, D [de] MMMM [de] YYYY • hh:mm A');
     }
 
     onNoClick(): void {

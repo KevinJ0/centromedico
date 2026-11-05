@@ -1,112 +1,361 @@
-<main class="auth-page">
-  <div class="auth-card">
-    <div class="auth-brand">
-      <img src="../../../assets/imgs/logo-alone.png" alt="Hospital Salvador" class="auth-logo" loading="lazy" width="64" height="64">
-      <h1 class="auth-title">Hospital Salvador</h1>
-      <p class="auth-subtitle">Accede a tu cuenta para gestionar tus citas</p>
-    </div>
+<main class="login-layout">
+  <!-- Left Side: Editorial Medical Showcase & Brand Narrative -->
+  <aside class="login-aside" aria-label="Portal Institucional Hospital del Salvador">
+    <div class="login-aside__ambient-glow-top"></div>
+    <div class="login-aside__ambient-glow-bottom"></div>
+    <div class="login-aside__overlay"></div>
+    
+    <div class="login-aside__content">
+      <!-- Institutional Top Bar -->
+      <header class="login-aside__header">
+        <a [routerLink]="['/']" class="login-aside__logo-link" aria-label="Volver al inicio del Hospital Salvador">
+          <img src="assets/imgs/header_logo.png" alt="Hospital Salvador" class="login-aside__logo" width="160" height="42">
+        </a>
+        <div class="login-aside__accreditation-pill">
+          <mat-icon aria-hidden="true">verified</mat-icon>
+          <span>Acreditación en Salud</span>
+        </div>
+      </header>
 
-    <mat-tab-group class="auth-tabs" [selectedIndex]="indiceActivo" animationDuration="200ms">
-      <mat-tab label="Acceso">
-        <div class="auth-form-wrap" *ngIf="!loading else load" data-aos="fade-up">
-          <form [formGroup]="loginFormGroup" (ngSubmit)="Login()" class="auth-form">
-            <mat-form-field appearance="outline" class="full-width">
+      <!-- Center Editorial Narrative -->
+      <div class="login-aside__body">
+        <div class="login-aside__kicker">
+          <mat-icon aria-hidden="true">local_hospital</mat-icon>
+          <span>PORTAL CLÍNICO DIGITAL</span>
+        </div>
+
+        <h1 class="login-aside__title">Tu salud y bienestar en manos de especialistas</h1>
+        
+        <p class="login-aside__text">
+          Gestiona tus horas médicas, accede a tus antecedentes de salud y conéctate con los profesionales del Hospital del Salvador desde cualquier lugar.
+        </p>
+
+        <!-- Feature Cards Grid (Frosted Medical Glass) -->
+        <div class="login-aside__features-grid">
+          <div class="login-aside__feature-card">
+            <div class="login-aside__feature-icon-box">
+              <mat-icon aria-hidden="true">event_available</mat-icon>
+            </div>
+            <div class="login-aside__feature-content">
+              <strong>Agendamiento digital 24/7</strong>
+              <span>Reserva consultas en tiempo real y recibe confirmación inmediata.</span>
+            </div>
+          </div>
+
+          <div class="login-aside__feature-card">
+            <div class="login-aside__feature-icon-box">
+              <mat-icon aria-hidden="true">shield</mat-icon>
+            </div>
+            <div class="login-aside__feature-content">
+              <strong>Historial clínico protegido</strong>
+              <span>Tus datos resguardados bajo estándares estrictos de cifrado médico.</span>
+            </div>
+          </div>
+
+          <div class="login-aside__feature-card">
+            <div class="login-aside__feature-icon-box">
+              <mat-icon aria-hidden="true">medical_services</mat-icon>
+            </div>
+            <div class="login-aside__feature-content">
+              <strong>Doctores certificados</strong>
+              <span>Equipo clínico colegiado y acreditado por el Hospital del Salvador.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Medical Stats Strip -->
+        <div class="login-aside__stats-card" aria-label="Cifras institucionales">
+          <div class="login-aside__stat-col">
+            <span class="stat-number">+120</span>
+            <span class="stat-label">Especialistas Colegiados</span>
+          </div>
+          <div class="login-aside__stat-divider" aria-hidden="true"></div>
+          <div class="login-aside__stat-col">
+            <span class="stat-number">24/7</span>
+            <span class="stat-label">Agendamiento Online</span>
+          </div>
+          <div class="login-aside__stat-divider" aria-hidden="true"></div>
+          <div class="login-aside__stat-col">
+            <span class="stat-number">100%</span>
+            <span class="stat-label">Cifrado Clínico Seguro</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trust Footer -->
+      <footer class="login-aside__footer">
+        <div class="login-aside__trust-line">
+          <mat-icon aria-hidden="true">verified_user</mat-icon>
+          <span>Portal Oficial de Pacientes &bull; Acreditado por la Superintendencia de Salud</span>
+        </div>
+      </footer>
+    </div>
+  </aside>
+
+  <!-- Right Side: Patient Authentication Hub -->
+  <section class="login-main" aria-label="Formulario de Acceso y Registro">
+    <div class="login-main__pattern-grid" aria-hidden="true"></div>
+    
+    <div class="login-card">
+      <!-- Mobile Brand Header (Visible on viewports < 992px) -->
+      <div class="login-card__mobile-brand">
+        <a [routerLink]="['/']" aria-label="Ir al inicio de Hospital Salvador">
+          <img src="assets/imgs/header_logo.png" alt="Hospital Salvador" width="148" height="40">
+        </a>
+      </div>
+
+      <!-- Card Header with Subtle Medical Kicker -->
+      <header class="login-card__header">
+        <div class="auth-kicker">
+          <mat-icon aria-hidden="true">health_and_safety</mat-icon>
+          <span>PORTAL DE SALUD DEL PACIENTE</span>
+        </div>
+        <h2 class="login-card__title">
+          {{ indiceActivo === 0 ? 'Iniciar sesión' : 'Crear tu cuenta' }}
+        </h2>
+        <p class="login-card__subtitle">
+          {{ indiceActivo === 0 
+              ? 'Ingresa tus credenciales para acceder a tus consultas y horas médicas' 
+              : 'Regístrate para agendar horas con especialistas y revisar tus citas' }}
+        </p>
+      </header>
+
+      <!-- Segmented Pill Switcher (WAI-ARIA Tablist) -->
+      <div class="auth-switcher" role="tablist" aria-label="Seleccionar modo de acceso">
+        <button type="button"
+                role="tab"
+                id="tab-login"
+                aria-controls="panel-login"
+                class="auth-switcher__pill"
+                [class.is-active]="indiceActivo === 0"
+                [attr.aria-selected]="indiceActivo === 0"
+                (click)="cambiarTab(0)">
+          <mat-icon aria-hidden="true">login</mat-icon>
+          <span>Iniciar sesión</span>
+        </button>
+        <button type="button"
+                role="tab"
+                id="tab-signup"
+                aria-controls="panel-signup"
+                class="auth-switcher__pill"
+                [class.is-active]="indiceActivo === 1"
+                [attr.aria-selected]="indiceActivo === 1"
+                (click)="cambiarTab(1)">
+          <mat-icon aria-hidden="true">person_add_alt</mat-icon>
+          <span>Crear cuenta</span>
+        </button>
+      </div>
+
+      <!-- Inline Feedback Alert (if invalid login) -->
+      <div *ngIf="invalidLogin && !loading" class="auth-alert-error" role="alert" aria-live="assertive">
+        <mat-icon aria-hidden="true">error_outline</mat-icon>
+        <div class="auth-alert-error__content">
+          <strong>Error de autenticación</strong>
+          <span>{{ ErrorMessage || 'Correo electrónico o contraseña incorrectos. Por favor, reintenta.' }}</span>
+        </div>
+      </div>
+
+      <!-- Loading State Indicator -->
+      <div *ngIf="loading" class="auth-loading" aria-live="polite">
+        <mat-progress-spinner [mode]="mode" diameter="42" color="primary"></mat-progress-spinner>
+        <p class="auth-loading__text">Verificando tus datos clínicos...</p>
+      </div>
+
+      <!-- TAB 0: Iniciar Sesión (Login Panel) -->
+      <div *ngIf="!loading && indiceActivo === 0"
+           id="panel-login"
+           role="tabpanel"
+           aria-labelledby="tab-login"
+           class="auth-form-wrapper">
+        <form [formGroup]="loginFormGroup" (ngSubmit)="Login()" class="auth-form" novalidate>
+          <div class="auth-field-group">
+            <mat-form-field appearance="outline" class="w-full">
               <mat-label>Correo electrónico</mat-label>
-              <mat-icon matPrefix>mail_outline</mat-icon>
-              <input type="email" matInput formControlName="loginEmailControl" [errorStateMatcher]="matcher"
-                placeholder="tu@correo.com" autocomplete="email">
+              <mat-icon matPrefix class="auth-field-icon" aria-hidden="true">mail_outline</mat-icon>
+              <input type="email"
+                     matInput
+                     formControlName="loginEmailControl"
+                     placeholder="paciente@correo.cl"
+                     autocomplete="email">
               <mat-error *ngIf="loginFormGroup.get('loginEmailControl').hasError('email') && !loginFormGroup.get('loginEmailControl').hasError('required')">
-                Ingresa un correo válido
+                Ingresa una dirección de correo válida
               </mat-error>
               <mat-error *ngIf="loginFormGroup.get('loginEmailControl').hasError('required')">
-                El correo es <strong>requerido</strong>
+                El correo electrónico es obligatorio
               </mat-error>
             </mat-form-field>
+          </div>
 
-            <mat-form-field appearance="outline" class="full-width">
+          <div class="auth-field-group">
+            <mat-form-field appearance="outline" class="w-full">
               <mat-label>Contraseña</mat-label>
-              <mat-icon matPrefix>lock_outline</mat-icon>
-              <input type="password" matInput formControlName="loginPasswordControl" [errorStateMatcher]="matcher"
-                placeholder="••••••••" autocomplete="current-password">
+              <mat-icon matPrefix class="auth-field-icon" aria-hidden="true">lock_outline</mat-icon>
+              <input [type]="hideLoginPassword ? 'password' : 'text'"
+                     matInput
+                     formControlName="loginPasswordControl"
+                     placeholder="Ingresa tu contraseña"
+                     autocomplete="current-password">
+              <button type="button"
+                      mat-icon-button
+                      matSuffix
+                      (click)="hideLoginPassword = !hideLoginPassword"
+                      [attr.aria-label]="hideLoginPassword ? 'Mostrar contraseña' : 'Ocultar contraseña'"
+                      [attr.aria-pressed]="!hideLoginPassword"
+                      class="auth-toggle-visibility">
+                <mat-icon aria-hidden="true">{{ hideLoginPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+              </button>
               <mat-error *ngIf="loginFormGroup.get('loginPasswordControl').hasError('required')">
-                La contraseña es <strong>requerida</strong>
+                La contraseña es obligatoria
               </mat-error>
             </mat-form-field>
+          </div>
 
-            <div class="auth-row">
-              <a href="javascript:void(0)" class="auth-link">Olvidé mi contraseña</a>
-            </div>
-
-            <button type="submit" mat-flat-button color="primary" class="auth-submit" [disabled]="loading">
-              <mat-icon aria-hidden="true">login</mat-icon>
-              Entrar
+          <div class="auth-meta-row">
+            <button type="button"
+                    class="auth-link-forgot"
+                    (click)="openSnackBar('Para reestablecer tu clave, acércate a mesón de atención o comunícate con soporte de Hospital Salvador.')">
+              <mat-icon aria-hidden="true">help_outline</mat-icon>
+              <span>¿Olvidaste tu contraseña?</span>
             </button>
+          </div>
 
-            <p class="auth-switch">
-              ¿No tienes cuenta?
-              <a class="auth-link-strong" (click)="cambiarTab(1)">Regístrate</a>
-            </p>
-          </form>
-        </div>
-      </mat-tab>
+          <button type="submit"
+                  mat-flat-button
+                  color="primary"
+                  class="auth-submit-btn"
+                  [disabled]="loading || loginFormGroup.invalid">
+            <span>Ingresar al Portal</span>
+            <mat-icon aria-hidden="true">arrow_forward</mat-icon>
+          </button>
 
-      <mat-tab label="Registro">
-        <div class="auth-form-wrap" *ngIf="!loading else load" data-aos="fade-up">
-          <form [formGroup]="signupFormGroup" (ngSubmit)="Signup()" class="auth-form">
-            <mat-form-field appearance="outline" class="full-width">
+          <div class="auth-switch-note">
+            <span>¿Aún no tienes cuenta registrada?</span>
+            <button type="button" class="auth-switch-link" (click)="cambiarTab(1)">
+              Crea tu cuenta aquí
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- TAB 1: Registro (Signup Panel) -->
+      <div *ngIf="!loading && indiceActivo === 1"
+           id="panel-signup"
+           role="tabpanel"
+           aria-labelledby="tab-signup"
+           class="auth-form-wrapper">
+        <form [formGroup]="signupFormGroup" (ngSubmit)="Signup()" class="auth-form" novalidate>
+          <div class="auth-field-group">
+            <mat-form-field appearance="outline" class="w-full">
               <mat-label>Correo electrónico</mat-label>
-              <mat-icon matPrefix>mail_outline</mat-icon>
-              <input type="email" matInput formControlName="signupEmailControl" [errorStateMatcher]="matcher"
-                placeholder="tu@correo.com" autocomplete="email">
+              <mat-icon matPrefix class="auth-field-icon" aria-hidden="true">mail_outline</mat-icon>
+              <input type="email"
+                     matInput
+                     formControlName="signupEmailControl"
+                     placeholder="paciente@correo.cl"
+                     autocomplete="email">
               <mat-error *ngIf="signupFormGroup.get('signupEmailControl').hasError('email') && !signupFormGroup.get('signupEmailControl').hasError('required')">
-                Ingresa un correo válido
+                Ingresa una dirección de correo válida
               </mat-error>
               <mat-error *ngIf="signupFormGroup.get('signupEmailControl').hasError('required')">
-                El correo es <strong>requerido</strong>
+                El correo electrónico es obligatorio
               </mat-error>
             </mat-form-field>
+          </div>
 
-            <mat-form-field appearance="outline" class="full-width">
+          <div class="auth-field-group">
+            <mat-form-field appearance="outline" class="w-full">
               <mat-label>Contraseña</mat-label>
-              <mat-icon matPrefix>lock_outline</mat-icon>
-              <input matInput type="password" placeholder="Mínimo 5 caracteres" formControlName="password"
-                (input)="onPasswordInput()" autocomplete="new-password">
+              <mat-icon matPrefix class="auth-field-icon" aria-hidden="true">lock_outline</mat-icon>
+              <input [type]="hideSignupPassword ? 'password' : 'text'"
+                     matInput
+                     formControlName="password"
+                     (input)="onPasswordInput()"
+                     placeholder="Mínimo 6 caracteres"
+                     autocomplete="new-password">
+              <button type="button"
+                      mat-icon-button
+                      matSuffix
+                      (click)="hideSignupPassword = !hideSignupPassword"
+                      [attr.aria-label]="hideSignupPassword ? 'Mostrar contraseña' : 'Ocultar contraseña'"
+                      [attr.aria-pressed]="!hideSignupPassword"
+                      class="auth-toggle-visibility">
+                <mat-icon aria-hidden="true">{{ hideSignupPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+              </button>
               <mat-error *ngIf="signupFormGroup.get('password').hasError('required')">
-                La contraseña es <strong>requerida</strong>
+                La contraseña es obligatoria
+              </mat-error>
+              <mat-error *ngIf="signupFormGroup.get('password').hasError('minlength')">
+                La contraseña debe tener al menos 6 caracteres
               </mat-error>
             </mat-form-field>
+          </div>
 
-            <mat-form-field appearance="outline" class="full-width">
+          <div class="auth-field-group">
+            <mat-form-field appearance="outline" class="w-full">
               <mat-label>Confirmar contraseña</mat-label>
-              <mat-icon matPrefix>lock_outline</mat-icon>
-              <input matInput type="password" placeholder="Repite tu contraseña" formControlName="password2"
-                (input)="onPasswordInput()" autocomplete="new-password">
+              <mat-icon matPrefix class="auth-field-icon" aria-hidden="true">lock_outline</mat-icon>
+              <input [type]="hideSignupPassword2 ? 'password' : 'text'"
+                     matInput
+                     formControlName="password2"
+                     (input)="onPasswordInput()"
+                     placeholder="Repite tu contraseña"
+                     autocomplete="new-password">
+              <button type="button"
+                      mat-icon-button
+                      matSuffix
+                      (click)="hideSignupPassword2 = !hideSignupPassword2"
+                      [attr.aria-label]="hideSignupPassword2 ? 'Mostrar contraseña' : 'Ocultar contraseña'"
+                      [attr.aria-pressed]="!hideSignupPassword2"
+                      class="auth-toggle-visibility">
+                <mat-icon aria-hidden="true">{{ hideSignupPassword2 ? 'visibility_off' : 'visibility' }}</mat-icon>
+              </button>
               <mat-error *ngIf="signupFormGroup.get('password2').hasError('required')">
-                Confirma tu contraseña
+                Por favor confirma tu contraseña
               </mat-error>
               <mat-error *ngIf="signupFormGroup.get('password2').invalid && !signupFormGroup.get('password2').hasError('required')">
-                Las contraseñas <strong>no coinciden</strong>
+                Las contraseñas no coinciden
               </mat-error>
             </mat-form-field>
+          </div>
 
-            <button type="submit" mat-flat-button color="primary" class="auth-submit" [disabled]="loading">
-              <mat-icon aria-hidden="true">person_add</mat-icon>
-              Crear cuenta
+          <div class="auth-field-hint">
+            <mat-icon aria-hidden="true">shield_outlined</mat-icon>
+            <span>Tu información quedará vinculada de forma segura a tu ficha médica.</span>
+          </div>
+
+          <button type="submit"
+                  mat-flat-button
+                  color="primary"
+                  class="auth-submit-btn"
+                  [disabled]="loading || signupFormGroup.invalid">
+            <span>Crear mi cuenta de paciente</span>
+            <mat-icon aria-hidden="true">check_circle</mat-icon>
+          </button>
+
+          <div class="auth-switch-note">
+            <span>¿Ya tienes una cuenta registrada?</span>
+            <button type="button" class="auth-switch-link" (click)="cambiarTab(0)">
+              Inicia sesión aquí
             </button>
+          </div>
+        </form>
+      </div>
 
-            <p class="auth-switch">
-              ¿Ya tienes cuenta?
-              <a class="auth-link-strong" (click)="cambiarTab(0)">Accede</a>
-            </p>
-          </form>
+      <!-- Trust & Security Strip -->
+      <div class="auth-security-strip">
+        <div class="auth-security-strip__item">
+          <mat-icon aria-hidden="true">verified_user</mat-icon>
+          <span>Cifrado SSL de 256 bits de grado médico</span>
         </div>
-      </mat-tab>
-    </mat-tab-group>
-  </div>
+      </div>
 
-  <ng-template #load>
-    <div class="auth-loading">
-      <mat-progress-spinner [mode]="mode"></mat-progress-spinner>
+      <!-- Return to Home Link -->
+      <div class="auth-back-home">
+        <a [routerLink]="['/']" class="auth-back-link">
+          <mat-icon aria-hidden="true">arrow_back</mat-icon>
+          <span>Volver a la página principal</span>
+        </a>
+      </div>
     </div>
-  </ng-template>
+  </section>
 </main>

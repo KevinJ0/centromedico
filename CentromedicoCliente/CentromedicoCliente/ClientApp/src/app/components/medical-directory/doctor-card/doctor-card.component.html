@@ -1,45 +1,84 @@
-<div class="doctor-card">
+<article class="doctor-card">
+  <!-- Top Architectural Clinical Banner -->
+  <div class="doctor-card__banner" aria-hidden="true">
+    <svg class="doctor-card__banner-wave" viewBox="0 0 400 100" preserveAspectRatio="none">
+      <path d="M0,60 C120,100 260,10 400,55 L400,100 L0,100 Z" fill="rgba(255,255,255,0.08)"></path>
+      <circle cx="340" cy="24" r="48" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"></circle>
+      <circle cx="340" cy="24" r="76" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="1"></circle>
+    </svg>
+    <span class="doctor-card__availability">
+      <span class="doctor-card__availability-dot"></span>
+      Agenda abierta
+    </span>
+  </div>
 
-  <div class="flex-container">
-    <div class="doctor-img">
-      <img [src]="doctorData.profilePhoto | noProfilePhoto" [alt]="'Foto de ' + doctorData.nombre + ' ' + doctorData.apellido" srcset="" loading="lazy">
-    </div>
-
-    <div class="doctor-info">
-
-      <div class="descrip">
-        <a [routerLink]="['/medicos', doctorData.id]">
-          <p class="nombre"> {{doctorData.nombre + " "+ doctorData.apellido }}</p>
-        </a>
-        <p class="especialidades"> {{_especialidades}}</p>
-      </div>
-
-      <div class="contactos">
-        <div class="numeros">
-          <p *ngIf="doctorData.telefono1" class="telefono1">{{doctorData.telefono1 | mask: '000-000-0000'}}
-            <img class="contact-icon" *ngIf="doctorData.telefono1_contact.includes('w')"
-              src="../../../../assets/icons/whatsapp.svg" loading="lazy" />
-            <img *ngIf="doctorData.telefono1_contact.includes('t')" src="../../../../assets/icons/phone-call.svg" loading="lazy">
-          </p>
-          <p *ngIf="doctorData.telefono2" class="telefono2">{{doctorData.telefono2 | mask: '000-000-0000'}}
-            <img *ngIf="doctorData.telefono2_contact.includes('w')" src="../../../../assets/icons/whatsapp.svg" loading="lazy" />
-            <img *ngIf="doctorData.telefono2_contact.includes('t')" src="../../../../assets/icons/phone-call.svg" loading="lazy">
-          </p>
+  <!-- Overlapping Portrait Medallion + Identity -->
+  <div class="doctor-card__body">
+    <div class="doctor-card__profile-row">
+      <a class="doctor-card__avatar-link" [routerLink]="['/medicos', doctorData.id]" tabindex="-1" aria-hidden="true">
+        <div class="doctor-card__avatar">
+          <img src="assets/imgs/no-image.png" [src]="doctorData.profilePhoto | noProfilePhoto: doctorData.id"
+               (error)="$any($event.target).src = 'assets/imgs/doctors/doctor-' + (doctorData.id || 1) + '.jpg'"
+               [alt]="'Foto de ' + doctorData.nombre + ' ' + doctorData.apellido"
+               loading="lazy">
         </div>
-        <p class="correo">{{doctorData.correo}}</p>
+        <span class="doctor-card__verified" title="Especialista certificado">
+          <mat-icon aria-hidden="true">verified</mat-icon>
+        </span>
+      </a>
+
+      <div class="doctor-card__head">
+        <span class="doctor-card__specialty">{{ _especialidades }}</span>
+        <a class="doctor-card__name-link" [routerLink]="['/medicos', doctorData.id]">
+          <h3 class="doctor-card__name">Dr(a). {{ doctorData.nombre + ' ' + doctorData.apellido }}</h3>
+        </a>
+      </div>
+    </div>
+
+    <!-- Structured Contact Channels -->
+    <div class="doctor-card__contacts">
+      <div class="doctor-card__contact-item" *ngIf="doctorData.telefono1 || doctorData.telefono2">
+        <span class="doctor-card__contact-icon" aria-hidden="true">
+          <mat-icon>call</mat-icon>
+        </span>
+        <div class="doctor-card__phones">
+          <span *ngIf="doctorData.telefono1" class="doctor-card__phone">
+            <span>{{ doctorData.telefono1 | mask: '000-000-0000' }}</span>
+            <img class="contact-badge" *ngIf="doctorData.telefono1_contact?.includes('w')"
+              src="../../../../assets/icons/whatsapp.svg" alt="WhatsApp" loading="lazy" />
+            <img class="contact-badge" *ngIf="doctorData.telefono1_contact?.includes('t')"
+              src="../../../../assets/icons/phone-call.svg" alt="Teléfono" loading="lazy" />
+          </span>
+
+          <span *ngIf="doctorData.telefono2" class="doctor-card__phone">
+            <span>{{ doctorData.telefono2 | mask: '000-000-0000' }}</span>
+            <img class="contact-badge" *ngIf="doctorData.telefono2_contact?.includes('w')"
+              src="../../../../assets/icons/whatsapp.svg" alt="WhatsApp" loading="lazy" />
+            <img class="contact-badge" *ngIf="doctorData.telefono2_contact?.includes('t')"
+              src="../../../../assets/icons/phone-call.svg" alt="Teléfono" loading="lazy" />
+          </span>
+        </div>
+      </div>
+
+      <div class="doctor-card__contact-item" *ngIf="doctorData.correo">
+        <span class="doctor-card__contact-icon" aria-hidden="true">
+          <mat-icon>mail_outline</mat-icon>
+        </span>
+        <span class="doctor-card__email">{{ doctorData.correo }}</span>
       </div>
     </div>
   </div>
-  <div class="action-buttons">
 
-    <button [routerLink]="['/crear-cita']" [queryParams]="{ medicoId: doctorData.id}" mat-stroked-button color="accent">
+  <!-- Capsule Action Dock -->
+  <div class="doctor-card__actions">
+    <a class="card-pill card-pill--primary" [routerLink]="['/crear-cita']" [queryParams]="{ medicoId: doctorData.id }">
+      <mat-icon aria-hidden="true">event_available</mat-icon>
       <span>Hacer cita</span>
-      <mat-icon style="margin-left: 3px;" matSuffix>event</mat-icon>
-    </button>
+    </a>
 
-    <button [routerLink]="['/medicos',doctorData.id]" mat-stroked-button color="accent">
+    <a class="card-pill card-pill--ghost" [routerLink]="['/medicos', doctorData.id]">
       <span>Ver perfil</span>
-      <mat-icon style="margin-left: 3px;" matSuffix>badge</mat-icon>
-    </button>
+      <mat-icon aria-hidden="true">arrow_forward</mat-icon>
+    </a>
   </div>
-</div>
+</article>

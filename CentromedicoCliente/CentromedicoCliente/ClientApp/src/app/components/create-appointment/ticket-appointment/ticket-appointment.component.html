@@ -1,27 +1,27 @@
-<main>
+<main class="ticket-page">
   <div id="print-section" class="boarding-pass-container">
-    <div class="ticket-visual">
+    <article class="ticket-visual">
 
       <!-- Header Section -->
-      <div class="ticket-header">
+      <header class="ticket-header">
         <div class="brand">
-          <span class="brand-name">HOSPITAL SALVADOR</span>
+          <span class="brand-name">HOSPITAL DEL SALVADOR</span>
         </div>
         <div class="ticket-title">
-          <h2>TICKET DE CITA</h2>
-          <span class="confirmation-code">#{{citaDataResult.cod_verificacion}}</span>
+          <h1>Comprobante de Cita</h1>
+          <span class="confirmation-code">Código #{{citaDataResult.cod_verificacion}}</span>
         </div>
-      </div>
+      </header>
 
       <!-- Main Body -->
       <div class="ticket-body">
         <div class="info-row highlight-row">
           <div class="info-group">
-            <label>FECHA & HORA</label>
+            <label>Fecha y hora</label>
             <p>{{citaDataResult.fecha_hora}}</p>
           </div>
           <div class="info-group align-right">
-            <label>TURNO</label>
+            <label>Turno</label>
             <p class="big-text">{{citaDataResult.turno}}</p>
           </div>
         </div>
@@ -30,29 +30,29 @@
 
         <div class="info-row">
           <div class="info-group">
-            <label>PACIENTE</label>
+            <label>Paciente</label>
             <p>{{citaDataResult.paciente_nombre_apellido}}</p>
           </div>
-          <div class="info-group">
-            <label>DOCTOR</label>
+          <div class="info-group align-right">
+            <label>Especialista</label>
             <p>{{citaDataResult.medico_nombre_apellido}}</p>
           </div>
         </div>
 
         <div class="info-row">
           <div class="info-group">
-            <label>CONSULTORIO</label>
+            <label>Consultorio</label>
             <p>{{citaDataResult.consultorio}}</p>
           </div>
-          <div class="info-group">
-            <label>SERVICIO</label>
+          <div class="info-group align-right">
+            <label>Servicio</label>
             <p>{{citaDataResult.servicio}}</p>
           </div>
         </div>
 
         <div class="info-row" *ngIf="isDependent">
           <div class="info-group">
-            <label>TUTOR</label>
+            <label>Tutor responsable</label>
             <p>{{citaDataResult.tutor_nombre_apellido}}</p>
           </div>
         </div>
@@ -61,42 +61,44 @@
 
         <div class="info-row footer-row">
           <div class="info-group">
-            <label>SEGURO</label>
+            <label>Seguro médico (ARS)</label>
             <p>{{citaDataResult.seguro}}</p>
           </div>
           <div class="info-group align-right">
-            <label>DIFERENCIA A PAGAR</label>
+            <label>Diferencia a pagar</label>
             <p class="price-text">RD${{citaDataResult.diferencia}}</p>
           </div>
         </div>
-
       </div>
 
       <!-- Cutout Circles for effect -->
-      <div class="ticket-cutout left"></div>
-      <div class="ticket-cutout right"></div>
+      <div class="ticket-cutout left" aria-hidden="true"></div>
+      <div class="ticket-cutout right" aria-hidden="true"></div>
 
       <!-- Footer / Disclaimer -->
-      <div class="ticket-footer">
+      <footer class="ticket-footer">
         <p class="disclaimer">
-          Por favor llegar 30 minutos antes. Recuerde traer su documento de identidad.
+          Por favor preséntese 30 minutos antes con su documento de identidad y carnet de seguro médico.
         </p>
-        <div class="barcode-strip"></div>
-      </div>
-    </div>
+        <div class="barcode-strip" aria-hidden="true"></div>
+      </footer>
+    </article>
   </div>
 
   <div class="actions-container">
-    <p class="success-msg">
-      <mat-icon>check_circle</mat-icon>
-      Hemos enviado la confirmación a su correo.
+    <p class="success-pill">
+      <mat-icon aria-hidden="true">check_circle</mat-icon>
+      <span>Hemos enviado los detalles de confirmación a su correo electrónico.</span>
     </p>
     <div class="buttons">
-      <button mat-flat-button color="primary" useExistingCss="true" [useExistingCss]="true" ngxPrint
+      <button type="button" class="pill-btn pill-btn--primary" useExistingCss="true" [useExistingCss]="true" ngxPrint
         printSectionId="print-section">
-        <mat-icon>print</mat-icon> Imprimir Ticket
+        <mat-icon aria-hidden="true">print</mat-icon>
+        <span>Imprimir comprobante</span>
       </button>
-      <button mat-stroked-button [routerLink]="['/']">Volver al Inicio</button>
+      <a class="pill-btn pill-btn--ghost" [routerLink]="['/']">
+        <span>Volver al inicio</span>
+      </a>
     </div>
   </div>
 </main>

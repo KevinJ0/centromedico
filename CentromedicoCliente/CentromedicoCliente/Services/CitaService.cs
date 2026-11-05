@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cliente.DTO;
@@ -236,7 +236,8 @@ namespace CentromedicoCliente.Services
                     contacto = formdata.contacto,
                     contacto_whatsapp = formdata.contacto_whatsapp,
                     fecha_hora = formdata.fecha_hora,
-                    turno = nTurn
+                    turno = nTurn,
+                    estado = true
                 };
 
                 //reserve a doctor's schedule
@@ -325,6 +326,20 @@ namespace CentromedicoCliente.Services
 
         public async Task<citaFormDTO> getFormCitaAsync(int medicoID)
         {
+
+            var userName = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!string.IsNullOrEmpty(userName))
+            {
+                var currentUser = await _userManager.FindByNameAsync(userName);
+                if (currentUser != null)
+                {
+                    bool hasActive = await _db.citas.AnyAsync(x => x.medicosID == medicoID && x.estado == true && x.pacientes.MyIdentityUsers == currentUser);
+                    if (hasActive)
+                    {
+                        throw new BadRequestException("Ya tiene una cita médica programada con este especialista. Puede consultarla en la sección 'Mis Citas'.");
+                    }
+                }
+            }
 
             var medico = await _medicoSvc.getFullByIdAsync(medicoID);
 

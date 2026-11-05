@@ -95,6 +95,17 @@ namespace Doctor.Repository.Repositories
                 {
                     if (int.TryParse(citaDTO.medicosID.ToString(), out int _medicoID))
                     {
+                        if (citaDTO.turno_paciente == null)
+                        {
+                            citaDTO.turno_paciente = new turnoDTO
+                            {
+                                medicosID = _medicoID,
+                                turno_actual = 0,
+                                turno_atendido = 0,
+                                fecha = DateTime.Now
+                            };
+                        }
+
                         citaDTO.turno_paciente.cant_pacientes_adelante = getCantCitasPendientes(citaDTO.fecha_hora, _medicoID);
                         citaDTO.turno_paciente.ultima_entrada = getLastTurnByDate(citaDTO.fecha_hora, _medicoID);
                         citaDTO.turno_paciente.primera_entrada = getFirstTurnByDate(citaDTO.fecha_hora, _medicoID);

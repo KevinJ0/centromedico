@@ -1,405 +1,539 @@
-.example-headers-align .mat-expansion-panel-header-title,
-.example-headers-align .mat-expansion-panel-header-description {
-  flex-basis: 0;
+/* =========================================================================
+   Mis Citas — Rediseño Compacto & Ergonómico ("Confianza cercana")
+   ========================================================================= */
+
+.citas-page {
+  min-height: calc(100vh - 12rem);
+  padding: clamp(1.25rem, 3vw, 2.5rem) 1rem 3.5rem;
+  background-color: var(--color-surface, #f8fafc);
+  font-family: var(--font-body, var(--font-body, "Inter", sans-serif));
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: clip;
 }
 
-.example-headers-align .mat-expansion-panel-header-description {
-  justify-content: space-between;
-  align-items: center;
-}
-
-.example-headers-align .mat-form-field+.mat-form-field {
-  margin-left: 8px;
-}
-
-/* Main Container */
-main {
-  min-height: 70vh;
-  padding-bottom: 3rem;
-  padding-top: 1rem;
-  /* Softer background for the page */
+.citas-container {
+  max-width: 1140px;
+  margin: 0 auto;
 }
 
 /* Page Header */
-.mat-card-header {
-  text-align: center;
-  flex-direction: column;
+.citas-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+  flex-wrap: wrap;
 }
 
-mat-card-title h2 {
-  font-size: 2rem;
+.citas-header__title {
+  font-size: clamp(1.5rem, 2.8vw, 2rem);
   font-weight: 800;
-  color: var(--color-text-strong);
+  color: var(--color-text-strong, #1a202c);
+  margin: 0 0 0.25rem;
+  letter-spacing: -0.02em;
+}
+
+.citas-header__subtitle {
+  font-size: 0.95rem;
+  color: var(--color-text-muted, #64748b);
   margin: 0;
-  letter-spacing: -0.5px;
 }
 
-mat-card-subtitle {
-  font-size: 1rem;
-  color: var(--color-text-muted);
-  margin-top: 0.5rem;
-  margin-bottom: 0;
+.btn-nueva-cita {
+  background-color: var(--color-primary, #186cb2) !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  border-radius: 9999px !important;
+  padding: 0.55rem 1.35rem !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.4rem !important;
+  box-shadow: 0 4px 12px rgba(24, 108, 178, 0.25) !important;
+  transition: transform 0.15s ease, background-color 0.15s ease !important;
 }
 
-/* No Content State */
-.no-content {
-  text-align: center;
+.btn-nueva-cita:hover {
+  background-color: var(--color-primary-dark, #0f4f85) !important;
+  transform: translateY(-1px);
+}
+
+/* Loading State */
+.citas-loading {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
   justify-content: center;
-  padding: 4rem 1rem;
-  opacity: 0.8;
+  gap: 1rem;
+  padding: 5rem 1rem;
+  color: var(--color-text-muted, #64748b);
+  font-weight: 500;
 }
 
-.no-content h3 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #475569;
-}
-
-.no-content button {
-  background: var(--primary-color);
-  color: white;
-  padding: 0.8rem 1.5rem;
-  font-weight: 600;
-  border-radius: 12px !important;
-  box-shadow: 0 4px 12px rgba(24, 108, 178, 0.3);
-}
-
-/* Card Container */
-.cita-card-container {
-  width: 100%;
+/* Empty State */
+.citas-empty {
   display: flex;
-  gap: 2rem;
-  flex-wrap: wrap;
-  flex-direction: row;
-  align-content: center;
-  align-items: flex-start;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  padding: 1rem;
+  text-align: center;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid var(--color-border, #e2e8f0);
+  padding: clamp(3rem, 6vw, 4.5rem) 1.5rem;
+  max-width: 580px;
+  margin: 2rem auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
 }
 
-/* Cita Card Design */
+.citas-empty__img {
+  width: 90px;
+  height: auto;
+  opacity: 0.85;
+  margin-bottom: 1.25rem;
+}
+
+.citas-empty__title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--color-text-strong, #1a202c);
+  margin: 0 0 0.5rem;
+}
+
+.citas-empty__text {
+  font-size: 0.95rem;
+  color: var(--color-text-muted, #64748b);
+  margin: 0 0 1.5rem;
+  line-height: 1.5;
+  max-width: 44ch;
+}
+
+/* Grid Layout for Compact Cards */
+.citas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 460px), 1fr));
+  gap: 1.25rem;
+  align-items: stretch;
+}
+
+/* Compact Cita Card */
 .cita-card {
-  max-width: 28rem;
-  width: 100%;
-  border-radius: 24px !important;
-  background: var(--color-white);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.08), 0 10px 15px -5px rgba(0, 0, 0, 0.04) !important;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  overflow: hidden;
+  min-width: 0;
+  max-width: 100%;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid var(--color-border, #e2e8f0);
+  box-shadow: 0 4px 16px rgba(15, 40, 80, 0.05);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   position: relative;
 }
 
 .cita-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 25px 50px -10px rgba(24, 108, 178, 0.15) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(13, 92, 158, 0.1);
+  border-color: rgba(13, 92, 158, 0.3);
 }
 
-/* Card Header & Doctor Info */
-mat-card-header {
+/* Card Top: Doctor Info & Turno Badge */
+.cita-card__top {
   display: flex;
-  flex-flow: column;
-  padding: 0;
-  margin-bottom: 1rem;
-}
-
-.medico-data {
-  display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  margin-top: 1rem;
+  gap: 1rem;
+  min-width: 0;
+  width: 100%;
 }
 
-.profilePhoto {
-  object-fit: cover;
-  width: 7rem;
-  height: 7rem;
+.cita-card__doctor {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  min-width: 0;
+  flex: 1 1 0;
+  overflow: hidden;
+}
+
+.doctor-avatar {
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-  border: 2px solid white;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  margin-bottom: 1rem;
-}
-
-.medico-data .title {
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: var(--color-text-strong);
-  margin: 0;
-  text-align: center;
-}
-
-.medico-data .subtitle {
-  font-size: 0.95rem;
-  color: var(--primary-color);
-  font-weight: 500;
-  margin: 0.2rem 0 0 0;
-  text-align: center;
-  background: rgba(24, 108, 178, 0.08);
-  /* Light primary bg */
-  padding: 4px 12px;
-  border-radius: 6px;
-  /* User requested specific radius */
-}
-
-/* Action Row (Posponer) */
-mat-action-row {
+  object-fit: cover;
   border: none;
-  padding: 0 1rem 1rem 1rem;
-  margin-bottom: 0;
-  justify-content: center;
-  width: 100%;
-  box-sizing: border-box;
+  box-shadow: none;
+  flex-shrink: 0;
 }
 
-.mat-action-subcontainer {
-  width: 100%;
-}
-
-.pospone {
-  width: 100%;
-  border-radius: 12px !important;
-  /* Consistent with app style */
-  font-size: 0.9rem;
-  padding: 0.5rem !important;
-  font-weight: 600;
-  border: 1px solid #fee2e2;
-  color: var(--color-danger) !important;
-  background-color: #fef2f2;
-}
-
-/* Customizing Mat-Tabs */
-::ng-deep .cita-card .mat-tab-label {
-  font-family: inherit;
-  font-weight: 600;
-  color: var(--color-text-subtle);
-  opacity: 1 !important;
-  min-width: 0 !important;
-  padding: 0 1.5rem !important;
-}
-
-::ng-deep .cita-card .mat-tab-label-active {
-  color: var(--primary-color);
-}
-
-::ng-deep .cita-card .mat-ink-bar {
-  background-color: var(--primary-color) !important;
-  height: 3px !important;
-  border-radius: 3px 3px 0 0;
-}
-
-::ng-deep .cita-card .mat-tab-header {
-  border-bottom: 1px solid var(--color-surface-alt);
-  margin-bottom: 1.5rem;
-}
-
-/* Tab Content */
-mat-card-content {
-  padding: 1.5rem 1rem 1.5rem 1rem !important;
-}
-
-/* "Turnos" Tab */
-.turnos-container-flex {
+.doctor-meta {
+  min-width: 0;
+  flex: 1 1 0;
   display: flex;
-  align-items: center;
   flex-direction: column;
-  width: 100%;
+  gap: 2px;
+  overflow: hidden;
 }
 
-.pulse-wrapper {
-  margin-top: 1rem;
-}
-
-.ticket-icon {
-  width: 70px;
-  filter: drop-shadow(0 4px 6px rgba(24, 108, 178, 0.2));
-}
-
-.turno-title,
-.mi-turno-title {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--color-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-top: 1.5rem;
-}
-
-.turno-number {
-  font-size: 3.5rem;
-  font-weight: 800;
-  color: var(--primary-color);
-  line-height: 1;
-  margin: 0.5rem 0 1.5rem 0;
-  text-shadow: 0 4px 10px rgba(24, 108, 178, 0.15);
-}
-
-.mi-turno-number {
-  font-size: 2rem;
+.doctor-name {
+  font-size: 1.05rem;
   font-weight: 700;
-  color: var(--color-text);
-  margin: 0.5rem 0;
-}
-
-.patient-cant,
-.aprox-time {
-  font-size: 0.9rem;
-  color: var(--color-text-muted);
-  margin: 1rem 0;
-  text-align: center;
-}
-
-.patient-cant span,
-.aprox-time span {
-  color: var(--color-text-strong);
-  font-weight: 700;
-}
-
-/* "Información" Tab */
-.data-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.8rem 0;
-}
-
-.data-row>div:first-child {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--color-text-muted);
-}
-
-.data-row mat-icon {
-  color: var(--primary-color);
-  font-size: 1.2rem;
-  width: 1.2rem;
-  height: 1.2rem;
-}
-
-.data-row h3 {
+  color: var(--color-text-strong, #1a202c);
   margin: 0;
-  font-size: 0.95rem;
-  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
 }
 
-.data-row .data {
+.doctor-specialty {
+  display: inline-block;
+  font-size: 0.78rem;
+  color: #0d5c9e;
   font-weight: 600;
-  color: var(--color-text);
-  text-align: right;
+  background: rgba(13, 92, 158, 0.08);
+  padding: 2px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  width: fit-content;
 }
 
-.double-flex-container {
-  display: flex;
-  gap: 1rem;
-  background: var(--color-surface);
-  padding: 1rem;
-  border-radius: 16px;
-  margin: 1rem 0;
-  justify-content: space-around;
-}
-
-.double-flex-container .data-row {
-  flex-direction: column;
-  padding: 0;
-  gap: 0.5rem;
-}
-
-.double-flex-container .data-row .data {
-  font-size: 1.2rem;
-  color: var(--primary-color);
-}
-
-/* Mini Cards Grid */
-.mis-datos-container {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
-
-.minicard {
-  background: var(--color-white);
-  border: 1px solid var(--color-border);
-  border-radius: 16px;
-  padding: 1rem;
+/* Patient Turn Badge */
+.cita-card__my-turn {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  min-height: 5.5rem;
-  transition: all 0.2s;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(13, 92, 158, 0.1) 0%, rgba(13, 92, 158, 0.04) 100%);
+  border: 1px solid rgba(13, 92, 158, 0.2);
+  border-radius: 12px;
+  padding: 0.35rem 0.75rem;
+  flex-shrink: 0;
+  min-width: 66px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(13, 92, 158, 0.06);
 }
 
-.minicard:hover {
-  border-color: var(--primary-color);
-  background: rgba(24, 108, 178, 0.02);
-}
-
-.minicard .icon mat-icon {
-  color: var(--primary-color);
-  font-size: 1.5rem;
-  width: 1.5rem;
-  height: 1.5rem;
-}
-
-.minicard .title {
-  font-size: 0.95rem;
+.my-turn__label {
+  font-size: 0.68rem;
   font-weight: 700;
-  color: var(--color-text-strong);
-  margin-top: auto;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #0d5c9e;
+}
+
+.my-turn__val {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #0d5c9e;
+  line-height: 1.1;
+}
+
+/* Unified Schedule & Live Queue Monitor Strip */
+.cita-card__strip {
+  background: #f8fafc;
+  border: 1px solid #edf2f7;
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.strip-section {
+  flex: 1;
+  min-width: 0;
+}
+
+.strip-section--schedule {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.strip-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.strip-icon {
+  font-size: 1.1rem;
+  width: 1.1rem;
+  height: 1.1rem;
+  color: #0d5c9e;
+}
+
+.strip-text-primary {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--color-text-strong, #1a202c);
+  text-transform: capitalize;
+}
+
+.strip-subitems {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.strip-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-text, #334155);
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 1px 6px;
+}
+
+.strip-pill mat-icon {
+  font-size: 0.95rem;
+  width: 0.95rem;
+  height: 0.95rem;
+  color: #64748b;
+}
+
+.strip-pill--room {
+  background: rgba(13, 92, 158, 0.05);
+  border-color: rgba(13, 92, 158, 0.18);
+  color: #0d5c9e;
+}
+
+.strip-pill--room mat-icon {
+  color: #0d5c9e;
+}
+
+.strip-divider {
+  width: 1px;
+  height: 44px;
+  background-color: #e2e8f0;
+  flex-shrink: 0;
+}
+
+/* Queue Live Status */
+.strip-section--queue {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  text-align: right;
+  align-items: flex-end;
+}
+
+.queue-status-head {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background-color: rgba(13, 92, 158, 0.08);
+  color: #0d5c9e;
+  border: 1px solid rgba(13, 92, 158, 0.2);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
   line-height: 1.2;
 }
 
-.minicard .subtitle {
+.live-badge mat-icon {
+  font-size: 0.82rem;
+  width: 0.82rem;
+  height: 0.82rem;
+  color: #0d5c9e;
+}
+
+.queue-label {
+  font-size: 0.78rem;
+  color: var(--color-text-muted, #64748b);
+  font-weight: 500;
+}
+
+.queue-current-num {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--color-text-strong, #1a202c);
+}
+
+.queue-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.queue-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.76rem;
+  color: #475569;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  padding: 1px 6px;
+  border-radius: 6px;
+}
+
+.queue-chip mat-icon {
+  font-size: 0.9rem;
+  width: 0.9rem;
+  height: 0.9rem;
+  color: #0d5c9e;
+}
+
+/* Details Badges */
+.cita-card__details {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.detail-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 0.25rem 0.55rem;
+  font-size: 0.78rem;
+  color: var(--color-text, #334155);
+}
+
+.detail-badge mat-icon {
+  font-size: 0.95rem;
+  width: 0.95rem;
+  height: 0.95rem;
+  color: #0d5c9e;
+}
+
+.detail-value {
+  font-weight: 600;
+}
+
+.detail-tutor {
+  color: #64748b;
+  font-weight: 400;
+  font-size: 0.72rem;
+}
+
+.detail-badge--cost {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+  color: #166534;
+}
+
+.detail-badge--cost mat-icon {
+  color: #16a34a;
+}
+
+/* Card Footer */
+.cita-card__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 0.5rem;
+  border-top: 1px solid #f1f5f9;
+}
+
+.cita-code {
   font-size: 0.75rem;
-  color: var(--color-text-subtle);
-  text-transform: uppercase;
+  font-weight: 600;
+  color: #94a3b8;
   letter-spacing: 0.5px;
-  margin-top: 0.2rem;
 }
 
-/* Animations */
-@keyframes bouncePause {
+.btn-posponer {
+  border-radius: 8px !important;
+  font-size: 0.82rem !important;
+  font-weight: 600 !important;
+  padding: 0 0.75rem !important;
+  line-height: 32px !important;
+  height: 32px !important;
+  border-color: #fecaca !important;
+  color: #dc2626 !important;
+  background-color: #fef2f2 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  transition: all 0.15s ease !important;
+}
 
-  0%,
-  10%,
-  20%,
-  100% {
-    transform: translateY(0);
+.btn-posponer:hover {
+  background-color: #fee2e2 !important;
+  border-color: #f87171 !important;
+}
+
+.btn-posponer mat-icon {
+  font-size: 1rem;
+  width: 1rem;
+  height: 1rem;
+  margin: 0 !important;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 600px) {
+  .citas-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
   }
 
-  10% {
-    transform: translateY(-3px);
-  }
-
-  20% {
-    transform: translateY(0);
-  }
-}
-
-.ticket-icon {
-  animation: bouncePause 3s infinite ease-in-out;
-}
-
-.ticket-icon:hover {
-  animation: bounceTicket 0.8s;
-}
-
-@media only screen and (max-width: 600px) {
   .cita-card {
-    border-radius: 20px;
-    box-shadow: none !important;
-    border: 1px solid var(--color-border);
+    padding: 1rem;
   }
 
-  .cita-card-container {
-    padding: 1rem 0 0 0;
+  .cita-card__top {
+    gap: 1rem;
   }
 
-  mat-card-content {
-    padding: 1rem 0 0 0 !important;
+  .cita-card__strip {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.65rem;
+    padding: 0.75rem;
+  }
+
+  .strip-divider {
+    display: none;
+  }
+
+  .strip-section--queue {
+    text-align: left;
+    align-items: flex-start;
+    border-top: 1px dashed #e2e8f0;
+    padding-top: 0.5rem;
+  }
+
+  .queue-meta {
+    justify-content: flex-start;
+  }
+
+  .citas-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .btn-nueva-cita {
+    width: 100%;
+    justify-content: center;
   }
 }

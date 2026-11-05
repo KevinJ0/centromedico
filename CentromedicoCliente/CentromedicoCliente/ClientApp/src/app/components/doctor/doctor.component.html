@@ -1,129 +1,353 @@
-<main class="doctor-detail-container" *ngIf="!loading else load">
-  <!-- Back Button (Breadcrumb style) -->
-  <a class="back-link" [routerLink]="['..']">
-    <mat-icon>arrow_back</mat-icon> Volver al directorio
-  </a>
+<main class="doctor-profile">
+  <!-- Capa ambiental animada bioluminiscente (estética clínica de alta fidelidad) -->
+  <div class="profile-ambient" aria-hidden="true">
+    <div class="profile-ambient__dots"></div>
+    <span class="profile-ambient__orb profile-ambient__orb--one"></span>
+    <span class="profile-ambient__orb profile-ambient__orb--two"></span>
+    <span class="profile-ambient__orb profile-ambient__orb--three"></span>
+    <div class="profile-ambient__cross-decor profile-ambient__cross-decor--tl"></div>
+    <div class="profile-ambient__cross-decor profile-ambient__cross-decor--br"></div>
+  </div>
 
-  <!-- Header Section: Profile & Actions -->
-  <section class="profile-header" data-aos="fade-down">
-    <div class="profile-main">
-      <div class="profile-image-container">
-        <img [src]="_medico.profilePhoto | noProfilePhoto" alt="Foto del médico" loading="lazy">
+  <ng-container *ngIf="!loading && _medico; else load">
+    <!-- ============ EDITORIAL PROFILE HERO ============ -->
+    <header class="profile-hero">
+      <!-- Ambient Luminous Halo & Concentric Clinical Rings -->
+      <div class="profile-hero__ambient" aria-hidden="true">
+        <span class="profile-hero__glow"></span>
+        <svg class="profile-hero__rings" viewBox="0 0 600 600" fill="none">
+          <circle cx="300" cy="300" r="140" stroke="rgba(24, 108, 178, 0.12)" stroke-width="1.5" stroke-dasharray="8 8" />
+          <circle cx="300" cy="300" r="215" stroke="rgba(24, 108, 178, 0.07)" stroke-width="1" />
+          <circle cx="300" cy="300" r="285" stroke="rgba(14, 165, 233, 0.08)" stroke-width="1" stroke-dasharray="14 12" />
+        </svg>
+        <svg class="profile-hero__waves" viewBox="0 0 1440 120" preserveAspectRatio="none">
+          <path class="profile-wave profile-wave--back"
+            d="M0,45 C320,10 660,85 1020,40 C1220,15 1360,55 1440,42 L1440,120 L0,120 Z"></path>
+          <path class="profile-wave profile-wave--front"
+            d="M0,68 C300,92 640,35 990,70 C1210,95 1340,65 1440,78 L1440,120 L0,120 Z"></path>
+        </svg>
       </div>
-      <div class="profile-info">
+
+      <div class="profile-hero__inner">
+      <!-- Barra superior: navegación y estado de actividad -->
+      <div class="profile-hero__topbar">
+        <a class="back-pill" [routerLink]="['/medicos']">
+          <mat-icon aria-hidden="true">arrow_back</mat-icon>
+          <span>Volver al directorio médico</span>
+        </a>
+      </div>
+
+      <!-- Hero Showcase: Fotografía, Especialidades, Nombre y Acreditaciones Centradas -->
+      <div class="profile-hero__showcase">
+        <!-- Foto del Especialista (Sin marco cuadrado, circular y centrada) -->
+        <figure class="profile-portrait">
+          <img src="assets/imgs/doctors/doctor-1.jpg"
+               [src]="_medico.profilePhoto | noProfilePhoto: _medico.id"
+               [alt]="'Fotografía de ' + _medico.nombre + ' ' + _medico.apellido"
+               (error)="$any($event.target).src = 'assets/imgs/doctors/doctor-' + (_medico.id || 1) + '.jpg'"
+               loading="lazy">
+        </figure>
+
+        <!-- Píldoras de Especialidades Centradas -->
+        <div class="specialties-wrap" *ngIf="_medico.especialidades?.length; else fallbackSpec">
+          <span *ngFor="let esp of _medico.especialidades" class="specialty-pill">
+            <mat-icon aria-hidden="true">medical_services</mat-icon>
+            <span>{{ esp }}</span>
+          </span>
+        </div>
+        <ng-template #fallbackSpec>
+          <div class="specialties-wrap" *ngIf="_especialidades">
+            <span class="specialty-pill">
+              <mat-icon aria-hidden="true">medical_services</mat-icon>
+              <span>{{ _especialidades }}</span>
+            </span>
+          </div>
+        </ng-template>
+
+        <!-- Nombre del Doctor Centrado con Prefijo Dinámico -->
         <h1 class="doctor-name">
-          <span class="title" *ngIf="_medico.sexo == 'f' else maleTitle">Dra.</span>
-          <ng-template #maleTitle><span class="title">Dr.</span></ng-template>
-          {{_medico.nombre}} {{_medico.apellido}}
+          <span class="doctor-prefix" *ngIf="_medico.sexo == 'f'; else maleTitle">Dra.</span>
+          <ng-template #maleTitle><span class="doctor-prefix">Dr.</span></ng-template>
+          {{ _medico.nombre }} {{ _medico.apellido }}
         </h1>
-        <span class="specialty-badge">{{_especialidades}}</span>
-      </div>
-    </div>
 
-    <div class="profile-actions">
-      <button [routerLink]="['/crear-cita']" [queryParams]="{ medicoId: medicoId}" mat-flat-button color="primary"
-        class="cta-button">
-        <mat-icon>event</mat-icon>
-        <span>Agendar Cita</span>
-      </button>
-    </div>
-  </section>
-
-  <!-- Content Grid -->
-  <div class="content-grid">
-
-    <!-- Left Column: Personal Info & Contact -->
-    <div class="info-column">
-
-      <!-- Personal Information Card -->
-      <div class="content-card info-card" data-aos="fade-up" data-aos-delay="100">
-        <div class="card-header">
-          <mat-icon class="card-icon">person</mat-icon>
-          <h3>Información Personal</h3>
-        </div>
-        <div class="card-body">
-          <div class="info-row" *ngIf="_medico.telefono1 || _medico.telefono2">
-            <span class="label">Teléfonos</span>
-            <div class="values">
-              <a *ngIf="_medico.telefono1" [href]="'tel:' + _medico.telefono1" class="phone-link">
-                <mat-icon>phone</mat-icon> {{_medico.telefono1 | mask: '000-000-0000'}}
-              </a>
-              <a *ngIf="_medico.telefono2" [href]="'tel:' + _medico.telefono2" class="phone-link">
-                <mat-icon>phone</mat-icon> {{_medico.telefono2 | mask: '000-000-0000'}}
-              </a>
+        <!-- BARRA DE ACREDITACIONES MÉDICAS OFICIALES CENTRADA (Exequátur, Colegiatura CMD, Consultorio) -->
+        <div class="accreditation-bar" *ngIf="_medico.exequatur || _medico.colegiatura || _medico.consultorio">
+          <!-- Exequátur Oficial -->
+          <div class="accreditation-chip" *ngIf="_medico.exequatur">
+            <span class="accreditation-chip__icon accreditation-chip__icon--verified" aria-hidden="true">
+              <mat-icon>verified</mat-icon>
+            </span>
+            <div class="accreditation-chip__text">
+              <span class="accreditation-chip__label">Exequátur Oficial</span>
+              <strong class="accreditation-chip__value">No. {{ _medico.exequatur }}</strong>
             </div>
           </div>
 
-          <div class="info-row" *ngIf="_medico.correo">
-            <span class="label">Correo</span>
-            <div class="values">
-              <span class="value link"><mat-icon>email</mat-icon> {{_medico.correo}}</span>
+          <!-- Colegiatura CMD -->
+          <div class="accreditation-chip" *ngIf="_medico.colegiatura">
+            <span class="accreditation-chip__icon accreditation-chip__icon--cmd" aria-hidden="true">
+              <mat-icon>workspace_premium</mat-icon>
+            </span>
+            <div class="accreditation-chip__text">
+              <span class="accreditation-chip__label">Colegiatura CMD</span>
+              <strong class="accreditation-chip__value">No. {{ _medico.colegiatura }}</strong>
             </div>
           </div>
 
-          <div class="info-row" *ngIf="_medico.url_facebook || _medico.url_twitter || _medico.url_instagram">
-            <span class="label">Redes Sociales</span>
-            <div class="social-links">
-              <a *ngIf="_medico.url_facebook" [href]="_medico.url_facebook" target="_blank"
-                class="social-btn"><mat-icon>facebook</mat-icon></a>
-              <a *ngIf="_medico.url_twitter" [href]="_medico.url_twitter" target="_blank" class="social-btn"><mat-icon
-                  svgIcon="twitter"></mat-icon></a>
-              <a *ngIf="_medico.url_instagram" [href]="_medico.url_instagram" target="_blank"
-                class="social-btn"><mat-icon svgIcon="instagram"></mat-icon></a>
+          <!-- Consultorio Oficial -->
+          <div class="accreditation-chip" *ngIf="_medico.consultorio">
+            <span class="accreditation-chip__icon accreditation-chip__icon--room" aria-hidden="true">
+              <mat-icon>meeting_room</mat-icon>
+            </span>
+            <div class="accreditation-chip__text">
+              <span class="accreditation-chip__label">Consultorio</span>
+              <strong class="accreditation-chip__value">Consultorio {{ _medico.consultorio }}</strong>
             </div>
           </div>
+        </div>
 
-          <div class="regulatory-info">
-            <span *ngIf="_medico.exequatur" class="reg-badge">Exequatur: {{_medico.exequatur}}</span>
-            <span *ngIf="_medico.colegiatura" class="reg-badge">Colegiatura: {{_medico.colegiatura}}</span>
-          </div>
+        <!-- Acciones Rápidas Centradas -->
+        <div class="profile-hero__actions">
+          <a class="pill-btn pill-btn--primary pill-btn--hero"
+             [routerLink]="['/crear-cita']"
+             [queryParams]="{ medicoId: medicoId }">
+            <mat-icon aria-hidden="true">event_available</mat-icon>
+            <span>Agendar cita médica</span>
+            <mat-icon class="pill-btn__arrow" aria-hidden="true">arrow_forward</mat-icon>
+          </a>
+
+          <a *ngIf="telefonoPrincipal"
+             [href]="'tel:' + telefonoPrincipal"
+             class="pill-btn pill-btn--secondary">
+            <mat-icon aria-hidden="true">call</mat-icon>
+            <span>Llamar al {{ telefonoPrincipal | mask: '000-000-0000' }}</span>
+          </a>
+        </div>
+
+        <!-- Insignia de Confianza / Garantía Clínica Centrada -->
+        <div class="profile-hero__guarantee">
+          <mat-icon aria-hidden="true">check_circle</mat-icon>
+          <span>Validación ARS inmediata · Confirmación en tiempo real · Sin filas</span>
         </div>
       </div>
-
-      <!-- Insurance Card -->
-      <div class="content-card insurance-card" data-aos="fade-up" data-aos-delay="200">
-        <div class="card-header">
-          <mat-icon class="card-icon">verified_user</mat-icon>
-          <h3>Aseguradoras</h3>
-        </div>
-        <ul class="insurance-list">
-          <li *ngFor="let item of _medico.seguros">
-            <mat-icon>check_circle</mat-icon> {{item.descrip}}
-          </li>
-        </ul>
-      </div>
-
     </div>
+  </header>
 
-    <!-- Right Column: Schedule -->
-    <div class="schedule-column">
-      <div class="content-card schedule-card" data-aos="fade-up" data-aos-delay="300">
-        <div class="card-header">
-          <mat-icon class="card-icon">schedule</mat-icon>
-          <h3>Horarios de Consulta</h3>
-        </div>
-        <div class="schedule-container">
-          <div *ngFor="let day of _medico.horarios | keyvalue">
-            <ng-container *ngIf="_medico.horarios[day.key]">
-              <div class="schedule-row">
-                <div class="day-label">{{ day.key }}</div>
-                <div class="hours">
-                  <span *ngFor="let hour of _medico.horarios[day.key]; let i = index" class="hour-tag">
-                    {{ hour }}
-                  </span>
+  <!-- ============ DETAILS & SCHEDULE GRID ============ -->
+  <section class="profile-body">
+    <div class="profile-body__inner">
+      <div class="content-grid">
+
+        <!-- Columna 1: Contacto, Aseguradoras y Servicios -->
+        <div class="info-column">
+          <!-- Tarjeta de Contacto y Consultorio -->
+          <article class="sculpt-panel" data-aos="fade-up" data-aos-delay="40">
+            <header class="sculpt-panel__header">
+              <span class="sculpt-panel__orb" aria-hidden="true">
+                <mat-icon>contact_phone</mat-icon>
+              </span>
+              <div>
+                <h2 class="sculpt-panel__title">Contacto y consultorio</h2>
+                <p class="sculpt-panel__sub">Canales directos de atención del especialista</p>
+              </div>
+            </header>
+
+            <div class="contact-list">
+              <!-- Consultorio -->
+              <div class="contact-block" *ngIf="_medico.consultorio">
+                <span class="contact-label">Ubicación de consulta</span>
+                <div class="consultorio-detail">
+                  <mat-icon aria-hidden="true">apartment</mat-icon>
+                  <div>
+                    <strong class="consultorio-title">Consultorio {{ _medico.consultorio }}</strong>
+                    <span class="consultorio-sub">Hospital del Salvador · Área de consultas externas</span>
+                  </div>
                 </div>
               </div>
-            </ng-container>
-          </div>
+
+              <!-- Teléfonos -->
+              <div class="contact-block" *ngIf="hasTelefonos">
+                <span class="contact-label">Teléfonos de atención</span>
+                <div class="phone-group">
+                  <a *ngIf="_medico.telefono1" [href]="'tel:' + _medico.telefono1" class="phone-pill">
+                    <mat-icon aria-hidden="true">call</mat-icon>
+                    <span>{{ _medico.telefono1 | mask: '000-000-0000' }}</span>
+                  </a>
+                  <a *ngIf="_medico.telefono2" [href]="'tel:' + _medico.telefono2" class="phone-pill">
+                    <mat-icon aria-hidden="true">call</mat-icon>
+                    <span>{{ _medico.telefono2 | mask: '000-000-0000' }}</span>
+                  </a>
+                </div>
+              </div>
+
+              <!-- Correo -->
+              <div class="contact-block" *ngIf="_medico.correo">
+                <span class="contact-label">Correo institucional</span>
+                <a [href]="'mailto:' + _medico.correo" class="email-row">
+                  <mat-icon aria-hidden="true">mail_outline</mat-icon>
+                  <span>{{ _medico.correo }}</span>
+                </a>
+              </div>
+
+              <!-- Redes profesionales -->
+              <div class="contact-block" *ngIf="hasRedes">
+                <span class="contact-label">Redes profesionales</span>
+                <div class="social-links">
+                  <a *ngIf="_medico.url_facebook" [href]="_medico.url_facebook" target="_blank" rel="noopener noreferrer"
+                    class="social-orb" aria-label="Perfil de Facebook del especialista">
+                    <mat-icon>facebook</mat-icon>
+                  </a>
+                  <a *ngIf="_medico.url_twitter" [href]="_medico.url_twitter" target="_blank" rel="noopener noreferrer"
+                    class="social-orb" aria-label="Perfil de Twitter del especialista">
+                    <mat-icon svgIcon="twitter"></mat-icon>
+                  </a>
+                  <a *ngIf="_medico.url_instagram" [href]="_medico.url_instagram" target="_blank" rel="noopener noreferrer"
+                    class="social-orb" aria-label="Perfil de Instagram del especialista">
+                    <mat-icon svgIcon="instagram"></mat-icon>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Tarjeta de Aseguradoras Aceptadas (ARS) -->
+          <article class="sculpt-panel" *ngIf="hasSeguros" data-aos="fade-up" data-aos-delay="100">
+            <header class="sculpt-panel__header">
+              <span class="sculpt-panel__orb" aria-hidden="true">
+                <mat-icon>verified_user</mat-icon>
+              </span>
+              <div class="sculpt-panel__header-row">
+                <div>
+                  <h2 class="sculpt-panel__title">Aseguradoras aceptadas</h2>
+                  <p class="sculpt-panel__sub">Cobertura ARS validada automáticamente al reservar</p>
+                </div>
+                <span class="insurance-badge">{{ _medico.seguros.length }} disponibles</span>
+              </div>
+            </header>
+
+            <ul class="insurance-list">
+              <li *ngFor="let item of _medico.seguros" class="insurance-item">
+                <span class="insurance-item__icon" aria-hidden="true">
+                  <mat-icon>check</mat-icon>
+                </span>
+                <span class="insurance-item__name">{{ item.descrip }}</span>
+              </li>
+            </ul>
+
+            <footer class="insurance-footer">
+              <mat-icon aria-hidden="true">shield</mat-icon>
+              <span>El porcentaje exacto de cobertura se calcula al seleccionar su seguro en la reserva.</span>
+            </footer>
+          </article>
+
+          <!-- Tarjeta de Servicios y Procedimientos (si existen) -->
+          <article class="sculpt-panel" *ngIf="hasServicios" data-aos="fade-up" data-aos-delay="160">
+            <header class="sculpt-panel__header">
+              <span class="sculpt-panel__orb" aria-hidden="true">
+                <mat-icon>medical_services</mat-icon>
+              </span>
+              <div>
+                <h2 class="sculpt-panel__title">Servicios y procedimientos</h2>
+                <p class="sculpt-panel__sub">Tratamientos y atenciones especializadas</p>
+              </div>
+            </header>
+
+            <ul class="services-list">
+              <li *ngFor="let servicio of _medico.servicios" class="services-item">
+                <mat-icon aria-hidden="true">check_circle_outline</mat-icon>
+                <span>{{ servicio }}</span>
+              </li>
+            </ul>
+          </article>
         </div>
+
+        <!-- Columna 2: Agenda y Horarios de Consulta -->
+        <div class="schedule-column">
+          <article class="sculpt-panel sculpt-panel--schedule" data-aos="fade-up" data-aos-delay="120">
+            <header class="sculpt-panel__header">
+              <span class="sculpt-panel__orb" aria-hidden="true">
+                <mat-icon>event_available</mat-icon>
+              </span>
+              <div>
+                <h2 class="sculpt-panel__title">Agenda y horarios de consulta</h2>
+                <p class="sculpt-panel__sub">Disponibilidad habitual por día de la semana</p>
+              </div>
+            </header>
+
+            <!-- Lista de horarios si están presentes -->
+            <div class="schedule-list" *ngIf="hasHorarios; else noScheduleTpl">
+              <ng-container *ngFor="let day of _medico.horarios | keyvalue">
+                <div class="schedule-row" *ngIf="day.value?.length">
+                  <div class="schedule-day-box">
+                    <span class="schedule-day">{{ day.key }}</span>
+                    <span class="schedule-count">{{ day.value.length }} turno(s)</span>
+                  </div>
+                  <div class="schedule-hours">
+                    <span *ngFor="let hour of day.value" class="hour-pill">
+                      <mat-icon aria-hidden="true">schedule</mat-icon>
+                      <span>{{ hour }}</span>
+                    </span>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+
+            <!-- Template cuando no hay horarios registrados -->
+            <ng-template #noScheduleTpl>
+              <div class="schedule-empty">
+                <mat-icon aria-hidden="true">calendar_month</mat-icon>
+                <div class="schedule-empty__copy">
+                  <strong>Horarios sujetos a programación en tiempo real</strong>
+                  <p>Inicie el proceso de agendamiento para consultar los turnos disponibles esta semana.</p>
+                </div>
+              </div>
+            </ng-template>
+
+            <!-- Consejos clínicos de preparación -->
+            <div class="schedule-guidelines">
+              <h3 class="guidelines-title">
+                <mat-icon aria-hidden="true">info</mat-icon>
+                <span>Indicaciones para el día de su consulta</span>
+              </h3>
+              <ul class="guidelines-list">
+                <li>Presentar documento de identidad y carnet de seguro ARS vigente en recepción.</li>
+                <li>Llegar 15 minutos antes de la hora seleccionada para verificación de signos vitales.</li>
+                <li>Si cuenta con estudios previos o analíticas de laboratorio recientes, favor traerlos consigo.</li>
+              </ul>
+            </div>
+
+            <!-- Footer con CTA a agendar cita -->
+            <footer class="schedule-footer">
+              <div class="schedule-footer__info">
+                <strong class="schedule-footer__headline">¿Listo para su atención médica?</strong>
+                <p class="schedule-footer__note">
+                  Elija el día y turno exacto disponible durante el proceso de reserva en línea.
+                </p>
+              </div>
+
+              <a class="pill-btn pill-btn--primary pill-btn--full-mobile"
+                 [routerLink]="['/crear-cita']"
+                 [queryParams]="{ medicoId: medicoId }">
+                <span>Elegir fecha y reservar turno</span>
+                <mat-icon aria-hidden="true">arrow_forward</mat-icon>
+              </a>
+            </footer>
+          </article>
+        </div>
+
       </div>
     </div>
+  </section>
+  </ng-container>
 
-  </div>
+  <ng-template #load>
+    <div class="loading-container">
+      <div class="loading-spinner-wrap">
+        <mat-progress-spinner mode="indeterminate" diameter="52" strokeWidth="4"></mat-progress-spinner>
+      </div>
+      <p class="loading-label">Cargando perfil del especialista...</p>
+      <span class="loading-sub">Hospital del Salvador · Red Médica Integrada</span>
+    </div>
+  </ng-template>
 </main>
-
-<ng-template #load>
-  <div class="loading-container">
-    <mat-progress-spinner mode="indeterminate" diameter="50"></mat-progress-spinner>
-  </div>
-</ng-template>

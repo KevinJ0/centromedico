@@ -1,191 +1,258 @@
-<div class="settings-container" data-aos="fade-up">
-    <div class="settings-header">
-        <div class="title-section">
-            <mat-icon class="header-icon">manage_accounts</mat-icon>
-            <h1>Datos de usuario</h1>
-        </div>
-        <p class="subtitle">Administra tu información personal y seguridad de la cuenta.</p>
-    </div>
+<main class="settings-page">
+  <!-- Ambient Animated Clinical Aurora & Waves (Matching Home & Directory) -->
+  <div class="settings-ambient" aria-hidden="true">
+    <div class="settings-ambient__dots"></div>
+    <span class="settings-ambient__orb settings-ambient__orb--1"></span>
+    <span class="settings-ambient__orb settings-ambient__orb--2"></span>
+    <span class="settings-ambient__orb settings-ambient__orb--3"></span>
+    <svg class="settings-ambient__waves" viewBox="0 0 1440 320" preserveAspectRatio="none">
+      <path class="ambient-wave ambient-wave--back"
+        d="M0,160 C320,60 620,260 980,140 C1210,60 1350,180 1440,130 L1440,320 L0,320 Z">
+      </path>
+      <path class="ambient-wave ambient-wave--front"
+        d="M0,210 C300,290 660,100 1040,210 C1250,270 1360,190 1440,220 L1440,320 L0,320 Z">
+      </path>
+    </svg>
+  </div>
+
+  <div class="settings-container">
+    <!-- Compact Top Navigation & Identity Bar -->
+    <header class="settings-header">
+      <div class="header-breadcrumb">
+        <a class="back-pill" [routerLink]="['/']">
+          <mat-icon aria-hidden="true">arrow_back</mat-icon>
+          <span>Volver al inicio</span>
+        </a>
+        <span class="security-chip">
+          <mat-icon aria-hidden="true">verified_user</mat-icon>
+          <span>Portal de Pacientes • Acceso Seguro</span>
+        </span>
+      </div>
+
+      <div class="header-content">
+        <h1 class="settings-title">Ajustes y Datos de Usuario</h1>
+        <p class="settings-subtitle">
+          Administra tu expediente personal, canales de contacto y credenciales de acceso.
+        </p>
+      </div>
+    </header>
 
     <div class="settings-grid" *ngIf="!loading; else loader">
-        <div class="main-column">
-            <mat-card class="settings-card">
-                <mat-card-header>
-                    <mat-icon mat-card-avatar>person</mat-icon>
-                    <mat-card-title>Perfil Personal</mat-card-title>
-                    <mat-card-subtitle>Información básica de tu cuenta</mat-card-subtitle>
-                </mat-card-header>
-
-                <mat-card-content>
-                    <form [formGroup]="userForm" class="user-form">
-                        <div class="form-row">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Nombre</mat-label>
-                                <input matInput formControlName="nombre">
-                            </mat-form-field>
-
-                            <mat-form-field appearance="outline">
-                                <mat-label>Apellido</mat-label>
-                                <input matInput formControlName="apellido">
-                            </mat-form-field>
-                        </div>
-
-                        <div class="form-row">
-                            <mat-form-field appearance="outline">
-                                <mat-label>ID / Cédula</mat-label>
-                                <input matInput formControlName="doc_identidad">
-                            </mat-form-field>
-
-                            <mat-form-field appearance="outline">
-                                <mat-label>Teléfono</mat-label>
-                                <input matInput formControlName="contacto" mask="000-000-0000">
-                            </mat-form-field>
-                        </div>
-
-                        <div class="form-row">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Fecha de Nacimiento</mat-label>
-                                <input matInput [matDatepicker]="picker" formControlName="fecha_nacimiento">
-                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                                <mat-datepicker #picker></mat-datepicker>
-                            </mat-form-field>
-
-                            <mat-form-field appearance="outline">
-                                <mat-label>Sexo</mat-label>
-                                <mat-select formControlName="sexo">
-                                    <mat-select-trigger>
-                                        <div class="option-content">
-                                            <mat-icon [class.male-icon]="userForm.get('sexo').value === 'm'"
-                                                [class.female-icon]="userForm.get('sexo').value === 'f'">
-                                                {{ userForm.get('sexo').value === 'm' ? 'male' : 'female' }}
-                                            </mat-icon>
-                                            {{ userForm.get('sexo').value === 'm' ? 'Masculino' : 'Femenino' }}
-                                        </div>
-                                    </mat-select-trigger>
-                                    <mat-option value="m">
-                                        <div class="option-content">
-                                            <mat-icon class="male-icon">male</mat-icon> Masculino
-                                        </div>
-                                    </mat-option>
-                                    <mat-option value="f">
-                                        <div class="option-content">
-                                            <mat-icon class="female-icon">female</mat-icon> Femenino
-                                        </div>
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-
-                        <mat-form-field appearance="outline" class="full-width">
-                            <mat-label>Correo Electrónico</mat-label>
-                            <input matInput formControlName="correo">
-                            <mat-icon matSuffix>lock</mat-icon>
-                            <mat-hint>El correo no puede ser modificado</mat-hint>
-                        </mat-form-field>
-                    </form>
-                </mat-card-content>
-
-                <mat-card-actions align="end">
-                    <button mat-flat-button color="primary" class="save-btn form-action-btn" (click)="saveUserInfo()"
-                        [disabled]="saving || userForm.invalid">
-                        <mat-icon *ngIf="!saving">save</mat-icon>
-                        <mat-spinner diameter="20" *ngIf="saving"></mat-spinner>
-                        <span>Guardar Cambios</span>
-                    </button>
-                </mat-card-actions>
-            </mat-card>
-
-            <mat-card class="settings-card security-card">
-                <mat-card-header>
-                    <mat-icon mat-card-avatar>security</mat-icon>
-                    <mat-card-title>Seguridad</mat-card-title>
-                    <mat-card-subtitle>Cambia tu contraseña de acceso</mat-card-subtitle>
-                </mat-card-header>
-
-                <mat-card-content>
-                    <form [formGroup]="passwordForm" class="password-form">
-                        <mat-form-field appearance="outline" class="full-width">
-                            <mat-label>Contraseña Actual</mat-label>
-                            <input matInput type="password" formControlName="currentPassword">
-                        </mat-form-field>
-
-                        <div class="form-row">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Nueva Contraseña</mat-label>
-                                <input matInput type="password" formControlName="newPassword">
-                            </mat-form-field>
-
-                            <mat-form-field appearance="outline">
-                                <mat-label>Confirmar Nueva Contraseña</mat-label>
-                                <input matInput type="password" formControlName="confirmPassword">
-                            </mat-form-field>
-                        </div>
-                    </form>
-                </mat-card-content>
-
-                <mat-card-actions align="end">
-                    <button mat-stroked-button color="primary" class="form-action-btn" (click)="changePassword()"
-                        [disabled]="passwordForm.invalid">
-                        <mat-icon>lock_open</mat-icon>
-                        <span>Actualizar Contraseña</span>
-                    </button>
-                </mat-card-actions>
-            </mat-card>
-        </div>
-
-        <div class="side-column">
-            <mat-card class="info-card meta-card">
-                <div class="user-preview">
-                    <div class="avatar-container" [class.male]="userInfo.sexo === 'm'"
-                        [class.female]="userInfo.sexo === 'f'">
-                        <mat-icon>{{ userInfo.sexo === 'm' ? 'male' : 'female' }}</mat-icon>
-                    </div>
-                    <h3>{{ userInfo.nombre }} {{ userInfo.apellido }}</h3>
-                    <span class="user-badge">{{ accountType }}</span>
-                </div>
-
-                <mat-divider></mat-divider>
-
-                <div class="meta-list">
-                    <div class="meta-item">
-                        <mat-icon>calendar_today</mat-icon>
-                        <div class="meta-content">
-                            <span class="label">Fecha de creación</span>
-                            <span class="value">{{ accountCreationDate | date:'dd MMM, yyyy' }}</span>
-                        </div>
-                    </div>
-
-                    <div class="meta-item">
-                        <mat-icon>history</mat-icon>
-                        <div class="meta-content">
-                            <span class="label">Último acceso</span>
-                            <span class="value">{{ lastLogin | date:'short' }}</span>
-                        </div>
-                    </div>
-
-                    <div class="meta-item">
-                        <mat-icon>verified</mat-icon>
-                        <div class="meta-content">
-                            <span class="label">Estado de cuenta</span>
-                            <span class="value status-active">{{ accountStatus }}</span>
-                        </div>
-                    </div>
-                </div>
-            </mat-card>
-
-            <div class="help-box" data-aos="fade-up">
-                <mat-icon>help_outline</mat-icon>
-                <h4>¿Necesitas ayuda?</h4>
-                <p>Si tienes problemas con tu cuenta, contacta a soporte técnico.</p>
-                <button mat-button color="primary">Contactar Soporte</button>
+      <!-- Main Column: Forms -->
+      <div class="main-column">
+        <!-- Panel 1: Perfil Personal -->
+        <article class="sculpt-panel">
+          <header class="panel-head">
+            <div class="panel-orb panel-orb--primary" aria-hidden="true">
+              <mat-icon>person</mat-icon>
             </div>
-        </div>
+            <div class="panel-head__text">
+              <h2 class="panel-title">Información Personal</h2>
+              <p class="panel-subtitle">Datos registrados en tu expediente médico del Hospital Salvador</p>
+            </div>
+          </header>
+
+          <form [formGroup]="userForm" class="user-form">
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Nombre</mat-label>
+                <input matInput formControlName="nombre" placeholder="Tu nombre">
+                <mat-icon matSuffix aria-hidden="true">badge</mat-icon>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Apellido</mat-label>
+                <input matInput formControlName="apellido" placeholder="Tus apellidos">
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Cédula o Documento de Identidad</mat-label>
+                <input matInput formControlName="doc_identidad" placeholder="Documento de identidad">
+                <mat-icon matSuffix aria-hidden="true">fingerprint</mat-icon>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Teléfono de Contacto</mat-label>
+                <input matInput formControlName="contacto" mask="000-000-0000" placeholder="809-555-1234">
+                <mat-icon matSuffix aria-hidden="true">phone</mat-icon>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Fecha de Nacimiento</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="fecha_nacimiento" placeholder="Selecciona tu fecha">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Sexo</mat-label>
+                <mat-select formControlName="sexo">
+                  <mat-select-trigger>
+                    <div class="option-content">
+                      <mat-icon class="sex-icon" aria-hidden="true">
+                        {{ userForm.get('sexo').value === 'm' ? 'male' : 'female' }}
+                      </mat-icon>
+                      <span>{{ userForm.get('sexo').value === 'm' ? 'Masculino' : 'Femenino' }}</span>
+                    </div>
+                  </mat-select-trigger>
+                  <mat-option value="m">
+                    <div class="option-content">
+                      <mat-icon class="sex-icon" aria-hidden="true">male</mat-icon>
+                      <span>Masculino</span>
+                    </div>
+                  </mat-option>
+                  <mat-option value="f">
+                    <div class="option-content">
+                      <mat-icon class="sex-icon" aria-hidden="true">female</mat-icon>
+                      <span>Femenino</span>
+                    </div>
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <mat-form-field appearance="outline" class="form-field full-width">
+              <mat-label>Correo Electrónico (Usuario)</mat-label>
+              <input matInput formControlName="correo" [readonly]="true">
+              <mat-icon matSuffix aria-hidden="true">lock</mat-icon>
+              <mat-hint>El correo electrónico está vinculado a tu cuenta y no puede modificarse directamente.</mat-hint>
+            </mat-form-field>
+
+            <div class="panel-actions">
+              <button type="button" class="pill-btn pill-btn--primary" (click)="saveUserInfo()"
+                [disabled]="saving || userForm.invalid">
+                <mat-icon *ngIf="!saving" aria-hidden="true">save</mat-icon>
+                <mat-spinner diameter="20" *ngIf="saving"></mat-spinner>
+                <span>Guardar Cambios</span>
+              </button>
+            </div>
+          </form>
+        </article>
+
+        <!-- Panel 2: Seguridad y Contraseña -->
+        <article class="sculpt-panel">
+          <header class="panel-head">
+            <div class="panel-orb panel-orb--amber" aria-hidden="true">
+              <mat-icon>shield</mat-icon>
+            </div>
+            <div class="panel-head__text">
+              <h2 class="panel-title">Seguridad & Contraseña</h2>
+              <p class="panel-subtitle">Actualiza tu contraseña para mantener protegida tu información clínica</p>
+            </div>
+          </header>
+
+          <form [formGroup]="passwordForm" class="password-form">
+            <mat-form-field appearance="outline" class="form-field full-width">
+              <mat-label>Contraseña Actual</mat-label>
+              <input matInput type="password" formControlName="currentPassword" placeholder="Ingresa tu contraseña actual">
+              <mat-icon matSuffix aria-hidden="true">vpn_key</mat-icon>
+            </mat-form-field>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Nueva Contraseña</mat-label>
+                <input matInput type="password" formControlName="newPassword" placeholder="Mínimo 6 caracteres">
+                <mat-icon matSuffix aria-hidden="true">lock_outline</mat-icon>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Confirmar Nueva Contraseña</mat-label>
+                <input matInput type="password" formControlName="confirmPassword" placeholder="Repite la nueva contraseña">
+              </mat-form-field>
+            </div>
+
+            <div class="panel-actions">
+              <button type="button" class="pill-btn pill-btn--secondary" (click)="changePassword()"
+                [disabled]="passwordForm.invalid">
+                <mat-icon aria-hidden="true">lock_reset</mat-icon>
+                <span>Actualizar Contraseña</span>
+              </button>
+            </div>
+          </form>
+        </article>
+      </div>
+
+      <!-- Side Column: Patient Profile Card & Support -->
+      <aside class="side-column">
+        <!-- Patient ID Card -->
+        <article class="sculpt-panel patient-card">
+          <div class="patient-card__head">
+            <span class="patient-card__label">Expediente Paciente</span>
+            <span class="patient-card__status">
+              <span class="patient-card__status-dot"></span>
+              {{ accountStatus }}
+            </span>
+          </div>
+
+          <div class="patient-card__body">
+            <div class="patient-card__avatar-row">
+              <div class="patient-avatar" [class.male]="userInfo?.sexo === 'm'" [class.female]="userInfo?.sexo === 'f'">
+                <mat-icon aria-hidden="true">{{ userInfo?.sexo === 'm' ? 'male' : 'female' }}</mat-icon>
+              </div>
+            </div>
+
+            <div class="patient-card__identity">
+              <h3 class="patient-name">{{ userInfo?.nombre }} {{ userInfo?.apellido }}</h3>
+              <span class="patient-category">{{ accountType }}</span>
+            </div>
+
+            <div class="meta-strip">
+              <div class="meta-row">
+                <span class="meta-icon" aria-hidden="true"><mat-icon>calendar_today</mat-icon></span>
+                <div class="meta-text">
+                  <span class="meta-label">Fecha de registro</span>
+                  <strong class="meta-value">{{ accountCreationDate | date:'dd MMM, yyyy' }}</strong>
+                </div>
+              </div>
+
+              <div class="meta-row">
+                <span class="meta-icon" aria-hidden="true"><mat-icon>history</mat-icon></span>
+                <div class="meta-text">
+                  <span class="meta-label">Último acceso al portal</span>
+                  <strong class="meta-value">{{ lastLogin | date:'short' }}</strong>
+                </div>
+              </div>
+
+              <div class="meta-row">
+                <span class="meta-icon meta-icon--mint" aria-hidden="true"><mat-icon>verified</mat-icon></span>
+                <div class="meta-text">
+                  <span class="meta-label">Expediente Clínico</span>
+                  <strong class="meta-value text-mint">Verificado y Activo</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Help Support Card -->
+        <article class="sculpt-panel support-card">
+          <div class="support-head">
+            <span class="support-orb" aria-hidden="true"><mat-icon>contact_support</mat-icon></span>
+            <div>
+              <h3 class="support-title">¿Necesitas Asistencia?</h3>
+              <p class="support-subtitle">Nuestro equipo está listo para ayudarte</p>
+            </div>
+          </div>
+          <p class="support-desc">
+            Si requieres actualizar datos oficiales o tienes dudas sobre tus citas médicas, contáctanos directamente.
+          </p>
+          <a class="pill-btn pill-btn--ghost support-btn" href="tel:8095558811">
+            <mat-icon aria-hidden="true">call</mat-icon>
+            <span>Llamar a Soporte: 809-555-8811</span>
+          </a>
+        </article>
+      </aside>
     </div>
 
     <ng-template #loader>
-        <div class="loader-container">
-            <mat-spinner diameter="50"></mat-spinner>
-            <p>Cargando información...</p>
-        </div>
+      <div class="loader-container">
+        <mat-spinner diameter="48"></mat-spinner>
+        <p class="loader-text">Cargando datos de tu cuenta...</p>
+      </div>
     </ng-template>
-</div>
+  </div>
+</main>

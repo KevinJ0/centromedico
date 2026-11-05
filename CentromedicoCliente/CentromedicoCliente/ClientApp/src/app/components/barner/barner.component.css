@@ -1,78 +1,197 @@
-.barner-container {
-  background-image: url(../../../assets/imgs/barner.png);
+/* =========================================================================
+   Closing CTA Banner — Full Capsule & Sculptural Motif
+   ========================================================================= */
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.closing-cta {
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  font-family: var(--font-body, "Inter", sans-serif);
+}
+
+.closing-cta__inner {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.closing-cta__panel {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
+  background-image:
+    linear-gradient(130deg, rgba(10, 37, 64, 0.86) 0%, rgba(13, 92, 158, 0.74) 55%, rgba(10, 37, 64, 0.84) 100%),
+    url(../../../assets/imgs/barner.png);
   background-position: center;
   background-size: cover;
-  width: 100%;
-  height: auto;
-  padding: 4rem clamp(.5rem, 4vw, 4rem);
-  display: grid;
-  justify-content: space-between;
-  grid-auto-columns: auto auto;
-  grid-auto-flow: column;
-  background-color: rgba(0, 0, 0, 0.096);
-  position: relative;
-}
-
-.black-screen {
-  position: absolute;
-  background-color: rgba(0, 0, 0, 0.096);
-  width: 100%;
-  height: 100%;
-  top: 0;
-  z-index: 1;
-}
-
-.barner-container .item {
-  z-index: 2;
-  display: flex;
-  justify-content: center;
-  text-align: center;
-  align-items: center;
-}
-
-.btn-container {
-  flex-direction: column;
-  padding: 1rem;
-  background-color: rgba(0, 0, 0, 0.39);
-  width: clamp(4rem, 40vw, 25rem);
-
-}
-
-.btn-container a {
-  text-decoration: none;
+  background-repeat: no-repeat;
   border: none;
-  padding: 1rem !important;
-  font-size: 1.2rem;
-  background-color: var(--primary-color);
-  margin: 5px 0;
-  font-weight: 500;
-  color: white;
-  width: 100%;
-  max-width: 25rem;
+  border-radius: 0;
+  padding: 4rem clamp(1rem, 5vw, 4rem);
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) auto;
+  gap: clamp(1.75rem, 4vw, 3.5rem);
+  align-items: center;
+  justify-content: space-between;
+  color: #ffffff;
+  box-shadow: none;
 }
 
+.closing-cta__copy {
+  max-width: 56ch;
+}
 
-.barner-container h3 {
+.closing-cta__title {
+  font-size: clamp(1.75rem, 3.4vw, 2.45rem);
+  font-weight: 800;
+  line-height: 1.14;
+  letter-spacing: -0.025em;
+  color: #ffffff;
+  margin: 0 0 0.75rem;
+  text-wrap: balance;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.closing-cta__text {
+  font-size: clamp(0.98rem, 1.2vw, 1.08rem);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.94);
   margin: 0;
-  max-width: 50rem;
-  color: white;
-  text-shadow: 1px 1px 4px rgb(0 0 0 / 60%);
-  font-size: clamp(2rem, 3.5vw, 2.5rem);
+  text-wrap: pretty;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
 }
 
-.btn-container .search-doctor-btn {
-  background-color: aliceblue;
-  color: black;
+.closing-cta__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 270px;
+  background: rgba(10, 37, 64, 0.44);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 1.15rem;
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
-@media screen and (max-width: 680px) {
-  .item {
+.closing-cta__btn-primary,
+.closing-cta__btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-height: 52px;
+  border-radius: 999px;
+  font-size: 0.96rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition:
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.closing-cta__btn-primary {
+  padding: 0.45rem 0.5rem 0.45rem 1.5rem;
+  background-color: #ffffff;
+  color: #0a2540;
+}
+
+.closing-cta__btn-circle {
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  background-color: #0d5c9e;
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.closing-cta__btn-circle mat-icon {
+  font-size: 1.15rem;
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+.closing-cta__btn-primary:hover {
+  background-color: #f2f6fb;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(10, 25, 50, 0.22);
+}
+
+.closing-cta__btn-secondary {
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  background-color: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+}
+
+.closing-cta__btn-secondary:hover {
+  background-color: rgba(255, 255, 255, 0.22);
+  transform: translateY(-2px);
+}
+
+.closing-cta__btn-secondary mat-icon {
+  font-size: 1.2rem;
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+@media (max-width: 900px) {
+  .closing-cta__panel {
+    grid-template-columns: 1fr;
+  }
+
+  .closing-cta__actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+
+  .closing-cta__btn-primary,
+  .closing-cta__btn-secondary {
+    flex: 1 1 220px;
+  }
+}
+
+@media (max-width: 480px) {
+  .closing-cta {
+    padding: 0;
+  }
+
+  .closing-cta__panel {
+    padding: 3rem 1.25rem;
+    border-radius: 0;
+  }
+
+  .closing-cta__actions {
+    flex-direction: column;
     width: 100%;
+    padding: 0.85rem;
+    border-radius: 22px;
   }
 
-  .barner-container {
-    grid-auto-flow: row;
-
+  .closing-cta__btn-primary,
+  .closing-cta__btn-secondary {
+    width: 100%;
+    flex: none;
   }
+}
 
+@media (prefers-reduced-motion: reduce) {
+  .closing-cta__btn-primary,
+  .closing-cta__btn-secondary {
+    transition: none;
+  }
 }

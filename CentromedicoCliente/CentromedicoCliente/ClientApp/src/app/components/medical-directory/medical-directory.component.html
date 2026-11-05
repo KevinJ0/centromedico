@@ -1,27 +1,45 @@
 <main class="directory">
-  <!-- ============ SEARCH HERO ============ -->
+  <!-- ============ PHOTO SEARCH HERO + ANIMATED LUMINOUS STAGE ============ -->
   <section class="search-hero" aria-labelledby="directory-title">
     <div class="search-hero__bg"></div>
     <div class="search-hero__overlay"></div>
+
+    <!-- Animated Luminous Rings & Orbs in Hero -->
+    <div class="search-hero__ambient" aria-hidden="true">
+      <span class="hero-glow hero-glow--one"></span>
+      <span class="hero-glow hero-glow--two"></span>
+      <svg class="hero-rings" viewBox="0 0 600 600" fill="none">
+        <circle cx="300" cy="300" r="180" stroke="rgba(255,255,255,0.08)" stroke-width="1.5" stroke-dasharray="12 10" />
+        <circle cx="300" cy="300" r="250" stroke="rgba(255,255,255,0.06)" stroke-width="1" />
+        <circle cx="300" cy="300" r="110" stroke="rgba(255,255,255,0.10)" stroke-width="1" />
+      </svg>
+    </div>
+
     <div class="search-hero__content">
-      <a class="back-link" [routerLink]="['/']">
-        <mat-icon aria-hidden="true">arrow_back</mat-icon> Inicio
-      </a>
-      <h1 id="directory-title" class="search-hero__title">Directorio Médico</h1>
-      <p class="search-hero__lede">Encuentra tu especialista y agenda tu cita en minutos.</p>
-      <p class="search-hero__sub">Cientos de médicos profesionales están aquí para ayudarte.</p>
+      <div class="search-hero__top">
+        <a class="hero-pill" [routerLink]="['/']">
+          <mat-icon aria-hidden="true">arrow_back</mat-icon>
+          <span>Volver al inicio</span>
+        </a>
+      </div>
+
+      <div class="search-hero__copy">
+        <h1 id="directory-title" class="search-hero__title">Directorio Médico</h1>
+        <p class="search-hero__lede">Encuentra tu especialista y agenda tu cita en minutos.</p>
+        <p class="search-hero__sub">Cientos de médicos profesionales están aquí para ayudarte.</p>
+      </div>
 
       <form class="search-form" [formGroup]="searchFormGroup" (ngSubmit)="Search()" role="search">
         <div class="search-form__fields">
           <mat-form-field appearance="outline" class="search-form__field">
             <mat-label>Nombre</mat-label>
-            <mat-icon matPrefix>person_search</mat-icon>
-            <input formControlName="nameControl" matInput placeholder="Nombre del médico">
+            <mat-icon matPrefix aria-hidden="true">person_search</mat-icon>
+            <input formControlName="nameControl" matInput placeholder="Nombre o apellido del médico">
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="search-form__field">
             <mat-label>Especialidad</mat-label>
-            <mat-icon matPrefix>medical_services</mat-icon>
+            <mat-icon matPrefix aria-hidden="true">medical_services</mat-icon>
             <mat-select formControlName="specialityControl">
               <mat-option [value]="0">Todas</mat-option>
               <mat-option *ngFor="let especialidad of especialidades$ | async" [value]="especialidad.id">
@@ -32,7 +50,7 @@
 
           <mat-form-field appearance="outline" class="search-form__field">
             <mat-label>Seguro</mat-label>
-            <mat-icon matPrefix>health_and_safety</mat-icon>
+            <mat-icon matPrefix aria-hidden="true">health_and_safety</mat-icon>
             <mat-select formControlName="insuranceControl">
               <mat-option [value]="0">Todos</mat-option>
               <mat-option *ngFor="let seguro of seguros$ | async" [value]="seguro.id">
@@ -40,65 +58,94 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-        </div>
 
-        <button class="search-form__btn" type="submit" [disabled]="isSent" mat-flat-button color="primary">
-          <mat-icon aria-hidden="true">search</mat-icon>
-          Buscar
-        </button>
+          <button class="search-form__btn" type="submit" [disabled]="isSent">
+            <mat-icon aria-hidden="true">search</mat-icon>
+            <span>Buscar</span>
+          </button>
+        </div>
       </form>
+
+      <div class="search-hero__support">
+        <a class="hero-pill hero-pill--support" href="tel:8095558811">
+          <mat-icon aria-hidden="true">support_agent</mat-icon>
+          <span>¿Ayuda? <strong>809-555-8811</strong></span>
+        </a>
+      </div>
     </div>
   </section>
 
-  <!-- ============ RESULTS ============ -->
+  <!-- ============ RESULTS DIRECTORY WITH ANIMATED AURORA CANVAS ============ -->
   <section class="results" aria-labelledby="results-title">
+    <!-- Animated Clinical Aurora & Flowing Waves Background -->
+    <div class="directory-ambient" aria-hidden="true">
+      <div class="directory-ambient__grid"></div>
+      <span class="directory-ambient__orb directory-ambient__orb--1"></span>
+      <span class="directory-ambient__orb directory-ambient__orb--2"></span>
+      <span class="directory-ambient__orb directory-ambient__orb--3"></span>
+      <svg class="directory-ambient__waves" viewBox="0 0 1440 420" preserveAspectRatio="none">
+        <path class="ambient-wave ambient-wave--back"
+          d="M0,192 C320,96 580,290 920,180 C1180,96 1340,210 1440,160 L1440,420 L0,420 Z">
+        </path>
+        <path class="ambient-wave ambient-wave--front"
+          d="M0,256 C280,330 640,120 1020,240 C1240,310 1360,220 1440,250 L1440,420 L0,420 Z">
+        </path>
+      </svg>
+    </div>
+
     <div class="results__inner">
-      <div class="results__head">
-        <div class="stat-card">
-          <mat-icon aria-hidden="true">groups</mat-icon>
-          <div class="stat-info">
-            <span class="stat-count">{{ displayDoctorsCount }}</span>
-            <span class="stat-label">Médicos disponibles</span>
-          </div>
-        </div>
-        <div class="help-badge">
-          <mat-icon aria-hidden="true">support_agent</mat-icon>
-          <span>¿Ayuda? <b>809-555-8811</b></span>
+      <div class="results__toolbar">
+        <div class="results__title-group">
+          <h2 id="results-title" class="results__title">Lista de médicos</h2>
+          <span class="results__count-pill">
+            <span class="results__count-dot" aria-hidden="true"></span>
+            <strong>{{ displayDoctorsCount }}</strong> médicos disponibles
+          </span>
         </div>
       </div>
 
-      <h2 id="results-title" class="results__title">Lista de médicos</h2>
-
       <div class="list-wrapper" *ngIf="isSent else DoctorsLst">
         <div class="progress-content">
-          <mat-progress-spinner [mode]="mode"></mat-progress-spinner>
+          <mat-progress-spinner [mode]="mode" diameter="48"></mat-progress-spinner>
+          <p class="progress-label">Actualizando directorio médico...</p>
         </div>
       </div>
 
       <ng-template #DoctorsLst>
         <div class="doctors-list" *ngIf="!showNoContent else NoContent">
           <div class="cards-grid" *ngIf="!loading else load">
-            <app-doctor-card *ngFor="let doctor of splicedData; let i = index" [doctorData]="doctor"
-              [attr.data-aos-delay]="i * 80" class="card-wrapper">
+            <app-doctor-card *ngFor="let doctor of splicedData; let i = index"
+                             [doctorData]="doctor"
+                             class="card-wrapper"
+                             data-aos="fade-up"
+                             [attr.data-aos-delay]="(i % 4) * 60">
             </app-doctor-card>
           </div>
-          <mat-paginator itemsPerPageLabel="Por página" (page)="pageChangeEvent($event)" [length]="pageLength"
-            [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions">
-          </mat-paginator>
+
+          <div class="paginator-shell">
+            <mat-paginator itemsPerPageLabel="Por página:" (page)="pageChangeEvent($event)"
+              [length]="pageLength" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions">
+            </mat-paginator>
+          </div>
         </div>
       </ng-template>
 
       <ng-template #NoContent>
         <div class="empty-state">
-          <mat-icon aria-hidden="true">search_off</mat-icon>
-          <h3>No se encontró ningún médico</h3>
-          <p>Intenta con otros filtros o limpia la búsqueda.</p>
+          <div class="empty-state__orb">
+            <mat-icon aria-hidden="true">search_off</mat-icon>
+          </div>
+          <h3 class="empty-state__title">No se encontró ningún médico</h3>
+          <p class="empty-state__desc">
+            Intenta con otros filtros o selecciona «Todas» las especialidades y vuelve a buscar.
+          </p>
         </div>
       </ng-template>
 
       <ng-template #load>
         <div class="progress-content">
-          <mat-progress-spinner [mode]="mode"></mat-progress-spinner>
+          <mat-progress-spinner [mode]="mode" diameter="48"></mat-progress-spinner>
+          <p class="progress-label">Cargando especialistas...</p>
         </div>
       </ng-template>
     </div>

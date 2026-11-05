@@ -1,103 +1,258 @@
-<header class="header" id="menu-mobile" role="banner">
+<header id="menu-principal" class="site-header" role="banner">
+  <div class="header-container">
 
-  <nav id="nav" class="nav" role="navigation">
-    <div class="mobile-container-logo">
-      <a [routerLink]="['/']">
-        <img src="../../../assets/imgs/footer_logo.png" class="mobile-main-logo" alt="Logo" loading="lazy">
+    <!-- Brand Identity (Left) -->
+    <div class="container-logo">
+      <a [routerLink]="['/']" (click)="closeMenu()" class="logo-link" aria-label="Hospital Salvador - Inicio">
+        <img src="assets/imgs/header_logo.png" class="main-logo" alt="Hospital Salvador" loading="lazy">
       </a>
     </div>
 
-    <ul class="nav__menu" id="menu" tabindex="-1" aria-label="main navigation" hidden>
-      <li class="nav__item"><a [routerLink]="['/']" class="nav__link">Inicio</a></li>
-      <li class="nav__item"><a [routerLink]="['/medicos']" class="nav__link">Directorio Médico</a></li>
-      <li class="nav__item"><a [routerLink]="['/medicos']" class="nav__link nav__link--cta">Agendar cita</a></li>
-      <li class="nav__item" [hidden]="!userName">
-        <a class="nav__link" [routerLink]="['/mis-citas']">Mis Citas</a>
-      </li>
-      <li class="nav__item"><a [routerLink]="['/ubicacion']" class="nav__link">Ubicaciones</a></li>
-      <li class="nav__item"><a [routerLink]="['/contactos']" class="nav__link">Contactos</a></li>
-      <li class="nav__item"><a [routerLink]="['/faq']" class="nav__link">Preguntas Frecuentes</a></li>
-      <li [hidden]="userName || isLoginRoute" class="nav__item">
-        <a class="nav__link" [routerLink]="['/paciente-login']">Acceso de pacientes</a>
-      </li>
-      <li class="nav__item" [hidden]="!userName">
-        <a class="nav__link" [routerLink]="['/ajustes-usuario']">Ajustes</a>
-      </li>
-      <li class="nav__item" [hidden]="!userName">
-        <a class="nav__link" (click)="logOut()">Cerrar sesión</a>
-      </li>
-    </ul>
+    <!-- Desktop Floating Island Navigation (Center) -->
+    <nav class="desktop-nav" aria-label="Navegación principal">
+      <div class="nav-pill-track">
+        <a [routerLink]="['/']"
+           routerLinkActive="active"
+           [routerLinkActiveOptions]="{ exact: true }"
+           class="nav-pill-item">
+          <mat-icon class="nav-pill-icon" aria-hidden="true">home</mat-icon>
+          <span>Inicio</span>
+        </a>
 
-    <a href="#nav" class="nav__toggle" role="button" aria-expanded="false" aria-controls="menu">
-      <svg class="menuicon" xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50">
-        <title>Toggle Menu</title>
-        <g>
-          <line class="menuicon__bar" x1="13" y1="16.5" x2="37" y2="16.5" />
-          <line class="menuicon__bar" x1="13" y1="24.5" x2="37" y2="24.5" />
-          <line class="menuicon__bar" x1="13" y1="24.5" x2="37" y2="24.5" />
-          <line class="menuicon__bar" x1="13" y1="32.5" x2="37" y2="32.5" />
-          <circle class="menuicon__circle" r="23" cx="25" cy="25" />
-        </g>
-      </svg>
-    </a>
+        <a [routerLink]="['/medicos']"
+           routerLinkActive="active"
+           class="nav-pill-item">
+          <mat-icon class="nav-pill-icon" aria-hidden="true">medical_services</mat-icon>
+          <span>Directorio Médico</span>
+        </a>
 
-    <div class="splash"></div>
-
-  </nav>
-
-</header>
-
-
-<header id="menu-principal">
-  <div class="bg-container-sub">
-    <div class="header-container">
-
-      <div class="container-logo">
-        <a [routerLink]="['/']">
-          <img src="../../../assets/imgs/header_logo.png" class="main-logo" alt="Logo" loading="lazy">
+        <a *ngIf="userName"
+           [routerLink]="['/mis-citas']"
+           routerLinkActive="active"
+           class="nav-pill-item">
+          <mat-icon class="nav-pill-icon" aria-hidden="true">event_available</mat-icon>
+          <span>Mis Citas</span>
         </a>
       </div>
+    </nav>
 
-      <div class="sub-menu">
-        <ul>
-          <li><a [routerLink]="['/']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Inicio</a></li>
-          <li><a [routerLink]="['/medicos']" routerLinkActive="active">Directorio Médico</a></li>
-          <li><a [routerLink]="['/medicos']" routerLinkActive="active" class="special-link">Agendar cita</a></li>
-          <li *ngIf="userName"><a [routerLink]="['/mis-citas']" routerLinkActive="active">Mis Citas</a></li>
-          <li><a [routerLink]="['/ubicacion']" routerLinkActive="active">Ubicaciones</a></li>
-          <li><a [routerLink]="['/contactos']" routerLinkActive="active">Contactos</a></li>
-          <li><a [routerLink]="['/faq']" routerLinkActive="active">Preguntas Frecuentes</a></li>
-        </ul>
+    <!-- Desktop Actions & Profile (Right) -->
+    <div class="desktop-actions">
+      <!-- Acceso a Pacientes (Si no ha iniciado sesión) -->
+      <a *ngIf="!userName && !isLoginRoute"
+         [routerLink]="['/paciente-login']"
+         class="btn-portal-paciente">
+        <span class="portal-badge-icon" aria-hidden="true">
+          <mat-icon>login</mat-icon>
+        </span>
+        <span class="portal-badge-text">Portal Pacientes</span>
+      </a>
+
+      <!-- Perfil de Paciente (Si ha iniciado sesión) -->
+      <div *ngIf="userName" class="user-profile-menu-wrap">
+        <button [matMenuTriggerFor]="userMenu"
+                class="user-profile-pill"
+                matTooltip="Mi cuenta y ajustes"
+                aria-label="Menú de usuario">
+          <div class="user-avatar-circle">
+            <mat-icon aria-hidden="true">person</mat-icon>
+          </div>
+          <div class="user-meta-info">
+            <span class="user-meta-status">Paciente</span>
+            <span class="user-meta-name">{{ userName }}</span>
+          </div>
+          <mat-icon class="user-chevron" aria-hidden="true">expand_more</mat-icon>
+        </button>
+
+        <mat-menu #userMenu="matMenu" xPosition="before" class="custom-user-menu">
+          <div class="menu-user-card">
+            <div class="menu-avatar-large">
+              <mat-icon>account_circle</mat-icon>
+            </div>
+            <div class="menu-user-details">
+              <strong class="menu-user-title">{{ userName }}</strong>
+              <span class="menu-user-subtitle">Paciente activo · Hospital Salvador</span>
+            </div>
+          </div>
+          <mat-divider></mat-divider>
+          <a mat-menu-item [routerLink]="['/mis-citas']">
+            <mat-icon color="primary">event_available</mat-icon>
+            <span>Mis Citas Médicas</span>
+          </a>
+          <a mat-menu-item [routerLink]="['/ajustes-usuario']">
+            <mat-icon>settings</mat-icon>
+            <span>Ajustes de Cuenta</span>
+          </a>
+          <mat-divider></mat-divider>
+          <button mat-menu-item (click)="logOut()" class="menu-item--logout">
+            <mat-icon color="warn">logout</mat-icon>
+            <span>Cerrar Sesión</span>
+          </button>
+        </mat-menu>
+      </div>
+    </div>
+
+    <!-- Mobile Top Bar Controls (Visible <= 1000px) -->
+    <div class="mobile-top-bar">
+      <!-- Botón Rápido Mobile de Acceso -->
+      <a *ngIf="!userName && !isLoginRoute"
+         [routerLink]="['/paciente-login']"
+         (click)="closeMenu()"
+         class="mobile-quick-btn mobile-quick-btn--portal"
+         aria-label="Portal de pacientes">
+        <mat-icon aria-hidden="true">login</mat-icon>
+        <span>Portal</span>
+      </a>
+
+      <!-- Botón Rápido Mobile de Mis Citas -->
+      <a *ngIf="userName"
+         [routerLink]="['/mis-citas']"
+         (click)="closeMenu()"
+         class="mobile-quick-btn mobile-quick-btn--citas"
+         aria-label="Mis citas">
+        <mat-icon aria-hidden="true">event_available</mat-icon>
+        <span>Mis Citas</span>
+      </a>
+
+      <!-- Botón Hamburguesa Moderno y Elegante -->
+      <button type="button"
+              class="mobile-nav-toggle"
+              (click)="toggleMenu()"
+              [attr.aria-expanded]="isMenuOpen"
+              aria-controls="mobile-dropdown-menu"
+              [attr.aria-label]="isMenuOpen ? 'Cerrar menú' : 'Abrir menú'">
+        <span class="hamburger-box"><span class="hamburger-line" [class.is-open]="isMenuOpen"></span></span>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Mobile Dropdown Backdrop Overlay -->
+  <div class="mobile-overlay"
+       *ngIf="isMenuOpen"
+       (click)="closeMenu()"
+       aria-hidden="true">
+  </div>
+
+  <!-- Mobile Slide-Down Dropdown Menu -->
+  <div id="mobile-dropdown-menu"
+       class="mobile-dropdown"
+       [class.is-open]="isMenuOpen"
+       [attr.aria-hidden]="!isMenuOpen">
+    <div class="mobile-dropdown__container">
+
+      <!-- Patient Profile Header if Logged In -->
+      <div *ngIf="userName" class="mobile-patient-profile">
+        <div class="mobile-patient-avatar">
+          <mat-icon aria-hidden="true">account_circle</mat-icon>
+        </div>
+        <div class="mobile-patient-meta">
+          <span class="mobile-patient-status">Paciente Activo</span>
+          <strong class="mobile-patient-name">{{ userName }}</strong>
+        </div>
       </div>
 
-      <div class="login-btn-container">
-        <ul>
-          <li *ngIf="!userName && !isLoginRoute">
-            <a [routerLink]="['/paciente-login']">
-              Acceso de pacientes <mat-icon aria-hidden="true">login</mat-icon>
-            </a>
-          </li>
-          <li *ngIf="userName" style="line-height: 0;">
-            <button [matMenuTriggerFor]="userMenu" class="settings-btn" matTooltip="Mi cuenta">
-              <mat-icon style="margin: 0 !important;">account_circle</mat-icon>
-            </button>
+      <!-- Navigation Links List with Rich Cards -->
+      <nav class="mobile-nav-list" aria-label="Navegación móvil">
+        <a [routerLink]="['/']"
+           (click)="closeMenu()"
+           class="mobile-nav-link"
+           routerLinkActive="is-active"
+           [routerLinkActiveOptions]="{ exact: true }">
+          <span class="link-icon-wrap">
+            <mat-icon aria-hidden="true">home</mat-icon>
+          </span>
+          <div class="link-body">
+            <span class="link-title">Inicio</span>
+            <span class="link-desc">Página principal y servicios</span>
+          </div>
+          <mat-icon class="link-arrow" aria-hidden="true">chevron_right</mat-icon>
+        </a>
 
-            <mat-menu #userMenu="matMenu" xPosition="before" class="custom-user-menu">
-              <div class="menu-user-info">
-                <span class="user-name-label">{{userName}}</span>
-              </div>
-              <mat-divider></mat-divider>
-              <a mat-menu-item [routerLink]="['/ajustes-usuario']">
-                <mat-icon color="primary">settings</mat-icon>
-                <span>Ajustes</span>
-              </a>
-              <button mat-menu-item (click)="logOut()">
-                <mat-icon color="warn">logout</mat-icon>
-                <span>Cerrar sesión</span>
-              </button>
-            </mat-menu>
-          </li>
-        </ul>
+        <a [routerLink]="['/medicos']"
+           (click)="closeMenu()"
+           class="mobile-nav-link"
+           routerLinkActive="is-active">
+          <span class="link-icon-wrap">
+            <mat-icon aria-hidden="true">medical_services</mat-icon>
+          </span>
+          <div class="link-body">
+            <span class="link-title">Directorio Médico</span>
+            <span class="link-desc">Especialistas, horarios y consultorios</span>
+          </div>
+          <mat-icon class="link-arrow" aria-hidden="true">chevron_right</mat-icon>
+        </a>
+
+        <a *ngIf="userName"
+           [routerLink]="['/mis-citas']"
+           (click)="closeMenu()"
+           class="mobile-nav-link"
+           routerLinkActive="is-active">
+          <span class="link-icon-wrap">
+            <mat-icon aria-hidden="true">event_available</mat-icon>
+          </span>
+          <div class="link-body">
+            <span class="link-title">Mis Citas</span>
+            <span class="link-desc">Historial y turnos programados</span>
+          </div>
+          <mat-icon class="link-arrow" aria-hidden="true">chevron_right</mat-icon>
+        </a>
+
+        <a *ngIf="!userName && !isLoginRoute"
+           [routerLink]="['/paciente-login']"
+           (click)="closeMenu()"
+           class="mobile-nav-link mobile-nav-link--login"
+           routerLinkActive="is-active">
+          <span class="link-icon-wrap">
+            <mat-icon aria-hidden="true">login</mat-icon>
+          </span>
+          <div class="link-body">
+            <span class="link-title">Portal Pacientes</span>
+            <span class="link-desc">Consultar citas y expediente</span>
+          </div>
+          <mat-icon class="link-arrow" aria-hidden="true">chevron_right</mat-icon>
+        </a>
+
+        <a *ngIf="userName"
+           [routerLink]="['/ajustes-usuario']"
+           (click)="closeMenu()"
+           class="mobile-nav-link"
+           routerLinkActive="is-active">
+          <span class="link-icon-wrap">
+            <mat-icon aria-hidden="true">settings</mat-icon>
+          </span>
+          <div class="link-body">
+            <span class="link-title">Ajustes de mi cuenta</span>
+            <span class="link-desc">Datos personales y preferencias</span>
+          </div>
+          <mat-icon class="link-arrow" aria-hidden="true">chevron_right</mat-icon>
+        </a>
+
+        <button *ngIf="userName"
+                type="button"
+                (click)="logOut()"
+                class="mobile-nav-link mobile-nav-link--logout">
+          <span class="link-icon-wrap">
+            <mat-icon aria-hidden="true">logout</mat-icon>
+          </span>
+          <div class="link-body">
+            <span class="link-title">Cerrar sesión</span>
+            <span class="link-desc">Salir del portal médico</span>
+          </div>
+        </button>
+      </nav>
+
+      <!-- Bottom Quick Booking CTA -->
+      <div class="mobile-drawer-cta">
+        <a [routerLink]="['/medicos']" (click)="closeMenu()" class="mobile-cta-btn">
+          <mat-icon aria-hidden="true">calendar_month</mat-icon>
+          <span>Agendar Cita Médica</span>
+          <mat-icon class="mobile-cta-arrow" aria-hidden="true">arrow_forward</mat-icon>
+        </a>
+        <div class="mobile-drawer-support">
+          <mat-icon aria-hidden="true">support_agent</mat-icon>
+          <span>Asistencia Médica 24/7 · Hospital del Salvador</span>
+        </div>
       </div>
 
     </div>

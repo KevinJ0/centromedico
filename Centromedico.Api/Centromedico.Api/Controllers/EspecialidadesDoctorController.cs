@@ -1,61 +1,103 @@
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using Centromedico.Database.Context;
-using Centromedico.Database.DbModels;
-using Cliente.DTO;
-using Microsoft.AspNetCore.Identity;
+using CentromedicoDoctor.Services.Interfaces;
+using Doctor.DTO;
+using Doctor.Repository.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+// Doctor-side especialidades management: get / getAll / add / delete.
+// Shares the api/Especialidades prefix with EspecialidadesController (getAllEspecialidades),
+// but uses distinct action names so the routes never collide.
 
-namespace CentromedicoCliente.Controllers
+namespace CentromedicoDoctor.Controllers
 {
     [Route("api/Especialidades")]
     [Produces("application/json")]
     [ApiController]
     public class EspecialidadesDoctorController : ControllerBase
     {
-        private readonly IMapper _mapper;
-        private readonly UserManager<MyIdentityUser> _userManager;
-        private readonly MyDbContext _db;
-        private readonly IConfiguration _configuration;
+        private readonly IEspecialidadRepository _especRepo;
+        private readonly IEspecialidadService _especSvc;
 
         public EspecialidadesDoctorController(
-            IConfiguration configuration,
-            UserManager<MyIdentityUser> userManager,
-             MyDbContext db, IMapper mapper)
+            IEspecialidadService especSvc,
+            IEspecialidadRepository especRepo)
         {
-            _userManager = userManager;
-            _configuration = configuration;
-            _db = db;
-            _mapper = mapper;
+            _especSvc = especSvc;
+            _especRepo = especRepo;
         }
 
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Doctor")]
         [HttpGet("[action]")]
-        public ActionResult<List<especialidadDTO>> getAllEspecialidades()
+        public ActionResult<List<especialidadDTO>> get()
         {
             try
             {
-                List<especialidadDTO> especialidadeslst = _db.especialidades
-                    .ProjectTo<especialidadDTO>(_mapper.ConfigurationProvider)
-                    .ToList();
+                List<especialidadDTO> result = _especRepo.get();
 
-                if (!especialidadeslst.Any())
-                    return NoContent();
+                if (!result.Any())
+                    return new NoContentResult();
 
-                return especialidadeslst;
-
+                return Ok(result);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw new Exception(e.Message);
+                throw;
             }
+        }
 
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Doctor")]
+        [HttpGet("[action]")]
+        public ActionResult<List<especialidadDTO>> getAll()
+        {
+            try
+            {
+                List<especialidadDTO> result = _especRepo.getAll();
+
+                if (!result.Any())
+                    return new NoContentResult();
+
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Doctor")]
+        [HttpDelete("[action]")]
+        public ActionResult delete(int id_espec)
+        {
+            try
+            {
+                _especSvc.deleteEspecMedico(id_espec);
+
+                return Ok();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Doctor")]
+        [HttpPost("[action]")]
+        public ActionResult add([FromBody] int id_espec)
+        {
+            try
+            {
+                _especSvc.addEspecMedico(id_espec);
+
+                return Ok();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

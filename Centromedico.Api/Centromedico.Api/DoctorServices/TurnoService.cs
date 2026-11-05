@@ -35,9 +35,20 @@ namespace CentromedicoDoctor.Services
 
             var turnoDto =  _mapper.Map<turnoDTO>(turno);
 
+            if (turnoDto == null)
+            {
+                turnoDto = new turnoDTO
+                {
+                    medicosID = medicosID,
+                    turno_actual = 0,
+                    turno_atendido = 0,
+                    fecha = DateTime.Now
+                };
+            }
+
             turnoDto.cant_pacientes_adelante = _citaRepo.getCantCitasPendientes(fecha_hora_cita, medicosID); 
             turnoDto.primera_entrada = _citaRepo.getFirstTurnByDate(fecha_hora_cita, medicosID); 
-            turnoDto.ultima_entrada = _citaRepo.getLastTurnByDate(fecha_hora_cita, medicosID); ;
+            turnoDto.ultima_entrada = _citaRepo.getLastTurnByDate(fecha_hora_cita, medicosID);
 
             return turnoDto;
         }

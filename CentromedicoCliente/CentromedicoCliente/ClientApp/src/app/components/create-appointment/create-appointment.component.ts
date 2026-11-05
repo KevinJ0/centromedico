@@ -1,5 +1,5 @@
 import { StepperOrientation } from '@angular/cdk/stepper';
-import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, Inject, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -8,11 +8,13 @@ import { map, catchError } from 'rxjs/operators';
 import * as _moment from 'moment';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
+import { MatStepper } from '@angular/material/stepper';
 import { CoberturaService } from 'src/app/services/cobertura.service';
 import { CitaService } from 'src/app/services/cita.service';
 import { AccountService } from 'src/app/services/account.service';
-import { hora, UserInfo, seguro, cita, cobertura, citaResult, servicioCobertura } from 'src/app/interfaces/InterfacesDto';
+import { hora, UserInfo, seguro, cita, cobertura, citaResult, servicioCobertura, medico } from 'src/app/interfaces/InterfacesDto';
 import { SeguroService } from 'src/app/services/seguro.service';
+import { DoctorService } from 'src/app/services/doctor.service';
 import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 import { AutoUnsubscribe } from "ngx-auto-unsubscribe";
 import { HorarioMedicoService } from '../../services/horario-medico.service';
@@ -71,7 +73,10 @@ export class CreateAppointmentComponent implements OnInit {
   dateFilter;
   identDocMask: string = "000-0000000-0";
   selectedTypeDoc: number = 0;
-
+  medicoData: medico | null = null;
+  hasExistingAppointment: boolean = false;
+  existingAppointment: any = null;
+  existingErrorMessage: string = '';
 
   constructor(
     private router: Router,
@@ -80,6 +85,7 @@ export class CreateAppointmentComponent implements OnInit {
     private horarioMedicoSvc: HorarioMedicoService,
     public citaSvc: CitaService,
     private accountSvc: AccountService,
+    private doctorSvc: DoctorService,
     private _formBuilder: FormBuilder,
     breakpointObserver: BreakpointObserver) {
 
@@ -94,16 +100,36 @@ export class CreateAppointmentComponent implements OnInit {
     this.stepperOrientation = breakpointObserver.observe('(min-width: 800px)')
       .pipe(map(({ matches }) => matches ? 'horizontal' : 'vertical'));
 
+    // Verificar si el paciente ya tiene una cita agendada con este médico
+    this.citaSvc.GetCitaList().pipe(
+      catchError(() => of([]))
+    ).subscribe(citas => {
+      if (citas && Array.isArray(citas)) {
+        const found = citas.find(c => c.medicosID === this.medicoId);
+        if (found) {
+          this.hasExistingAppointment = true;
+          this.existingAppointment = found;
+          this.loading = false;
+        }
+      }
+    });
+
     //inicializa las fechas permitidas
     this.citaSvc.GetCitaForm(this.medicoId)
       .pipe(
         catchError(err => {
-          console.error('Error al tratar de acceder a los pre-datos de la cita');
-          return of([]);
+          console.error('Error al tratar de acceder a los pre-datos de la cita', err);
+          this.loading = false;
+          const msg = typeof err?.error === 'string' ? err.error : (err?.error?.message || '');
+          if (err?.status === 400 || msg.includes('cita') || msg.includes('Cita')) {
+            this.hasExistingAppointment = true;
+            this.existingErrorMessage = msg || 'Ya tiene una cita médica programada con este especialista.';
+          }
+          return of(null);
         })).subscribe(r => {
-          console.log(r)
+          if (!r) return;
           this.servicios = r.servicios;
-          this.diasLaborables = r.diasLaborables.map(r => {
+          this.diasLaborables = (r.diasLaborables || []).map(r => {
             return new Date(r)
           });
 
@@ -125,6 +151,13 @@ export class CreateAppointmentComponent implements OnInit {
 
     //Relleno los datos del usuario si existe
     this.setUserInfo();
+
+    // Obtener datos del médico para el encabezado compacto
+    this.doctorSvc.GetMedicoById(this.medicoId)
+      .pipe(catchError(err => of(null)))
+      .subscribe(med => {
+        if (med) this.medicoData = med;
+      });
 
   }
 
@@ -254,11 +287,12 @@ export class CreateAppointmentComponent implements OnInit {
 
 
   onClickSubmit() {
-
-    console.log(_moment.utc(this.secondFormGroup.get("timeControl").value).format());
-
     if (!this.firstFormGroup.valid || !this.secondFormGroup.valid || !this.thirdFormGroup.valid) {
-      this.openSnackBar("Las información ingresada no es valida");
+      this.firstFormGroup.markAllAsTouched();
+      this.secondFormGroup.markAllAsTouched();
+      this.thirdFormGroup.markAllAsTouched();
+      this.openSnackBar("Por favor complete los campos requeridos para agendar su cita médica.");
+      this.scrollToFirstInvalidSection();
     } else {
       if (!this.loading) {
         this.loading = true;
@@ -312,6 +346,12 @@ export class CreateAppointmentComponent implements OnInit {
             this.citaSvc.CreateCita(_cita).subscribe((r: citaResult) => {
               console.log(r)
               this.citaSvc._citaResult = r;
+              try { sessionStorage.setItem('lastCitaResult', JSON.stringify(r)); } catch (e) {}
+              if (typeof window !== 'undefined') {
+                window.scrollTo(0, 0);
+                document.documentElement.scrollTop = 0;
+                document.body.scrollTop = 0;
+              }
               this.router.navigate(['ticket']);
             }, (err: string) => {
               this.loading = false;
@@ -387,10 +427,82 @@ export class CreateAppointmentComponent implements OnInit {
   }
 
 
+  get patientDisplayName(): string {
+    if (this.isDependent) {
+      const depName = this.thirdFormGroup?.get('dependentNameControl')?.value;
+      const depLast = this.thirdFormGroup?.get('dependentLastNameControl')?.value;
+      if (depName || depLast) {
+        return `${depName || ''} ${depLast || ''} (Menor)`.trim();
+      }
+      return 'Menor de edad';
+    }
+    const name = this.thirdFormGroup?.get('userNameControl')?.value;
+    const last = this.thirdFormGroup?.get('userLastNameControl')?.value;
+    if (name || last) {
+      return `${name || ''} ${last || ''}`.trim();
+    }
+    return 'Titular de la cuenta';
+  }
+
+  get completedSectionsCount(): number {
+    let count = 0;
+    if (this.firstFormGroup?.get('serviceTypeControl')?.valid && this.firstFormGroup?.get('insuranceControl')?.value !== null && this.firstFormGroup?.get('insuranceControl')?.value !== '') {
+      count++;
+    }
+    if (this.secondFormGroup?.get('dateControl')?.value && this.secondFormGroup?.get('timeControl')?.value) {
+      count++;
+    }
+    if (this.thirdFormGroup?.valid) {
+      count++;
+    }
+    return count;
+  }
+
+  get isFormValid(): boolean {
+    return !!(this.firstFormGroup?.valid && this.secondFormGroup?.valid && this.thirdFormGroup?.valid);
+  }
+
+  get selectedServiceName(): string {
+    const sId = this.firstFormGroup?.get('serviceTypeControl')?.value;
+    if (!sId || !this.servicios) return '';
+    const found = this.servicios.find(s => s.id === sId);
+    return found ? found.descrip : '';
+  }
+
+  get selectedInsuranceName(): string {
+    const iId = this.firstFormGroup?.get('insuranceControl')?.value;
+    if (!iId || !this.coberturas) return '';
+    const found = this.coberturas.find(c => c.segurosID === iId);
+    return found ? found.descrip : '';
+  }
+
+  get selectedDateFormatted(): string {
+    const dVal = this.secondFormGroup?.get('dateControl')?.value;
+    if (!dVal) return '';
+    return _moment(dVal).locale('es').format('dddd, D [de] MMMM [de] YYYY');
+  }
+
+  get selectedHourDescription(): string {
+    const tVal = this.secondFormGroup?.get('timeControl')?.value;
+    if (!tVal || !this.Horas) return '';
+    const found = this.Horas.find(h => new Date(h.id).getTime() === new Date(tVal).getTime());
+    return found ? found.descrip : _moment(tVal).utc().format('hh:mm A');
+  }
+
+  scrollToFirstInvalidSection(): void {
+    if (!this.firstFormGroup.valid) {
+      document.getElementById('sec-service')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else if (!this.secondFormGroup.valid) {
+      document.getElementById('sec-datetime')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else if (!this.thirdFormGroup.valid) {
+      document.getElementById('sec-patient')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
   scrollToTop(): void {
     window.scrollTo({
       top: 0,
-      behavior: 'auto'
+      behavior: 'smooth'
     });
   }
 
